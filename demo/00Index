@@ -1,0 +1,25 @@
+Chapter01    Introduction to MCMC Estimation and Bayesian Modelling
+Chapter02    Single Level Normal Response Modelling
+Chapter03    Variance Components Models
+Chapter04    Other Features of Variance Components Models
+Chapter05    Prior Distributions, Starting Values and Random Number Seeds
+Chapter06    Random Slopes Regression Models
+Chapter07    Using the WinBUGS Interface in MLwiN
+Chapter08    Running a Simulation Study in MLwiN
+Chapter09    Modelling Complex Variance at Level 1 / Heteroscedasticity
+Chapter10   Modelling Binary Responses
+Chapter11   Poisson Response Modelling
+Chapter12   Unordered Categorical Responses
+Chapter13   Ordered Categorical Responses
+Chapter14   Adjusting for Measurement Errors in Predictor Variables
+Chapter15   Cross Classified Models
+Chapter16   Multiple Membership Models
+Chapter17   Modelling Spatial Data
+Chapter18   Multivariate Normal Response Models and Missing Data
+Chapter19   Mixed Response Models and Correlated Residuals
+Chapter20   Multilevel Factor Analysis Modelling
+Chapter21   Using Structured MCMC
+Chapter22   Using the Structured MVN framework for models
+Chapter23   Using Orthogonal fixed effect vectors
+Chapter24   Parameter expansion
+Chapter25   Hierarchical Centring
