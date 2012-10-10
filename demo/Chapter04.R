@@ -60,15 +60,15 @@ mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwi
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2))
 ## Fit the model
 mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-sixway(mymodel3$chains[,"FP_standlrt"],"beta_1")
+sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
 
 ## MH Scale Factor =5.8
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2, adaption=0))
 ## Fit the model
 mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-aa=cbind(mymodel1$FP,mymodel2$FP,mymodel4$FP,mymodel3$FP)
-bb=cbind(mymodel1$RP,mymodel2$RP,mymodel4$RP,mymodel3$RP)
+aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
+bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel4["RP"],mymodel3["RP"])
 ctable=round(rbind(aa,bb),3)
 colnames(ctable)=c("IGLS","Gibbs", "MH", "MH Adaptive")
 print(ctable)
@@ -81,7 +81,7 @@ estoptions= list(EstM=1,mcmcMeth=list(fixM=3,residM=2,Lev1VarM=2, rate=40))
 ## Fit the model
 mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-estimates=mymodel5$chains
+estimates=mymodel5["chains"]
 par(mfrow=c(3,2))
 plot(4951:nrow(estimates),estimates[4951:nrow(estimates),"deviance"],xlab="iteration",
 ylab=expression(paste("Est. of deviance")),type="l")
@@ -101,7 +101,7 @@ estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iteratio
 mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
 lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel6$resi.chains[[1]]
+resi.chain2 = mymodel6["resi.chains"][[1]]
 resi.chain2 = matrix(resi.chain2, nrow =lencateg)
 sixway(resi.chain2[1,],name="u0_1")
 
@@ -134,10 +134,10 @@ points(1:65,u0rankhi[rankno],pch=25,bg="grey")
 for(i in 1:65) {lines(rep(i,2),c(u0ranklo[rankno[i]],u0rankhi[rankno[i]]))}
 
 ## Alternatively
-caterpillarR(mymodel6$residual, lev=2)
+caterpillarR(mymodel6["residual"], lev=2)
 
 # 4.9 Estimating a function of parameters . . . . . . . . . . . . . . . . 58
-estimates=mymodel6$chains
+estimates=mymodel6["chains"]
 isc = estimates[["RP2_var_cons"]]/(estimates[["RP2_var_cons"]]+estimates[["RP1_var_cons"]])
 summary(isc)
 sixway(isc,"isc")

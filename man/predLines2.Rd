@@ -8,7 +8,7 @@ Draws predicted lines using chains from a model estimated using MCMC
 This function draws predicted lines against an explanatory variable for selected groups at a higher level. The median and quantiles are calculated for each group.
 }
 \usage{
-predLines2(indata, chains, resi.chains, xname, lev = 2, levID, 
+predLines2(indata, chains, resi.chains, xname, lev = 2, levID,
 selected = NULL, probs=c(.025,.975), Legend=T)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -57,7 +57,7 @@ library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
 mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
-## MLwiN sample worksheet folder 
+## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
 
@@ -71,9 +71,9 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
 
-resi.chains=mymodel[["resi.chains"]]
-chains=mymodel[["chains"]]
-predLines2(indata, chains, resi.chains, xname="standlrt", lev = 2, levID, 
+resi.chains=mymodel["resi.chains"]
+chains=mymodel["chains"]
+predLines2(indata, chains, resi.chains, xname="standlrt", lev = 2, levID,
 selected =c(30,44,53,59), probs=c(.025,.975))
 }
-} 
+}

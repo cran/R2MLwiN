@@ -45,14 +45,14 @@ formula="normexam~(0|cons)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-summary(mymodel$chains[["FP_cons"]])
-sixway(mymodel$chains[["FP_cons"]],"beta_0")
+summary(mymodel["chains"][["FP_cons"]])
+sixway(mymodel["chains"][["FP_cons"]],"beta_0")
 
 ## Structured MCMC
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-summary(mymodel$chains[["FP_cons"]])
-sixway(mymodel$chains[["FP_cons"]],"beta_0")
+summary(mymodel["chains"][["FP_cons"]])
+sixway(mymodel["chains"][["FP_cons"]],"beta_0")
 
 # 21.3 A random intercepts model . . . . . . . . . . . . . . . . . . . . 334
 
@@ -60,14 +60,14 @@ formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-trajectories(mymodel$chains,Range=c(1,500))
+trajectories(mymodel["chains"],Range=c(1,500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
 estoptions= list(EstM=1, resi.store=T, resi.store.levs=2,mcmcMeth=list(iterations=5001),mcmcOptions=list(smcm=1))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 ## Each row represents each iteration
-resi=matrix(mymodel$resi.chains[[1]],ncol=65,byrow=T)
+resi=matrix(mymodel["resi.chains"][[1]],ncol=65,byrow=T)
 sixway(resi[,1],"school1")
 
 # 21.5 Random slopes model theory . . . . . . . . . . . . . . . . . . . .336
@@ -79,8 +79,8 @@ levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-sixway(mymodel$chains[,"FP_cons"],"beta_0")
-sixway(mymodel$chains[,"FP_standlrt"],"beta_1")
+sixway(mymodel["chains"][,"FP_cons"],"beta_0")
+sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .340
 

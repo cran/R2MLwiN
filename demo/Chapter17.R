@@ -86,10 +86,10 @@ estoptions= list(xclass=xclass,EstM=1,notation="class",mcmcMeth=list(iterations=
 mymodel=runMLwiN(formula, levID, D='Poisson', indata, estoptions, BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = FALSE), MLwiNPath=mlwin)
 
 ##Closes WinBUGS manually
-mean(mymodel$resi.chains[[1]])
-sd(mymodel$resi.chains[[1]])
+mean(mymodel["resi.chains"][[1]])
+sd(mymodel["resi.chains"][[1]])
 
-summary(mymodel$chains.bugs)
+summary(mymodel["chains.bugs"])
 
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259
 

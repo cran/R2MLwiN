@@ -69,8 +69,8 @@ estoptions= list(EstM=1, mcmcMeth=list(iterations=5001),resi.store.levs=2)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
 
-resi.chains=mymodel[["resi.chains"]]
-chains=mymodel[["chains"]]
+resi.chains=mymodel["resi.chains"]
+chains=mymodel["chains"]
 predLines2(indata, chains, resi.chains, xname="standlrt", lev = 2, levID, selected =NULL, probs=c(.025,.975),Legend=F)
 windows()
 predLines2(indata, chains, resi.chains, xname="standlrt", lev = 2, levID, selected =c(30,44,53,59), probs=c(.025,.975))
@@ -103,15 +103,15 @@ mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwi
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 
 cat("The mean parameter estimates\n")
-aa=cbind(mymodel0a$FP,mymodel0$FP,mymodel1$FP,mymodel2$FP,mymodel3$FP)
-bb=cbind(mymodel0a$RP,mymodel0$RP,mymodel1$RP,mymodel2$RP,mymodel3$RP)
+aa=cbind(mymodel0a["FP"],mymodel0["FP"],mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
+bb=cbind(mymodel0a["RP"],mymodel0["RP"],mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
 ctable=round(rbind(aa,bb),3)
 colnames(ctable)=c("IGLS","default","prior 2", "uniform", "prior 4")
 print(ctable)
 
 cat("The standard errors of parameter estimates\n")
-cc=cbind(sqrt(diag(mymodel0a$FP.cov)),sqrt(diag(mymodel0$FP.cov)),sqrt(diag(mymodel1$FP.cov)),sqrt(diag(mymodel2$FP.cov)),sqrt(diag(mymodel3$FP.cov)))
-dd=cbind(sqrt(diag(mymodel0a$RP.cov)),sqrt(diag(mymodel0$RP.cov)),sqrt(diag(mymodel1$RP.cov)),sqrt(diag(mymodel2$RP.cov)),sqrt(diag(mymodel3$RP.cov)))
+cc=cbind(sqrt(diag(mymodel0a["FP.cov"])),sqrt(diag(mymodel0["FP.cov"])),sqrt(diag(mymodel1["FP.cov"])),sqrt(diag(mymodel2["FP.cov"])),sqrt(diag(mymodel3["FP.cov"])))
+dd=cbind(sqrt(diag(mymodel0a["RP.cov"])),sqrt(diag(mymodel0["RP.cov"])),sqrt(diag(mymodel1["RP.cov"])),sqrt(diag(mymodel2["RP.cov"])),sqrt(diag(mymodel3["RP.cov"])))
 sdtable=round(rbind(cc,dd),3)
 colnames(sdtable)=c("IGLS","default","prior 2", "uniform", "prior 4")
 print(sdtable)

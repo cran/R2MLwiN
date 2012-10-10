@@ -8,8 +8,8 @@ Calls MLwiN from R
 This function executes MLwiN and then brings results back to R. A summary of the model will be printed, and a list of output objects will be saved in the work directory.
 }
 \usage{
-runMLwiN(Formula, levID, D = "Normal", indata, 
-estoptions = list(EstM = 0), BUGO = NULL, 
+runMLwiN(Formula, levID, D = "Normal", indata,
+estoptions = list(EstM = 0), BUGO = NULL,
 MLwiNPath = "C:/Program Files (x86)/MLwiN v2.26/", workdir=tempdir())
 }
 %- maybe also 'usage' for other objects documented here.
@@ -60,6 +60,9 @@ If \code{TRUE}, the generated files will be removed from the \code{workdir}.
 \item{Meth}{Specifies which maximum likelihood estimation method is to be used. If \code{Meth=0} estimation method is set to RIGLS. If \code{Meth=1} estimation method is set to IGLS (the default setting). If \code{Meth=2}, alternate between IGLS and RIGLS.}
 \item{merr}{A vector which sets-up measurement errors on predictor variables. The first element N defines the number of variables that have measurement errors. Then, for each variable with measurement error, a pair of inputs is required: value Ma is the explanatory variable number for the Mth variable which has measurement error and value Mb is the variance of the measurement errors for the Mth variable.}
 \item{fact}{A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}. See \code{\link{MacroScript2}} for details.}
+\item{weighting}{A list of objects specified for using weights in an analysis, including \code{levels}, \code{weights}, \code{mode}, \code{FSDE} and \code{RSDE}. See \code{\link{MacroScript1}} for details.}
+\item{centring}{If not empty, centring is used for the selected explanatory variables. A list of objects, named by explanatory variables, specifies the ways to centre the variables. \code{list(rv1=1,...)} means that \code{rv1} is centring by its ground mean; \code{list(rv1=c(2,'group'),...)} means that \code{rv1} is centring by the mean of the specified group. \code{'group'} is a string specifying the group binary indicator, i.e., a vector of (0, 1);  \code{list(rv1=c(3,value),...)} means that \code{rv1} is centring by the specified numerical \code{value}. Here \code{rv1} is a string of the explanatory variable.
+}
 \item{xclass}{A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. See \code{\link{MacroScript2}} for details.}
 \item{mcmcMeth}{A list of objects specifying advanced MCMC methodology and prior options, including the following:\cr
 \code{iterations}, \code{burnin}, \code{thinning}, \code{seed}, \code{priorParam}, \code{scale}, \code{refresh}, \code{fixM}, \code{residM}, \code{Lev1VarM}, \code{OtherVarM}, \code{adaption}, \code{priorcode}, \code{startval}, \code{rate}, \code{tol}, \code{lclo} and \code{nopause}. See \code{\link{MacroScript2}} for details.}
@@ -81,6 +84,7 @@ If the IGLS algorithm is used, (i.e., \code{EstM=0}), then the outputs are
 \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
 \item{LIKE}{The likelihood statistic (-2*log(like))}
 \item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
+\item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
 
 If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
 \item{estMCMC}{Captures the parameter estimates from MLwiN using the MCMC algorithm. <_FP_b column> has the fixed part estimates and its variances and covariances are stored in <_FP_v column>; <_RP_b column> has the random part estimates and its variances and covariances are stored in <_RP_v column>; DIC and likelihood measures are stored in <_Stats column>.}
@@ -92,7 +96,7 @@ If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
 \item{LIKE}{The likelihood statistic (-2*log(like))}
 \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
 \item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
-\item{loading}{If \code{fact} is not empty, then the factor loadings are returned.}
+\item{fact.loadings}{If \code{fact} is not empty, then the factor loadings are returned.}
 \item{fact.cov}{If \code{fact} is not empty, then factor covariances are returned.}
 \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
 \item{resi.chains}{If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.}

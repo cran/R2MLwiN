@@ -39,7 +39,7 @@ library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
 mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
-## MLwiN sample worksheet folder 
+## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
 
@@ -57,7 +57,7 @@ library(foreign);indata =read.dta(inputfile)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
 
 ## Caterpillar plot
-caterpillarR(mymodel$resi, lev=2)
+caterpillarR(mymodel["resi"], lev=2)
 }
 }
 

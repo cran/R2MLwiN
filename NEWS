@@ -1,0 +1,11 @@
+Tue Oct 09 2012
+1. Changes 
+   * the output of a fitted model is now a S4 class object consisting of print, "[", "[<-" and summary methods.
+   * drop "$" to get an element of the output object.
+
+2. New features 
+   * add macros to do weighting on all the levels when using IGLS.
+
+Thu Oct 18 2012
+1. New features
+   * add functionality to centre the explanatory variables.

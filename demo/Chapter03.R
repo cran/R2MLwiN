@@ -47,7 +47,7 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
 
-estimates=mymodel$chains
+estimates=mymodel["chains"]
 par(mfrow=c(3,2))
 plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"deviance"],xlab="iteration",
 ylab=expression(paste("Est. of deviance")),type="l")
@@ -60,8 +60,8 @@ ylab=expression(paste("Est. of ",sigma[u0]^2)),type="l")
 plot(4501:nrow(estimates),estimates[4501:nrow(estimates),"RP1_var_cons"],xlab="iteration",
 ylab=expression(paste("Est. of ",sigma[e0]^2)),type="l")
 
-sixway(mymodel$chains[,"FP_standlrt"],"beta_1")
-sixway(mymodel$chains[,"RP2_var_cons"],"sigma2u0")
+sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")
+sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 3.2 DIC and multilevel models . . . . . . . . . . . . . . . . . . . . . 41
 

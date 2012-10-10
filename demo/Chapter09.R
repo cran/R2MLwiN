@@ -78,10 +78,10 @@ levID=c('student')
 estoptions= list(EstM=1)
 ## Fit the model
 mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
-trajectories(mymodel1$chains,Range=c(4501,5000))
+trajectories(mymodel1["chains"],Range=c(4501,5000))
 
-l1varfn= mymodel1$RP["RP1_var_cons"]+2*mymodel1$RP["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel1$RP["RP1_var_standlrt"]*indata[["standlrt"]]^2
+l1varfn= mymodel1["RP"]["RP1_var_cons"]+2*mymodel1["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
+mymodel1["RP"]["RP1_var_standlrt"]*indata[["standlrt"]]^2
 plot(sort(indata[["standlrt"]]),l1varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="l1varfn",type="l")
 abline(v=0,lty="dotted")
 
@@ -95,9 +95,9 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
 
-l2varfn= mymodel2$RP["RP2_var_cons"]+2*mymodel2$RP["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel2$RP["RP2_var_standlrt"]*indata[["standlrt"]]^2
-l1varfn=mymodel2$RP["RP1_var_cons"]
+l2varfn= mymodel2["RP"]["RP2_var_cons"]+2*mymodel2["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
+mymodel2["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
+l1varfn=mymodel2["RP"]["RP1_var_cons"]
 plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.6),type="l")
 abline(h=l1varfn)
 abline(v=0,lty="dotted")
@@ -126,11 +126,11 @@ estoptions= list(EstM=1,clre=clre)
 ## Fit the model
 mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin, workdir = tempdir())
 
-l2varfn= mymodel5$RP["RP2_var_cons"]+2*mymodel5$RP["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel5$RP["RP2_var_standlrt"]*indata[["standlrt"]]^2
-l1varfnboys=mymodel5$RP["RP1_var_cons"]+2*mymodel5$RP["RP1_cov_cons_standlrt"]*indata[["standlrt"]]
-l1varfngirls=mymodel5$RP["RP1_var_cons"]+2*mymodel5$RP["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-2*mymodel5$RP["RP1_cov_cons_girl"]+2*mymodel5$RP["RP1_cov_standlrt_girl"]*indata[["standlrt"]]
+l2varfn= mymodel5["RP"]["RP2_var_cons"]+2*mymodel5["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
+mymodel5["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
+l1varfnboys=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]
+l1varfngirls=mymodel5["RP"]["RP1_var_cons"]+2*mymodel5["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
+2*mymodel5["RP"]["RP1_cov_cons_girl"]+2*mymodel5["RP"]["RP1_cov_standlrt_girl"]*indata[["standlrt"]]
 plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
 lines(sort(indata[["standlrt"]]),l1varfnboys[order(indata[["standlrt"]])])
 lines(sort(indata[["standlrt"]]),l1varfngirls[order(indata[["standlrt"]])])
@@ -142,11 +142,11 @@ estoptions= list(EstM=1,clre=clre,mcmcMeth=list(lclo=1))
 ## Fit the model
 mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin, workdir = tempdir())
 
-l2varfn= mymodel6$RP["RP2_var_cons"]+2*mymodel6$RP["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
-mymodel6$RP["RP2_var_standlrt"]*indata[["standlrt"]]^2
-l1varfnboys=1/exp(mymodel6$RP["RP1_var_cons"]+2*mymodel6$RP["RP1_cov_cons_standlrt"]*indata[["standlrt"]])
-l1varfngirls=1/exp(mymodel6$RP["RP1_var_cons"]+2*mymodel6$RP["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
-2*mymodel6$RP["RP1_cov_cons_girl"]+2*mymodel6$RP["RP1_cov_standlrt_girl"]*indata[["standlrt"]])
+l2varfn= mymodel6["RP"]["RP2_var_cons"]+2*mymodel6["RP"]["RP2_cov_cons_standlrt"]*indata[["standlrt"]]+
+mymodel6["RP"]["RP2_var_standlrt"]*indata[["standlrt"]]^2
+l1varfnboys=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]])
+l1varfngirls=1/exp(mymodel6["RP"]["RP1_var_cons"]+2*mymodel6["RP"]["RP1_cov_cons_standlrt"]*indata[["standlrt"]]+
+2*mymodel6["RP"]["RP1_cov_cons_girl"]+2*mymodel6["RP"]["RP1_cov_standlrt_girl"]*indata[["standlrt"]])
 plot(sort(indata[["standlrt"]]),l2varfn[order(indata[["standlrt"]])],xlab="standlrt",ylab="varfns",ylim=c(0,.8),type="l")
 lines(sort(indata[["standlrt"]]),l1varfnboys[order(indata[["standlrt"]])])
 lines(sort(indata[["standlrt"]]),l1varfngirls[order(indata[["standlrt"]])])

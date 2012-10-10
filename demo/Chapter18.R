@@ -67,7 +67,7 @@ estoptions= list(EstM=1,resi.store=T,resi.store.levs=3)
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
 
 lencateg = length(unique(indata[["school"]]))
-resi=na.omit(mymodel$resi.chains[["resi_lev3"]])
+resi=na.omit(mymodel["resi.chains"][["resi_lev3"]])
 ##u0 and u1 alternates for each iteration (each column)
 resi=matrix(resi,nrow =lencateg*2)
 label=1:nrow(resi)
@@ -166,7 +166,7 @@ mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLw
 
 estoptions= list(EstM=1,mcmcMeth=list(dami=c(0,1000,2000,3000,4000,5000)))
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
-#mymodel$esample
+#mymodel["esample"]
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

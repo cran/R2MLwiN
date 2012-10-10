@@ -61,8 +61,8 @@ estoptions= list(EstM=1, resi.store=T)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 
-resi=mymodel[["residual"]]
-FP=mymodel[["FP"]]
+resi=mymodel["residual"]
+FP=mymodel["FP"]
 predLines3(indata,FP,xname="gcseav", group="gender")
 
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
@@ -103,13 +103,13 @@ levID=c('estab','pupil')
 estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel$chains[["RP2_var_cons_12345"]],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel["chains"][["RP2_var_cons_12345"]],acf.maxlag = 300,"sigma2v6")
 
 ##Increases iterations to 50,000
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel$chains[["RP2_var_cons_12345"]],acf.maxlag = 300,"sigma2v6")
+sixway(mymodel["chains"][["RP2_var_cons_12345"]],acf.maxlag = 300,"sigma2v6")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

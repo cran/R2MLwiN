@@ -59,14 +59,14 @@ levID=c('district','woman')
 estoptions= list(EstM=1)
 ## Fit the model
 mymodel1=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel1$chains[["FP_age"]])
-sixway(mymodel1$chains[["FP_age"]],"beta_1")
+summary(mymodel1["chains"][["FP_age"]])
+sixway(mymodel1["chains"][["FP_age"]],"beta_1")
 
 ## 15,000 iterations
 estoptions= list(EstM=1,mcmcMeth=list(iterations=15000))
 ## Fit the model
 mymodel2=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel1$chains[["FP_age"]],"beta_1")
+sixway(mymodel1["chains"][["FP_age"]],"beta_1")
 
 ## Define the model
 formula="logit(use,denomb)~(0|cons+age+lc[nokids])"
@@ -82,8 +82,8 @@ formula="logit(use,denomb)~(0|cons+age+lc[nokids])+(2|cons)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
 mymodel4=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel4$chains[["RP2_var_cons"]])
-sixway(mymodel4$chains[["RP2_var_cons"]],"sigma2u0")
+summary(mymodel4["chains"][["RP2_var_cons"]])
+sixway(mymodel4["chains"][["RP2_var_cons"]],"sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
@@ -113,18 +113,18 @@ estoptions= list(EstM=1)
 mymodel8=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
 
 cat("The mean parameter estimates\n")
-aa=cbind(mymodel7$FP,mymodel8$FP)
-ESS.aa=effectiveSize(mymodel7$chains[,3:12])
-bb=cbind(mymodel7$RP,mymodel8$RP)
-ESS.bb=effectiveSize(mymodel8$chains[,3:12])
+aa=cbind(mymodel7["FP"],mymodel8["FP"])
+ESS.aa=effectiveSize(mymodel7["chains"][,3:12])
+bb=cbind(mymodel7["RP"],mymodel8["RP"])
+ESS.bb=effectiveSize(mymodel8["chains"][,3:12])
 ctable=round(rbind(aa,bb),3)
 ctable=cbind(ctable[,1],round(ESS.aa),ctable[,2],round(ESS.bb))
 colnames(ctable)=c("Gibbs","ESS(Gibbs)","Metropolis", "ESS(Metropolis)")
 print(ctable)
 
 cat("The standard errors of parameter estimates\n")
-cc=cbind(sqrt(diag(mymodel7$FP.cov)),sqrt(diag(mymodel8$FP.cov)))
-dd=cbind(sqrt(diag(mymodel7$RP.cov)),sqrt(diag(mymodel8$RP.cov)))
+cc=cbind(sqrt(diag(mymodel7["FP.cov"])),sqrt(diag(mymodel8["FP.cov"])))
+dd=cbind(sqrt(diag(mymodel7["RP.cov"])),sqrt(diag(mymodel8["RP.cov"])))
 sdtable=round(rbind(cc,dd),3)
 colnames(sdtable)=c("Gibbs","Metropolis")
 print(sdtable)
@@ -137,14 +137,13 @@ formula="logit(use,denomb)~(0|cons+age)+(2|cons)"
 levID=c('district','woman')
 estoptions= list(EstM=0)
 mymodel9=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
-#summary(mymodel9$chains.bugs)
-summary(mymodel9$chains.bugs[[1]][,"beta[1]"])
-sixway(mymodel9$chains.bugs[[1]][,"beta[1]"],"beta[1]")
+summary(mymodel9["chains.bugs"][[1]][,"beta[1]"])
+sixway(mymodel9["chains.bugs"][[1]][,"beta[1]"],"beta[1]")
 
 estoptions= list(EstM=1)
 mymodel10=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel10$chains[["FP_cons"]])
-sixway(mymodel10$chains[["FP_cons"]],"beta0")
+summary(mymodel10["chains"][["FP_cons"]])
+sixway(mymodel10["chains"][["FP_cons"]],"beta0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

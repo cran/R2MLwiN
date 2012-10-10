@@ -46,9 +46,9 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
 
-cat(paste("Pr(y = 1) =", round(exp(mymodel$FP["FP_cons_use4_1"])/(1+exp(mymodel$FP["FP_cons_use4_1"])+exp(mymodel$FP["FP_cons_use4_2"])+exp(mymodel$FP["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 2) =", round(exp(mymodel$FP["FP_cons_use4_2"])/(1+exp(mymodel$FP["FP_cons_use4_1"])+exp(mymodel$FP["FP_cons_use4_2"])+exp(mymodel$FP["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel$FP["FP_cons_use4_3"])/(1+exp(mymodel$FP["FP_cons_use4_1"])+exp(mymodel$FP["FP_cons_use4_2"])+exp(mymodel$FP["FP_cons_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_cons_use4_1"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_cons_use4_2"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
 
 # 12.2 Adding predictor variables . . . . . . . . . . . . . . . . . . . .173
 
@@ -59,13 +59,13 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
 
-cat(paste("Pr(y = 3) =", round(exp(mymodel$FP["FP_cons_use4_3"])/(1+exp(mymodel$FP["FP_cons_use4_1"])+exp(mymodel$FP["FP_cons_use4_2"])+exp(mymodel$FP["FP_cons_use4_3"])),4),"\n"))
-cat(paste("Pr(y = 3) =", round(exp(mymodel$FP["FP_cons_use4_3"]+mymodel$FP["FP_lc2_use4_3"])/(1+exp(mymodel$FP["FP_cons_use4_1"]+mymodel$FP["FP_lc2_use4_1"])+
-exp(mymodel$FP["FP_cons_use4_2"]+mymodel$FP["FP_lc2_use4_2"])+exp(mymodel$FP["FP_cons_use4_3"]+mymodel$FP["FP_lc2_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
+cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"]+mymodel["FP"]["FP_lc2_use4_1"])+
+exp(mymodel["FP"]["FP_cons_use4_2"]+mymodel["FP"]["FP_lc2_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])),4),"\n"))
 
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
-chains=mymodel$chains
+chains=mymodel["chains"]
 pred1=exp(chains[["FP_cons_use4_3"]])/(1+exp(chains[["FP_cons_use4_1"]])+exp(chains[["FP_cons_use4_2"]])+exp(chains[["FP_cons_use4_3"]]))
 summary(pred1)
 sixway(pred1,"prob1")
@@ -90,10 +90,10 @@ mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,M
 estoptions= list(EstM=1, nonlinear=c(1,2))
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel$chains[["RP2_var_cons_use4_1"]],"sigma2v0")
+sixway(mymodel["chains"][["RP2_var_cons_use4_1"]],"sigma2v0")
 
 RP3.cons=matrix(,3,3)
-RP3.cons[upper.tri(RP3.cons,diag=T)]=mymodel$RP[1:6]
+RP3.cons[upper.tri(RP3.cons,diag=T)]=mymodel["RP"][1:6]
 RP3.cons[lower.tri(RP3.cons)]=RP3.cons[upper.tri(RP3.cons)]
 round(cov2cor(RP3.cons),3)
 

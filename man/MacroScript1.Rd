@@ -11,15 +11,16 @@ MacroScript1 is an internal function which creates an MLwiN macro file to fit a 
 }
 \usage{
 MacroScript1(indata, dtafile, resp,
-levID, expl, rp, D = "Normal", 
-nonlinear = c(0, 1), categ = NULL, 
+levID, expl, rp, D = "Normal",
+nonlinear = c(0, 1), categ = NULL,
 notation = NULL, nonfp = NA,
-clre, smat, Meth = 1, 
+clre, smat, Meth = 1,
 BUGO = NULL, mem.init = "default",
+weighting = NULL,
 bugofile = bugofile, modelfile = modelfile,
-initfile = initfile, datafile = datafile, 
-macrofile = macrofile, IGLSfile = IGLSfile, 
-resifile = resifile, resi.store = resi.store, 
+initfile = initfile, datafile = datafile,
+macrofile = macrofile, IGLSfile = IGLSfile,
+resifile = resifile, resi.store = resi.store,
 debugmode = debugmode)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -71,6 +72,9 @@ If the first entry of the vector is \code{TRUE}, the current model is outputted 
 }
   \item{mem.init}{
 A vector which sets and displays worksheet capacities for the current MLwiN session according to the value(s) specified. By default, the number of levels is \code{nlev}+1; worksheet size in thousands of cells is 6000; the number of columns is 2500; the number of explanatory variables is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the number of levels specified by \code{levID}, and \code{num_vars} is approximately the number of explanatory variables calculated initially.
+}
+  \item{weighting}{
+A list of objects specified for using weights in an analysis, including \code{levels}, \code{weights}, \code{mode}, \code{FSDE} and \code{RSDE}. By default, \code{weighting} is \code{NULL}, i.e., equal weights for all units at all levels. If not \code{NULL}, \code{weights} is a string vector of names specifying the weights for all corresponding \code{levels} that is a integer vector of the same length of \code{weights}. \code{mode=0}: Weighting off (equal weights); \code{mode=1}: the specified raw weights are used at all levels; \code{mode=1}: the standardised weights are used at all levels. \code{FSDE} and \code{RSDE} set the type of standard error computation for fixed and random parameters. If \code{FSDE} and/or \code{RSDE} are/is ignored, \code{FSDE=2} and/or \code{RSDE=2} by default. If \code{FSDE=2} (or \code{RSDE=2}), compute robust or `sandwich' standard errors based on raw residuals. If \code{FSDE=0} (or \code{RSDE=0}), use standard, uncorrected, IGLS or RIGLS computation. Note that weights cannot be used with multivariate models.
 }
   \item{bugofile}{
 A file name where the WinBUGS code (including model, initial values and data) will be saved in .txt format.

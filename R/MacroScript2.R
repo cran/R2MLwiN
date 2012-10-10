@@ -1,6 +1,5 @@
 MacroScript2 <-
-function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,
-     nopause,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
+function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,     nopause,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
      chainfile=chainfile,esamplefile=esamplefile,resifile=resifile,resi.store=resi.store,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
 
 
@@ -1051,7 +1050,6 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         wrt("SMFA 2 c301")
 
     }
-
     if (D[1]=="Normal"){
         wrt("PREF   0")
         wrt("POST   0")
@@ -1161,14 +1159,14 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 if (is.na(xclass[[4]][ii])){
                     wrt(paste("MULM ",as.numeric(xclass[[1]][ii])," ", as.numeric(xclass[[2]][ii])," '",xclass[[3]][ii],"'",sep=""))
         			if (carflag){
-                        wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 1"))
+                        			wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 1"))
         			}else{
         				wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 0"))
         			}
                 }else{
                     wrt(paste("MULM ",as.numeric(xclass[[1]][ii])," ", as.numeric(xclass[[2]][ii])," '",xclass[[3]][ii],"'"," '",xclass[[4]][ii],"'",sep=""))
         			if (carflag){
-                        wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 1"))
+                        			wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 1"))
         			}else{
         				wrt(paste("CARP",as.numeric(xclass[[1]][ii])," 0"))
         			}

@@ -59,7 +59,7 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 
-FP=mymodel[["FP"]]
+FP=mymodel["FP"]
 predLines3(indata,FP,xname="gcseav", group="gender")
 }
 }

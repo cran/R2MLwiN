@@ -54,7 +54,7 @@ mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 # 15.5 Residuals . . . . . . . . . . . . . . . . . . . . . . . . . . . . 223
 
 lencateg = length(unique(indata[["SID"]]))
-resi.chain0=na.omit(mymodel$resi.chains[["resi_lev3"]])
+resi.chain0=na.omit(mymodel["resi.chains"][["resi_lev3"]])
 resi.chain0=matrix(resi.chain0, nrow =lencateg)
 residual0 = apply(resi.chain0,1,mean)
 rankno=order(residual0)
@@ -63,7 +63,7 @@ abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg = length(unique(indata[["SID"]]))
-#resi.chain0=na.omit(mymodel$resi.chains[["resi_lev3"]])
+#resi.chain0=na.omit(mymodel["resi.chains"][["resi_lev3"]])
 #resi.chain0=matrix(resi.chain0, nrow =lencateg)
 #u0rank = apply(resi.chain0,2,rank)
 #u0rankmn = apply(u0rank, 1,mean)
@@ -74,7 +74,7 @@ abline(h=0,lty="dotted")
 #caterpillar(y=u0rankmn[rankno],x=1:lencateg,qtlow=u0ranklo[rankno],qtup=u0rankhi[rankno]],ylim=c(0,20))
 
 lencateg = length(unique(indata[["PID"]]))
-resi.chain1=na.omit(mymodel$resi.chains[["resi_lev2"]])
+resi.chain1=na.omit(mymodel["resi.chains"][["resi_lev2"]])
 resi.chain1=matrix(resi.chain1, nrow =lencateg)
 residual1 = apply(resi.chain1,1,mean)
 rankno=order(residual1)
@@ -83,7 +83,7 @@ abline(h=0,lty="dotted")
 
 ## Common caterpillar
 #lencateg = length(unique(indata[["PID"]]))
-#resi.chain1=na.omit(mymodel$resi.chains[["resi_lev2"]])
+#resi.chain1=na.omit(mymodel["resi.chains"][["resi_lev2"]])
 #resi.chain1=matrix(resi.chain1, nrow =lencateg)
 #u0rank = apply(resi.chain1,2,rank)
 #u0rankmn = apply(u0rank, 1,mean)
@@ -108,7 +108,7 @@ estoptions= list(xclass=xclass,EstM=1,notation='class',resi.store=T,resi.store.l
 mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 
 lencateg = length(unique(indata[["SID"]]))
-resi.chain0=na.omit(mymodel$resi.chains[["resi_lev3"]])
+resi.chain0=na.omit(mymodel["resi.chains"][["resi_lev3"]])
 resi.chain0=matrix(resi.chain0, nrow =lencateg)
 residual0 = apply(resi.chain0,1,mean)
 rankno=order(residual0)

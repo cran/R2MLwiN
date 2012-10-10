@@ -49,7 +49,7 @@ mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLw
 
 covM1=matrix(,6,6)
 colnames(covM1)=rownames(covM1)=c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM1[upper.tri(covM1,diag=T)]= mymodel$RP
+covM1[upper.tri(covM1,diag=T)]= mymodel["RP"]
 #covM1[lower.tri(covM1)]=t(covM1)[lower.tri(covM1)]
 round(cov2cor(t(covM1)),3)
 
@@ -66,8 +66,8 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
 
-ranks=rank(na.omit(mymodel$fact.chains[["_FACT_value_b"]]))
-plot(x=ranks,na.omit(mymodel$fact.chains[["_FACT_value_b"]]),xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
+ranks=rank(na.omit(mymodel["fact.chains"][["_FACT_value_b"]]))
+plot(x=ranks,na.omit(mymodel["fact.chains"][["_FACT_value_b"]]),xlab="rank",ylab="factor scores",ylim=c(-2.35,1.2))
 abline(h=0,lty="dotted")
 
 # 20.5 Adding a scond factor to the model . . . . . . . . . . . . . . . .313
@@ -83,13 +83,13 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
 
-scores=na.omit(mymodel$fact.chains[["_FACT_value_b"]])
+scores=na.omit(mymodel["fact.chains"][["_FACT_value_b"]])
 plot(scores[2440:4878],scores[1:2439],xlab="Factor 2",ylab="Factor 1")
 abline(h=0,lty="dotted")
 abline(v=0,lty="dotted")
 # 20.6 Examining the chains of the loading estimates . . . . . . . . . . 317
 
-loads =mymodel$fact.chains[["_FACT_load_b_chain"]]
+loads =mymodel["fact.chains"][["_FACT_load_b_chain"]]
 
 loadsM= matrix(loads,ncol=length(loads)/5000,byrow=T)
 namesloads=c(rep("load1",6),rep("load2",6))
@@ -103,7 +103,7 @@ sixway(loadsM[,"load2.3"],acf.maxlag=1500,name="load2.3")
 estoptions= list(EstM=1, fact=fact,mcmcMeth=list(burnin=5000,iterations=10000))
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
 
-loads =mymodel$fact.chains[["_FACT_load_b_chain"]]
+loads =mymodel["fact.chains"][["_FACT_load_b_chain"]]
 
 loadsM= matrix(loads,ncol=length(loads)/10000,byrow=T)
 namesloads=c(rep("load1",6),rep("load2",6))
@@ -134,13 +134,13 @@ mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLw
 
 covM1=matrix(,6,6)
 colnames(covM1)=rownames(covM1)=c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM1[upper.tri(covM1,diag=T)]= mymodel$RP[22:42]
+covM1[upper.tri(covM1,diag=T)]= mymodel["RP"][22:42]
 #covM1[lower.tri(covM1)]=t(covM1)[lower.tri(covM1)]
 round(cov2cor(t(covM1)),3)
 
 covM2=matrix(,6,6)
 colnames(covM2)=rownames(covM2)=c("cons.es_core","cons.biol_core","cons.biol_r3","cons.biol_r4","cons.phys_core","cons.phys_r2")
-covM2[upper.tri(covM2,diag=T)]= mymodel$RP[1:21]
+covM2[upper.tri(covM2,diag=T)]= mymodel["RP"][1:21]
 #covM2[lower.tri(covM2)]=t(covM2)[lower.tri(covM2)]
 round(cov2cor(t(covM2)),3)
 
@@ -157,8 +157,8 @@ fact=list(nfact=nfact, lev.fact=lev.fact,nfactcor=nfactcor,factcor=factcor,loadi
 estoptions= list(EstM=1, fact=fact)
 mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
 
-ranks=rank(mymodel$fact.chains[2440:2538,"_FACT_value_b"])
-plot(x=ranks,y=mymodel$fact.chains[2440:2538,"_FACT_value_b"],xlab="rank",ylab="factor scores",ylim=c(-1,1))
+ranks=rank(mymodel["fact.chains"][2440:2538,"_FACT_value_b"])
+plot(x=ranks,y=mymodel["fact.chains"][2440:2538,"_FACT_value_b"],xlab="rank",ylab="factor scores",ylim=c(-1,1))
 abline(h=0,lty="dotted")
 
 # 20.10 Extensions and some warnings . . . . . . . . . . . . . . . . . . 324

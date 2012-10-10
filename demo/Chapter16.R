@@ -73,7 +73,7 @@ mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
 lencateg = length(unique(indata[["company"]]))
-resi0=na.omit(mymodel$resi.chains[["resi_lev2"]])
+resi0=na.omit(mymodel["resi.chains"][["resi_lev2"]])
 resi0=matrix(resi0, nrow =lencateg)
 resi0mean = apply(resi0,1,mean)
 resi0sd = apply(resi0,1,sd)

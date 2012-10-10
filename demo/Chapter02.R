@@ -49,7 +49,7 @@ estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
 
-estimates=mymodel$chains
+estimates=mymodel["chains"]
 par(mfrow=c(2,2))
 plot(1:nrow(estimates),estimates[,"deviance"],xlab="iteration",
 ylab=expression(paste("Est. of deviance")),type="l")

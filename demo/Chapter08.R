@@ -59,10 +59,10 @@ for (ii in 1:ns){
     indata=data.frame(cbind(pupil,school,cons,resp))
     estoptions= list(EstM=0)
     mymodel0=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
-    cc[,,ii]=as.matrix(mymodel0$estIGLS)
+    cc[,,ii]=as.matrix(mymodel0["estIGLS"])
     estoptions= list(EstM=1)
     mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
-    aa[,,ii]=as.matrix(mymodel$estMCMC)
+    aa[,,ii]=as.matrix(mymodel["estMCMC"])
 }
 bb=sapply(1:ns,function(x)  na.omit(stack(as.data.frame(aa[,,x])))$values)
 qbeta0.mcmc=quantile(bb[1,],probs=c(.025,.5,.975))

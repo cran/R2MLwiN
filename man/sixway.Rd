@@ -66,7 +66,7 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
 
-chain=mymodel$chains[,"FP_standlrt"]
+chain=mymodel["chains"][,"FP_standlrt"]
 sixway(chain,"beta_1")
 }
 }

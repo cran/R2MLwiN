@@ -51,12 +51,12 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 }
 \examples{
 
-\dontrun{ 
+\dontrun{
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
 mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
-## MLwiN sample worksheet folder 
+## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
 ## Example: tutorial
@@ -70,7 +70,7 @@ estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iteratio
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
 
 lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel$resi.chains[[1]]
+resi.chain2 = mymodel["resi.chains"][[1]]
 resi.chain2 = matrix(resi.chain2, nrow =lencateg)
 
 ## For each iteration, rank the schools
@@ -82,7 +82,7 @@ u0rankmd = apply(u0rank, 1,median)
 u0rankhi = apply(u0rank, 1, function(x) quantile(x,.975))
 rankno = order(u0rankmn)
 
-caterpillar(y=u0rankmn[rankno], x=1:65, qtlow=u0ranklo[rankno], qtup=u0rankhi[rankno], 
+caterpillar(y=u0rankmn[rankno], x=1:65, qtlow=u0ranklo[rankno], qtup=u0rankhi[rankno],
 xlab="School", ylab="Rank")
 }
 }

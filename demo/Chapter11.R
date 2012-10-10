@@ -43,8 +43,8 @@ levID=c('nation','region','county')
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
 mymodel1=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel1$chains[["FP_uvbi"]])
-sixway(mymodel1$chains[["FP_uvbi"]],"beta_1")
+summary(mymodel1["chains"][["FP_uvbi"]])
+sixway(mymodel1["chains"][["FP_uvbi"]],"beta_1")
 
 # 11.2 Adding in region level random effects . . . . . . . . . . . . . . 157
 
@@ -55,8 +55,8 @@ levID=c('region','county')
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
 mymodel2=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel2$chains[["FP_uvbi"]])
-sixway(mymodel2$chains[["FP_uvbi"]],"beta_1")
+summary(mymodel2["chains"][["FP_uvbi"]])
+sixway(mymodel2["chains"][["FP_uvbi"]],"beta_1")
 
 # 11.3 Including nation effects in the model . . . . . . . . . . . . . . 159
 
@@ -85,7 +85,7 @@ levID=c('region','county')
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
 mymodel5=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel5$chains[["FP_Belgium"]],acf.maxlag=5000,"beta_1")
+sixway(mymodel5["chains"][["FP_Belgium"]],acf.maxlag=5000,"beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
 
@@ -93,7 +93,7 @@ sixway(mymodel5$chains[["FP_Belgium"]],acf.maxlag=5000,"beta_1")
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,thinning=10))
 ## Fit the model
 mymodel6=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel6$chains[["FP_Belgium"]],"beta_1",thinning=10)
+sixway(mymodel6["chains"][["FP_Belgium"]],"beta_1",thinning=10)
 
 ## Half of million interations (could take a few hours to run)
 ## Increasing memory size of the worksheet

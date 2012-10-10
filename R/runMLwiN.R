@@ -19,15 +19,34 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 
     resi.store.levs=estoptions$resi.store.levs
 
+    weighting = estoptions$weighting
+
+    centring = estoptions$centring
+
+
+    if (!is.null(centring)){
+        for (p in names(centring)){
+            if(as.integer(centring[[p]][1])==1){
+                indata[[p]]=indata[[p]]-mean(indata[[p]])
+            }
+            if(as.integer(centring[[p]][1])==2){
+                indata[[p]]=indata[[p]]-mean(indata[[p]][as.logical(indata[[centring[[p]][2]]])])
+            }
+            if(as.integer(centring[[p]][1])==3){
+                indata[[p]]=indata[[p]]-as.integer(centring[[p]][2])
+            }
+        }
+    }
+
     debugmode=estoptions$debugmode
     if(is.null(debugmode)) debugmode=F
 
     x64=estoptions$x64
     if(is.null(x64)) x64=F
-    
+
     clean.files=estoptions$clean.files
     if (is.null(clean.files)) clean.files=T
-    
+
     if (!file.access(workdir)==0) dir.create(workdir)
 
     dtafile = gsub("\\", "/", tempfile("dtafile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
@@ -146,7 +165,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     }
     if (EstM==0){
         MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
-        BUGO,mem.init,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode)
+        BUGO,mem.init, weighting, bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode)
         iterations=estoptions$mcmcMeth$iterations
         if(is.null(iterations)) iterations=5000
         burnin=estoptions$mcmcMeth$burnin
@@ -632,77 +651,108 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         n.iter=iterations+burnin
         addmore=NULL
         if(EstM==1){
+            if(!is.null(xclass)&&length(xclass)==5){
+	if(sum(xclass[[5]])>0){
+	       addmore=c(addmore,"carmean")
+	}
+            }	
             if(is.matrix(mcmcOptions$paex)){
                 if(sum(mcmcOptions$paex[,2])>0){
                     vx=sapply(2:nlev, function(x) paste("v",x,sep=""))
                     sigma2v=sapply(2:nlev, function(x) paste("sigma2.v",x,sep=""))
-                    addmore=c(vx,sigma2v)
+                    addmore=c(addmore,vx,sigma2v)
                 }
             }else{
                 if(is.vector(mcmcOptions$paex)&&length(mcmcOptions$paex)==2){
                     if(mcmcOptions$paex[2]>0){
                         vx=sapply(2:nlev, function(x) paste("v",x,sep=""))
                         sigma2v=sapply(2:nlev, function(x) paste("sigma2.v",x,sep=""))
-                        addmore=c(vx,sigma2v)
+                        addmore=c(addmore, vx,sigma2v)
                     }
                 }
             }
         }
-        if(show.file) file.show(bugEst)
+        #if(show.file) file.show(bugEst)
         chains.bugs.mcmc=mlwin2bugs(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = as.numeric(BUGO[2]), n.iter = n.iter, n.burnin=burnin, n.thin=thinning, debug=T, bugs=BUGO[3],
         bugsWorkingDir=workdir, OpenBugs = as.logical(BUGO[4]), cleanBugsWorkingDir=clean.files)
-        time2=proc.time()-time1        
+        time2=proc.time()-time1
     }else{
         if (D[1]=="Mixed"&&(!is.null(BUGO)))  warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
     }
-    result<-new.env()
+
     if (EstM==0){
-        result$estIGLS=estIGLS
-        result$FP=FP
-        result$RP=RP
-        result$FP.cov=FP.cov
-        result$RP.cov=RP.cov
-        result$LIKE=LIKE
-        result$elapsed.time=time2[3]
+
+
+        outIGLS=new("mlwinfitIGLS")
+        outIGLS["Nobs"]=nrow(indata)
+        outIGLS["D"]=D
+        outIGLS["Formula"]=Formula
+        outIGLS["levID"]=levID
+        outIGLS["estIGLS"]=estIGLS
+        outIGLS["FP"]=FP
+        outIGLS["RP"]=RP
+        outIGLS["FP.cov"]=FP.cov
+        outIGLS["RP.cov"]=RP.cov
+        outIGLS["LIKE"]=LIKE
+        outIGLS["elapsed.time"]=time2[3]
         if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-            result$chains.bugs=chains.bugs.mcmc
+            outIGLS["chains.bugs"]=chains.bugs.mcmc
         }
 
+        if (resi.store){
+            outIGLS["residual"]=read.dta(resifile)
+        }
 
     }
     if (EstM==1){
-        result$estMCMC=estMCMC
-        result$FP=FP
-        result$RP=RP
-        result$FP.cov=FP.cov
-        result$RP.cov=RP.cov
-        result$chains=chains
-        result$elapsed.time=time2[3]
+
+
+
+        outMCMC=new("mlwinfitMCMC")
+
+        outMCMC["Nobs"]=nrow(indata)
+        outMCMC["burnin"]=burnin
+        outMCMC["iterations"]=iterations
+        outMCMC["D"]=D
+        outMCMC["Formula"]=Formula
+        outMCMC["levID"]=levID
+        outMCMC["merr"]=merr
+        outMCMC["fact"]=fact
+        outMCMC["xclass"]=xclass
+        outMCMC["estMCMC"]=estMCMC
+        outMCMC["FP"]=FP
+        outMCMC["RP"]=RP
+        outMCMC["FP.cov"]=FP.cov
+        outMCMC["RP.cov"]=RP.cov
+        outMCMC["chains"]=chains
+        outMCMC["elapsed.time"]=time2[3]
         if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-            result$BDIC=BDIC
+            outMCMC["BDIC"]=BDIC
         }else{
-            result$LIKE=LIKE
+            outMCMC["LIKE"]=LIKE
         }
         if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-            result$chains.bugs=chains.bugs.mcmc
+            outMCMC["chains.bugs"]=chains.bugs.mcmc
         }
         if (!is.null(fact)){
-            result$fact.loadings=loadings
-            result$fact.cov=fact.cov
-            result$fact.chains=read.dta(FACTchainfile)
+            outMCMC["fact.loadings"]=loadings
+            outMCMC["fact.cov"]=fact.cov
+            outMCMC["fact.chains"]=read.dta(FACTchainfile)
         }
         if (!is.null(resi.store.levs)){
-            result$resi.chains=read.dta(resichains)
+            outMCMC["resi.chains"]=read.dta(resichains)
         }
         if (!is.null(dami)){
-            result$esample=read.dta(esamplefile)
+            outMCMC["esample"]=read.dta(esamplefile)
         }
 
+        if (resi.store){
+            outMCMC["residual"]=read.dta(resifile)
+        }
+
+
     }
-    if (resi.store){
-        residual=read.dta(resifile)
-        result$residual=residual
-    }
+
     if (clean.files){
         file.remove(dtafile)
         file.remove(macrofile)
@@ -711,17 +761,17 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         if (EstM==1) file.remove(chainfile)
         if (!is.null(BUGO))  file.remove(bugofile)
         if (!is.null(BUGO))  file.remove(modelfile)
-#        if (!is.null(BUGO))  file.remove(initfile)
-#        if (!is.null(BUGO))  file.remove(datafile)
-#        if (!is.null(BUGO))  file.remove(scriptfile)
-#        if (!is.null(BUGO))  file.remove(bugEst)
         if (resi.store) file.remove(resifile)
         if (EstM==1){
-            if (!is.null(resi.store.levs)) file.remove(resichains)    
+            if (!is.null(resi.store.levs)) file.remove(resichains)
             if (!is.null(fact)) file.remove(FACTchainfile)
             if (!is.null(dami)) file.remove(esamplefile)
         }
     }
-    result=as.list(result)
-    result
+
+    if (EstM==0){
+        outIGLS
+    }else {
+        if (EstM==1) outMCMC
+    }
 }

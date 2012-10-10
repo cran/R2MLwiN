@@ -71,8 +71,8 @@ mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4
 estoptions= list(EstM=0, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
 mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T), MLwiNPath=mlwin, workdir = tempdir())
-chain=mymodel1$chains.bugs[[1]][,2]
-##summary(mymodel1$chains.bugs)
+chain=mymodel1["chains.bugs"][[1]][,2]
+##summary(mymodel1["chains.bugs"])
 summary(chain)
 sixway(chain,"beta[2]")
 

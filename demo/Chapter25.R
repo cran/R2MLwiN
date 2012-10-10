@@ -60,7 +60,7 @@ levID=c('school','student')
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2),show.file=T)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
-sixway(mymodel$chains.bugs[[1]][,"beta[1]"],"beta[1]")
+sixway(mymodel["chains.bugs"][[1]][,"beta[1]"],"beta[1]")
 
 # 25.3 Binomial hierarchical centering algorithm . . . . . . . . . . . . 408
 
@@ -95,12 +95,12 @@ levID=c('district','woman')
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2))
 mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-trajectories(mymodel$chains)
+trajectories(mymodel["chains"])
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2,orth=1))
 mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-trajectories(mymodel$chains)
+trajectories(mymodel["chains"])
 
 # 25.5 The Melanoma example . . . . . . . . . . . . . . . . . . . . . . .414
 
@@ -120,12 +120,12 @@ levID=c('region','county')
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000), mcmcOptions=list(hcen=2))
 mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel$chains[["FP_Belgium"]],acf.maxlag=100,"beta_1")
+sixway(mymodel["chains"][["FP_Belgium"]],acf.maxlag=100,"beta_1")
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 estoptions= list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1,hcen=2))
 mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel$chains[["FP_Belgium"]],acf.maxlag=100,"beta_1")
+sixway(mymodel["chains"][["FP_Belgium"]],acf.maxlag=100,"beta_1")
 
 # 25.6 Normal response models in MLwiN . . . . . . . . . . . . . . . . . 419
 
@@ -148,12 +148,12 @@ levID=c('school','student')
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcMeth=list(fixM=2,residM=2),mcmcOptions=list(hcen=2))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
-trajectories(mymodel$chains,Range=c(4501,5000))
+trajectories(mymodel["chains"],Range=c(4501,5000))
 ## Gibbs
 ## Hierarchical centring at level 2
 estoptions= list(EstM=1, mcmcOptions=list(hcen=2))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
-trajectories(mymodel$chains,Range=c(4501,5000))
+trajectories(mymodel["chains"],Range=c(4501,5000))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .422
 

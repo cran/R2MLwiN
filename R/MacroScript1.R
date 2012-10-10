@@ -1,6 +1,6 @@
 MacroScript1 <-
 function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1,
-BUGO=NULL,mem.init="default",bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode){
+BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode){
 
     nlev=length(levID)
 
@@ -1016,7 +1016,63 @@ BUGO=NULL,mem.init="default",bugofile=bugofile,modelfile=modelfile,initfile=init
     }
     wrt(paste("LINE ",nonlinear[1],nonlinear[2]))
     wrt("")
-
+    if (!is.null(weighting)){
+        if (is.null(weighting$FSDE)) weighting$FSDE=2
+        if (is.null(weighting$RSDE)) weighting$RSDE=2
+        if(length(weighting$levels)==length(weighting$weights)){
+            for (i in 1:length(weighting$weights)){
+                if (!is.na(weighting$weights[i])){
+                    wrt(paste("NOTE   Specify sampling weights at level", weighting$levels[i]))
+                    wrt(paste("WEIG ", weighting$levels[i]," ", 1, " '",weighting$weights[i],"'",sep=""))
+                    wrt("")
+                }else{
+                    wrt(paste("NOTE   Specify equal weights at level", weighting$levels[i]))
+                    wrt(paste("WEIG ", weighting$levels[i]," ", 1,sep=""))
+                    wrt("")
+                }
+                if (as.integer(weighting$mode)==2){
+                    wrt("NOTE   Standardised weighting")
+                    wrt(paste("WEIG ", weighting$levels[i]," ", 2, " c",1700+as.integer(weighting$levels[i]),sep=""))
+                    wrt("WEIG 2")
+                    wrt("")
+                }
+                if (as.integer(weighting$mode)==1){
+                    wrt("NOTE   Raw weighting")
+                    wrt(paste("WEIG ", weighting$levels[i]," ", 2, " c",1700+as.integer(weighting$levels[i]),sep=""))
+                    wrt("WEIG 1")
+                    wrt("")
+                }
+            }
+            if (as.integer(weighting$mode)>0){
+                wrt("NOTE   Create the standardised weights")
+                wrt("WEIG")
+                wrt("")
+                if ( weighting$FSDE==2){
+                    wrt("NOTE   Turn on sandwich estimators for the fixed part parameter standard errors")
+                    wrt("FSDE 2")
+                    wrt("")
+                }else{
+                    wrt("FSDE 0")
+                    wrt("")
+                }
+                if ( weighting$RSDE==2){
+                    wrt("NOTE   Turn on sandwich estimators for the random part parameter standard errors")
+                    wrt("RSDE 2")
+                    wrt("")
+                }else{
+                    wrt("RSDE 0")
+                    wrt("")
+                }
+            }else{
+                wrt("NOTE   Create the equal weights")
+                wrt("WEIG")
+                wrt("WEIG   0")
+                wrt("")
+            }
+        }else{
+            stop("The length of levels does not match with the length of weights.")
+        }
+    }
     if (D[1]=="Normal"){
         wrt("PREF   0")
         wrt("POST   0")

@@ -59,8 +59,8 @@ estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
 mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-aa=cbind(mymodel1$FP,mymodel2$FP,mymodel3$FP)
-bb=cbind(mymodel1$RP,mymodel2$RP,mymodel3$RP)
+aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
+bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
 ctable=round(rbind(aa,bb),3)
 colnames(ctable)=c("IGLS","Gibbs1", "Gibbs2")
 print(ctable)
@@ -74,7 +74,7 @@ prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
 mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-sixway(mymodel4$chains[,"FP_standlrt"],"beta_1")
+sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
 prior=list(fixe=list(standlrt=c(1,.1)))
@@ -82,7 +82,7 @@ prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
 mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-sixway(mymodel5$chains[,"FP_standlrt"],"beta_1")
+sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
 
@@ -92,7 +92,7 @@ prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
 mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-sixway(mymodel5$chains[,"RP2_var_cons"],"sigma^2_u0")
+sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
 
@@ -117,8 +117,8 @@ mymodel10=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlw
 estoptions= list(EstM=1,mcmcMeth=list(seed=4))
 mymodel11=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-aa=cbind(mymodel8$FP,mymodel9$FP,mymodel10$FP,mymodel11$FP)
-bb=cbind(mymodel8$RP,mymodel9$RP,mymodel10$RP,mymodel11$RP)
+aa=cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
+bb=cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])
 ctable=round(rbind(aa,bb),3)
 colnames(ctable)=c("Seed1","Seed2", "Seed3","Seed4")
 print(ctable)

@@ -71,7 +71,7 @@ mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
-sixway(mymodel$chains[["RP2_var_cons"]],"sigma2u0")
+sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u0")
 
 set.seed(1)
 indata[["temp"]]=double2singlePrecision(rnorm(4059))
@@ -92,8 +92,8 @@ mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-summary(mymodel$chains[["RP2_var_cons"]])
-sixway(mymodel$chains[["RP2_var_cons"]],"sigma2u0")
+summary(mymodel["chains"][["RP2_var_cons"]])
+sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .355
 

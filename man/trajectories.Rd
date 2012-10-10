@@ -50,6 +50,6 @@ ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
 
-trajectories(mymodel$chains,Range=c(4501,5000))
+trajectories(mymodel["chains"],Range=c(4501,5000))
 }
 }
