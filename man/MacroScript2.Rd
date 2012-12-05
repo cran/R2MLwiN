@@ -32,6 +32,7 @@ chainfile = chainfile,
 esamplefile = esamplefile,
 resifile = resifile,
 resi.store = resi.store,
+resioptions=resioptions,
 resichains = resichains,
 FACTchainfile = FACTchainfile,
 resi.store.levs = resi.store.levs,
@@ -186,6 +187,10 @@ A file name where the residual estimates will be saved. The default location is 
 }
   \item{resi.store}{
 A logical value to indicate if residuals are to be stored (\code{TRUE}) or not (\code{FALSE}).
+}
+   \item{resioptions}{
+A string vector to specify the various residual options. The \code{"variances"} option calculates the posterior variances instead of the posterior standard errors; the \code{"standardised"}, \code{"leverage"}, \code{"influence"} and \code{"deletion"} options calculate standardised, leverage, influence and deletion residuals respectively; the \code{"sampling"} option calculates the sampling variance covariance matrix for the residuals; the \code{"norecode"} option prevents residuals with values exceedingly close or
+equal to zero from being recoded to missing; the reflate option returns unshrunken residuals. Note that the default option is resioptions=c("variance","sampling"); "variance" cannot be used together with the other options to calculate standardised, leverage, influence and deletion residuals.
 }
 \item{resichains}{
 A file name where the residual chains will be saved. The default location is in the temporary folder.

@@ -28,14 +28,14 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 }
 
 \seealso{
-\cite{\link{read.dta}}
+\cite{\link[foreign]{read.dta}}
 }
 \examples{
 \dontrun{
 ## Modify the following paths as appropriate.
 ## MLwiN folder
 mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
-## MLwiN sample worksheet folder 
+## MLwiN sample worksheet folder
 wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")

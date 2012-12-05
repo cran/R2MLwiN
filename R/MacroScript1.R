@@ -1,6 +1,6 @@
 MacroScript1 <-
 function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1,
-BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode){
+BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode){
 
     nlev=length(levID)
 
@@ -1116,31 +1116,282 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
     wrt("EDIT 9 c1300 b1")
     wrt(paste("PSTA '",IGLSfile, "' ","'_FP_b' ","'_FP_v' ", "'_RP_b' ", "'_RP_v' ", "'_Stats'",sep=""))
 
+
+    calcresiduals = function(level, rpx, resioptions, tempcell =998, mcmc=T, clre=clre){
+
+        wrt("")
+        if (!("norecode"%in%resioptions)){
+            wrt("MISR 0")
+        }
+
+        tempcell = tempcell
+        len.rpx = length(rpx)
+
+        residual_estimates=NULL
+        for (k in 1:len.rpx){
+            tr=paste("c",tempcell,sep="")
+            residual_estimates = c(residual_estimates,tr)
+            wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_est_",rpx[k],"'",sep="")))
+            wrt(paste("DESC ",tr, paste("'residual estimates'",sep="")))
+            tempcell =1 +tempcell
+        }
+
+        if ("variance" %in% resioptions){
+            residual_var=NULL
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                residual_var = c(residual_var,tr)
+                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_variance_",rpx[k],"'",sep="")))
+                wrt(paste("DESC ",tr, paste("'residual variance'",sep="")))
+                tempcell =1 +tempcell
+            }
+        }else{
+            residual_se=NULL
+            for (k in 1:len.rpx){
+                        tr=paste("c",tempcell,sep="")
+                        residual_se = c(residual_se,tr)
+                        wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_se_",rpx[k],"'",sep="")))
+                        wrt(paste("DESC ",tr, paste("'residual standard error'",sep="")))
+                        tempcell =1 +tempcell
+            }
+
+        }
+        wrt("RFUN")
+        if ("variance" %in% resioptions){
+            wrt(paste(c("ROUT ", residual_estimates,residual_var), collapse=" "))
+        }else{
+            wrt(paste(c("ROUT ", residual_estimates, residual_se), collapse=" "))
+        }
+        wrt("")
+
+        wrt(paste("RLEV   ",level,sep=""))
+        wrt("RCOV   1")
+
+        if ("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions){
+            std_residual_estimates=NULL
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                std_residual_estimates=c(std_residual_estimates,tr)
+                wrt(paste("NAME ",tr, paste("'lev_",level,"_std_resi_est_",rpx[k],"'",sep="")))
+                wrt(paste("DESC ",tr, paste("'std standardised residual'",sep="")))
+                tempcell =1 +tempcell
+            }
+
+            wrt("RTYP   0")
+            if (mcmc){
+                wrt("MCRE")
+            }else{
+                wrt("RESI")
+            }
+            ccount =1
+            if (!("variance" %in% resioptions)){
+                for (cc in std_residual_estimates){
+                    wrt(paste("CALC ", cc, "=",residual_estimates[ccount],"/sqrt(", residual_se[ccount],")",sep=""))
+                    ccount =1 +ccount
+                }
+            }
+
+        }
+
+        #NOTE leverage depends on residuals with rtype 0
+        if ("leverage"%in%resioptions||"influence"%in%resioptions){
+            #influence requires leverage to be calculated
+            residual_leverage=NULL
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                residual_leverage = c(residual_leverage,tr)
+                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_leverage_",rpx[k],"'",sep="")))
+                wrt(paste("DESC ",tr, paste("'leverage residual'",sep="")))
+                tempcell =1 +tempcell
+            }
+
+            ccount =1
+            for (cc in residual_leverage){
+                resi_sdx = residual_se[ccount]
+                wrt(paste("OMEGa ",level,rpx[ccount], paste("c",tempcell,sep="")))# retrieve variance for corresponding random parameter
+                wrt(paste("PICK 1 ",paste("c",tempcell,sep=""), "b50"))
+                wrt(paste("ERASe ",paste("c",tempcell,sep="")))
+                wrt(paste("CALC ", cc, "=1-sqrt(",resi_sdx,")/sqrt(b50)"))
+                ccount =1 +ccount
+            }
+
+            if (!("standardised"%in%resioptions)&&!("deletion"%in%resioptions)){
+                wrt(paste(c("ERASe ",std_residual_estimates),collapse=" "))
+            }
+
+
+        }
+
+        wrt("RTYP   1")# Compute comparative variances
+        if (mcmc){
+            wrt("MCRE")
+        }else{
+            wrt("RESI")
+        }
+
+        if (!("variance"%in%resioptions)){
+            for (cc in residual_se){
+                wrt(paste("CALC ",cc, "=sqrt(",cc,")",sep=""))# Convert the variances to standard errors
+            }
+        }
+
+        if ("deletion"%in%resioptions||"influence"%in%resioptions){
+            residual_deletion=NULL
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                residual_deletion = c(residual_deletion,tr)
+                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_deletion_",rpx[k],"'",sep="")))
+                wrt(paste("DESC ",tr, paste("'deletion residual'",sep="")))
+                tempcell =1 +tempcell
+            }
+
+
+            wrt(paste("NOBS ",level,"b31 b32"))
+            ccount =1
+            for (cc in residual_deletion){
+                stdres =std_residual_estimates[ccount]
+                wrt(paste("CALC   ", cc, "=", stdres,"/ sqrt((b31 - 1 -", stdres,"^2)/(b31 - 2))",sep=""))
+                ccount = 1+ ccount
+            }
+
+            if (!("standardised"%in%resioptions)&&!("leverage"%in%resioptions)){
+                wrt(paste(c("ERASe ",std_residual_estimates),collapse=" "))
+            }
+        }
+
+        if ("influence"%in%resioptions){
+            residual_influence = NULL
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                residual_influence = c(residual_influence,tr)
+                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_influence_",rpx[k],"'",sep="")))
+                wrt(paste("DESC ",tr, paste("'influence residual'",sep="")))
+                tempcell =1 +tempcell
+            }
+
+            ccount =1
+            for (cc in residual_influence){
+                res_del=residual_deletion[ccount]
+                res_lev=residual_leverage[ccount]
+                wrt(paste("SUM    ", res_lev, " b50",sep=""))
+                wrt(paste("CALC   ", cc, "=",res_lev,"/b50",sep=""))
+                wrt(paste("CALC   ", cc, "=sqrt(",cc,"/(1-",cc,"))*abso(",res_del,")",sep=""))
+                ccount =ccount+1
+            }
+
+            if (!("deletion"%in%resioptions)){
+                wrt(paste(c("ERASE  ", residual_deletion),collapse=" "))
+            }
+            if(!("leverage"%in%resioptions)){
+                wrt(paste(c("ERASE  ", residual_leverage),collapse=" "))
+            }
+        }
+
+        if ("sampling"%in%resioptions){
+            varcols = NULL
+            numcombs = 0
+            k=1
+            for (i in 1:len.rpx){
+                for (j in 1:i){
+                    tempflag =1
+                    if (i==j){
+                        ## removel some variance residuals
+                        if (!is.null(clre)){
+                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[i]==clre[3,k])){
+                                tr=paste("c",tempcell,sep="")
+                                varcols = c(varcols,tr)
+                                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_var_",rpx[i],"'",sep="")))
+                                wrt(paste("DESC ",tr, paste("'sampling variance'",sep="")))
+                            }else{
+                                tempflag =0
+                                k = k+1
+                            }
+                        }else{
+                            tr=paste("c",tempcell,sep="")
+                            varcols = c(varcols,tr)
+                            wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_var_",rpx[i],"'",sep="")))
+                            wrt(paste("DESC ",tr, paste("'sampling variance'",sep="")))
+                        }
+                    }else{
+                        if (!is.null(clre)){
+                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])){
+                                tr=paste("c",tempcell,sep="")
+                                varcols = c(varcols,tr)
+                                wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_cov_",rpx[i],"_",rpx[j],"'",sep="")))
+                                wrt(paste("DESC ",tr, paste("'sampling covariance'",sep="")))
+                            }else{
+                                tempflag =0
+                                k=k+1
+                            }
+                        }else{
+                            tr=paste("c",tempcell,sep="")
+                            varcols = c(varcols,tr)
+                            wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_cov_",rpx[i],"_",rpx[j],"'",sep="")))
+                            wrt(paste("DESC ",tr, paste("'sampling covariance'",sep="")))
+                        }
+                    }
+                    if (tempflag ==1){
+                        tempcell =1 +tempcell
+                        numcombs =1 +numcombs
+                    }
+                }
+            }
+
+            std_residual_sampling = NULL
+            ii=1
+            for (k in 1:len.rpx){
+                tr=paste("c",tempcell,sep="")
+                std_residual_sampling = c(std_residual_sampling,tr)
+                tempcell =1 +tempcell
+            }
+
+            tempcol1 = paste("c",tempcell+1,sep="")
+            tempcol4 = paste("c",tempcell,sep="")
+            wrt(paste("NAME ",tempcol4, paste("'lev_",level,"_resi_cov'",sep="")))
+            wrt(paste("DESC ",tempcol4, paste("'sampling var(cov)'",sep="")))
+            tempcell=tempcell+1
+
+            wrt("RFUN")
+            wrt(paste(c("ROUT   ",std_residual_sampling, tempcol4), collapse=" "))
+            wrt("RCOV 2")
+            wrt("RESI")
+            wrt("")
+
+            #NOTE: This is square rooted, as the residual covariances are sometimes negative
+            wrt(paste("NOBS ",level, " b31 b32",sep=""))
+            wrt(paste("CODE ",numcombs, " 1 b31 ", tempcol1,sep=""))
+            wrt(paste(c("SPLIt ",tempcol4, tempcol1, varcols), collapse=" "))
+            wrt(paste(c("ERAS ",tempcol1, tempcol4), collapse=" "))
+            wrt(paste(c("ERAS ", std_residual_sampling), collapse=" "))
+        }
+
+        wrt("")
+        wrt(paste("NOBS ", level, " b30 b31",sep=""))
+        wrt(paste("GENE 1 b30 1",paste("c",tempcell,sep="")))
+        wrt(paste("NAME ",paste("c",tempcell,sep=""), " 'lev_",level,"_residualid'",sep=""))
+        if (!("norecode"%in%resioptions)){
+            wrt("MISR 1")
+        }
+        wrt("")
+        tempcell
+
+    }
+
+
     if (resi.store&& nrp>0){
-        tempcell=998
-        tr.all=NULL
         for (j in nrp:1){
             rpx=rp[[j]]
             len.rpx=length(rp[[j]])
-            wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
+            wrt(paste("NOTE Calculate level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
             levtt=as.numeric(sub("rp","",rp.names[j]))
-            wrt(paste("RLEV   ",levtt,sep=""))
-            wrt("RFUN")
-            wrt("RCOV   2")
-            tempcol=(tempcell+len.rpx):tempcell
-            tr=paste("c",tempcol,sep="")
-            for (k in 1:len.rpx){
-                wrt(paste("NAME ",tr[k],paste("'lev_",levtt,"_resi_est_",rpx[k],"'",sep="")))
+            if (j==nrp){
+                tempcell=calcresiduals(levtt, rpx, resioptions, tempcell =998, mcmc=F, clre=clre)
+            }else{
+                tempcell=calcresiduals(levtt, rpx, resioptions, tempcell =tempcell+1, mcmc=F, clre=clre)
             }
-            wrt(paste("NAME ",tr[len.rpx+1],paste("'lev_",levtt,"_resi_cov","'",sep="")))
-            wrt(paste("ROUT ", paste(tr,collapse=" ")))
-            wrt("MISR   0")
-            wrt("RESI")
-            wrt("MISR   1")
-            tr.all=c(tr.all,tr)
-            tempcell=tempcell+len.rpx+1
         }
-        wrt(paste("PSTA '",resifile, "' ", paste(tr.all,collapse=" "),sep=""))
+        wrt(paste("PSTA '",resifile, "' c998-",paste("c",tempcell,sep=""),sep=""))
+        wrt(paste("ERAS c988-",paste("c",tempcell,sep=""),sep=""))
     }
 
     FP=NULL

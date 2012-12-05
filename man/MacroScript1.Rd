@@ -21,7 +21,7 @@ bugofile = bugofile, modelfile = modelfile,
 initfile = initfile, datafile = datafile,
 macrofile = macrofile, IGLSfile = IGLSfile,
 resifile = resifile, resi.store = resi.store,
-debugmode = debugmode)
+resioptions = resioptions, debugmode = debugmode)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -99,6 +99,10 @@ A file name where the residuals will be saved. The default location is in the te
 }
   \item{resi.store}{
 A logical value to indicate if the residuals are to be stored (\code{TRUE}) or not (\code{FALSE}).
+}
+   \item{resioptions}{
+A string vector to specify the various residual options. The \code{"variances"} option calculates the posterior variances instead of the posterior standard errors; the \code{"standardised"}, \code{"leverage"}, \code{"influence"} and \code{"deletion"} options calculate standardised, leverage, influence and deletion residuals respectively; the \code{"sampling"} option calculates the sampling variance covariance matrix for the residuals; the \code{"norecode"} option prevents residuals with values exceedingly close or
+equal to zero from being recoded to missing; the reflate option returns unshrunken residuals. Note that the default option is resioptions=c("variance","sampling"); "variance" cannot be used together with the other options to calculate standardised, leverage, influence and deletion residuals.
 }
   \item{debugmode}{
 A logical value determining whether MLwiN is run in the background or not. The default value is \code{FALSE}: i.e. MLwiN is run in the background. If \code{TRUE} MLwiN remains open after the model has run, allowing the user to interact with MLwiN directly (but note that output will not be returned to R until MLwiN is closed).

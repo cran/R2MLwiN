@@ -45,6 +45,10 @@ A path to the folder where the output files are to be saved. If the folder speci
 \value{
 The argument \code{estoptions} is a list which can contain the following options used for estimating the model:
 \item{resi.store}{A logical value indicating whether residuals are to be stored or not.}
+\item{resioptions}{
+A string vector to specify the various residual options. The \code{"variances"} option calculates the posterior variances instead of the posterior standard errors; the \code{"standardised"}, \code{"leverage"}, \code{"influence"} and \code{"deletion"} options calculate standardised, leverage, influence and deletion residuals respectively; the \code{"sampling"} option calculates the sampling variance covariance matrix for the residuals; the \code{"norecode"} option prevents residuals with values exceedingly close or
+equal to zero from being recoded to missing; the reflate option returns unshrunken residuals. Note that the default option is resioptions=c("variance","sampling"); "variance" cannot be used together with the other options to calculate standardised, leverage, influence and deletion residuals.
+}
 \item{resi.store.levs}{An integer vector indicating the levels at which the residual chains are to be stored.}
 \item{debugmode}{A logical value determining whether MLwiN is run in the background or not. The default value is \code{FALSE}: i.e., MLwiN is run in the background. If \code{TRUE} MLwiN remains open after the model has run, and must be closed for the output to be returned to R. This option currently works for the 32bit MLwiN only.}
 \item{x64}{

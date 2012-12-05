@@ -17,6 +17,11 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     resi.store=estoptions$resi.store
     if (is.null(resi.store)) resi.store=F
 
+    resioptions=estoptions$resioptions
+    if (is.null(resioptions)) resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")
+    if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
+        stop("variance will not be calculated together with standardiased or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
+    }
     resi.store.levs=estoptions$resi.store.levs
 
     weighting = estoptions$weighting
@@ -165,7 +170,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     }
     if (EstM==0){
         MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
-        BUGO,mem.init, weighting, bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,debugmode=debugmode)
+        BUGO,mem.init, weighting, bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
         iterations=estoptions$mcmcMeth$iterations
         if(is.null(iterations)) iterations=5000
         burnin=estoptions$mcmcMeth$burnin
@@ -403,7 +408,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 
         MacroScript2(indata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,
         nopause,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-        chainfile=chainfile,esamplefile=esamplefile,resifile=resifile,resi.store=resi.store,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
+        chainfile=chainfile,esamplefile=esamplefile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
         WD <- getwd()
         if (x64){
             MLwiNPath1=paste(MLwiNPath,'/x64/',sep='')
@@ -700,7 +705,14 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }
 
         if (resi.store){
-            outIGLS["residual"]=read.dta(resifile)
+            resiraw=read.dta(resifile)
+            residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
+            if(length(residelpos)==0){
+                outIGLS["residual"]=resiraw
+            }else{
+                resisavename=names(resiraw)[-residelpos]
+                outIGLS["residual"]=resiraw[resisavename]
+            }
         }
 
     }
@@ -747,7 +759,14 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }
 
         if (resi.store){
-            outMCMC["residual"]=read.dta(resifile)
+            resiraw=read.dta(resifile)
+            residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
+            if(length(residelpos)==0){
+                outMCMC["residual"]=resiraw
+            }else{
+                resisavename=names(resiraw)[-residelpos]
+                outMCMC["residual"]=resiraw[resisavename]
+            }
         }
 
 

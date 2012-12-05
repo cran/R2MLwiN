@@ -57,7 +57,7 @@ library(foreign);indata =read.dta(inputfile)
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
 
 ## Caterpillar plot
-caterpillarR(mymodel["resi"], lev=2)
+caterpillarR(mymodel["residual"], lev=2)
 }
 }
 

@@ -36,7 +36,7 @@ A variety of plots and statistics are displayed in an R graphic window, includin
 \item{autocorrelation function}{the function \code{\link{acf}} is used to compute and plot estimates of the autocorrelation function;}
 \item{partial autocorrelation function}{the function \code{\link{pacf}} computes and plots estimates of the partial autocorrelation function;}
 \item{Monte Carlo standard error}{the estimated Monte Carlo standard error (\code{MCSE}) of the posterior estimate of the mean is plotted against the number of iterations;}
-\item{accuracy diagnostics}{the box contains two contrasting accuracy diagnostics. The Raftery-Lewis diagnostic (\code{\link{raftery.diag}}) is a diagnostic based on a particular quantile of the distribution. The diagnostic Nhat is used to estimate the length of Markov chain required to estimate a particular quantile (e.g. the 2.5\% and 97.5\% quantiles) to a given accuracy. The Brooks-Draper diagnostic (\code{BD}) is a diagnostic based on the mean of the distribution; it is used to estimate the length of Markov chain required to produce a mean estimate to k(=2) significant figures with a given accuracy;}
+\item{accuracy diagnostics}{the box contains two contrasting accuracy diagnostics. The Raftery-Lewis diagnostic (\code{\link[coda]{raftery.diag}}) is a diagnostic based on a particular quantile of the distribution. The diagnostic Nhat is used to estimate the length of Markov chain required to estimate a particular quantile (e.g. the 2.5\% and 97.5\% quantiles) to a given accuracy. The Brooks-Draper diagnostic (\code{BD}) is a diagnostic based on the mean of the distribution; it is used to estimate the length of Markov chain required to produce a mean estimate to k(=2) significant figures with a given accuracy;}
 \item{summary statistics}{this box provides summary statistics including the posterior mean, sd, mode, quantiles and the effective sample size (ESS) of the chain.}
 }
 
@@ -45,7 +45,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 }
 
 \seealso{
-\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link{raftery.diag}},\code{\link{effectiveSize}}
+\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}
 }
 \examples{
 \dontrun{

@@ -1,13 +1,13 @@
 Package: R2MLwiN
-Version: 0.1-1
-Date: 2012-10-10
+Version: 0.1-2
+Date: 2012-12-05
 Title: Running MLwiN from within R
 Author: Zhengzheng Zhang, Chris Charlton, Richard Parker, George
         Leckie, William Browne
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email
         = "zhengzheng236@gmail.com"), person("Chris", "Charlton", role
-        = "aut"), person("Richard", "Parker", role = "aut"),
+        ="aut"), person("Richard", "Parker", role = "aut"),
         person("George", "Leckie", role = "aut"), person("William",
         "Browne", role = "aut"))
 Depends: R (>= 2.13.0), methods, coda (>= 0.13-2), foreign (>= 0.8-41),
@@ -21,6 +21,6 @@ License: GPL (>= 2)
 URL: http://www.r-project.org,
         http://www.bristol.ac.uk/cmm/software/mlwin/
 SystemRequirements: MLwiN, (WinBUGs, OpenBUGs optional)
-Packaged: 2012-11-01 15:03:40 UTC; edzzz
+Packaged: 2012-12-06 11:52:51 UTC; edzzz
 Repository: CRAN
-Date/Publication: 2012-11-01 15:17:21
+Date/Publication: 2012-12-06 15:53:20
