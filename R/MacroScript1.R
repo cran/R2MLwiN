@@ -151,7 +151,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -170,7 +171,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -235,7 +237,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -254,7 +257,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -293,7 +297,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -320,7 +325,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -350,7 +356,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -369,7 +376,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -415,7 +423,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -434,7 +443,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -473,7 +483,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -500,7 +511,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -530,7 +542,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -549,7 +562,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -605,7 +619,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -624,7 +639,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -663,7 +679,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                              if(is.na(categ["ref",which(p==categ["var",])])){
                                  wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                              }else{
-                                 wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                              }
                          }else{
                              wrt(paste("ADDT    '",p,"'",sep=""))
@@ -690,7 +707,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -720,7 +738,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -739,7 +758,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -780,7 +800,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -799,7 +820,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -844,7 +866,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -863,7 +886,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -911,7 +935,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                          if(is.na(categ["ref",which(p==categ["var",])])){
                              wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                          }else{
-                             wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                          }
                      }else{
                          wrt(paste("ADDT    '",p,"'",sep=""))
@@ -930,7 +955,8 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))

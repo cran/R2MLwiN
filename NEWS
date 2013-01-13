@@ -1,3 +1,10 @@
+Tue Jan 15 2013
+1. Bugs fixing by Thomas Arkens
+   * add multiple categorical variables in the fixed terms.
+   * fix the reference categories (by changing to the level number of the factor object in R.)
+2. Changes
+   * in sixway(), replace getOption("device")() by windows(), so the package works in Rstudio.
+
 Thu Nov 15 2012
 1. New features
    * add various options for calculating residuals at all levels.   

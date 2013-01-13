@@ -6,7 +6,9 @@ if (thinning>1) {
     chain=chain[thinning*(1:N)]
 }
 if (is.null(name)) name="x"
-getOption( "device" )()
+#getOption( "device" )()
+#dev.new()
+windows()
 mypar <- par(mar = c(4, 4, 2, 1)/2,mgp=c(1,.25,0))
 on.exit(par(mypar))
 split.screen( figs = c( 4, 1 ) )

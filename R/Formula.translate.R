@@ -214,12 +214,15 @@ function(Formula,levID, D='Normal',indata){
         nleft=length(left)
 
         categ=NULL
-        categstr=unique(unlist(regmatches(left,gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",left))))
-        Rversion=R.Version()
-        if ((as.numeric(Rversion$major)>=2)&&(as.numeric(Rversion$minor)>=14.0)){
-            regmatches(left,gregexpr("(\\[+\\]|\\[+[[:print:]]+\\])",left))<-""
-        }else{
-            left=gsub("(\\[+\\]|\\[+[[:print:]]+\\])","",left)
+    	leftsplit <- strsplit(left, "(\\+)|(\\|)")
+	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
+
+        Rversion = R.Version()
+        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
+        }
+        else {
+            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
         }
         ncategstr=length(categstr)
         if (ncategstr>0){
@@ -656,12 +659,15 @@ function(Formula,levID, D='Normal',indata){
         nleft=length(left)
 
         categ=NULL
-        categstr=unique(unlist(regmatches(left,gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",left))))
-        Rversion=R.Version()
-        if ((as.numeric(Rversion$major)>=2)&&(as.numeric(Rversion$minor)>=14.0)){
-            regmatches(left,gregexpr("(\\[+\\]|\\[+[[:print:]]+\\])",left))<-""
-        }else{
-            left=gsub("(\\[+\\]|\\[+[[:print:]]+\\])","",left)
+    	leftsplit <- strsplit(left, "(\\+)|(\\|)")
+	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
+
+        Rversion = R.Version()
+        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
+        }
+        else {
+            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
         }
         ncategstr=length(categstr)
         if (ncategstr>0){
@@ -772,12 +778,14 @@ function(Formula,levID, D='Normal',indata){
         nleft=length(left)
 
         categ=NULL
-        categstr=unique(unlist(regmatches(left,gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",left))))
-        Rversion=R.Version()
-        if ((as.numeric(Rversion$major)>=2)&&(as.numeric(Rversion$minor)>=14.0)){
-            regmatches(left,gregexpr("(\\[+\\]|\\[+[[:print:]]+\\])",left))<-""
-        }else{
-            left=gsub("(\\[+\\]|\\[+[[:print:]]+\\])","",left)
+    	leftsplit <- strsplit(left, "(\\+)|(\\|)")
+	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
+        Rversion = R.Version()
+        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
+        }
+        else {
+            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
         }
         ncategstr=length(categstr)
         if (ncategstr>0){
@@ -872,12 +880,14 @@ function(Formula,levID, D='Normal',indata){
         nleft=length(left)
 
         categ=NULL
-        categstr=unique(unlist(regmatches(left,gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])",left))))
-        Rversion=R.Version()
-        if ((as.numeric(Rversion$major)>=2)&&(as.numeric(Rversion$minor)>=14.0)){
-            regmatches(left,gregexpr("(\\[+\\]|\\[+[[:print:]]+\\])",left))<-""
-        }else{
-            left=gsub("(\\[+\\]|\\[+[[:print:]]+\\])","",left)
+    	leftsplit <- strsplit(left, "(\\+)|(\\|)")
+	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
+        Rversion = R.Version()
+        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
+        }
+        else {
+            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
         }
         ncategstr=length(categstr)
         if (ncategstr>0){

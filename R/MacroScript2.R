@@ -154,7 +154,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -173,7 +174,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -238,7 +240,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -257,7 +260,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -296,7 +300,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -323,7 +328,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -353,7 +359,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -372,7 +379,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -418,7 +426,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -437,7 +446,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -476,7 +486,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -503,7 +514,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -533,7 +545,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -552,7 +565,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -608,7 +622,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -627,7 +642,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -666,7 +682,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                              if(is.na(categ["ref",which(p==categ["var",])])){
                                  wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                              }else{
-                                 wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                 wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                 #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                              }
                          }else{
                              wrt(paste("ADDT    '",p,"'",sep=""))
@@ -693,7 +710,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -723,7 +741,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 if(is.na(categ["ref",which(p==categ["var",])])){
                                     wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                 }else{
-                                    wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                    wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                    #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                 }
                             }else{
                                 wrt(paste("ADDT    '",p,"'",sep=""))
@@ -742,7 +761,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                     if(is.na(categ["ref",which(p==categ["var",])])){
                                         wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                                     }else{
-                                        wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                        wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                        #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                                     }
                                 }else{
                                     wrt(paste("ADDT    '",p,"'",sep=""))
@@ -783,7 +803,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -802,7 +823,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -848,7 +870,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         if(is.na(categ["ref",which(p==categ["var",])])){
                             wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                         }else{
-                            wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                            wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                            #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                         }
                     }else{
                         wrt(paste("ADDT    '",p,"'",sep=""))
@@ -867,7 +890,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
@@ -915,7 +939,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                          if(is.na(categ["ref",which(p==categ["var",])])){
                              wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                          }else{
-                             wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                             wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                             #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                          }
                      }else{
                          wrt(paste("ADDT    '",p,"'",sep=""))
@@ -934,7 +959,8 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                             if(is.na(categ["ref",which(p==categ["var",])])){
                                 wrt(paste("ADDT    '",p,"' ", -10000000,sep=""))
                             }else{
-                                wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
+                                wrt(paste("ADDT    '", p, "' ", which(levels(indata[,p])==categ["ref", which(p == categ["var", ])]), sep = ""))
+                                #wrt(paste("ADDT    '",p,"' '", categ["ref",which(p==categ["var",])],"'",sep=""))
                             }
                         }else{
                             wrt(paste("ADDT    '",p,"'",sep=""))
