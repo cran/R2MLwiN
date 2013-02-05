@@ -1,6 +1,6 @@
 Package: R2MLwiN
-Version: 0.1-3
-Date: 2013-01-13
+Version: 0.1-4
+Date: 2013-02-05
 Title: Running MLwiN from within R
 Author: Zhengzheng Zhang, Chris Charlton, Richard Parker, George
         Leckie, William Browne
@@ -22,6 +22,6 @@ License: GPL (>= 2)
 URL: http://www.r-project.org,
         http://www.bristol.ac.uk/cmm/software/mlwin/
 SystemRequirements: MLwiN, (WinBUGs, OpenBUGs optional)
-Packaged: 2013-01-15 22:52:31 UTC; Zhengzheng
+Packaged: 2013-02-05 10:23:06 UTC; zhengzheng
 Repository: CRAN
-Date/Publication: 2013-01-16 08:12:15
+Date/Publication: 2013-02-05 11:30:19

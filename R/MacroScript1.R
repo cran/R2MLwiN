@@ -1330,7 +1330,7 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                                 wrt(paste("DESC ",tr, paste("'sampling variance'",sep="")))
                             }else{
                                 tempflag =0
-                                k = k+1
+                                if (k<ncol(clre)) k = k+1
                             }
                         }else{
                             tr=paste("c",tempcell,sep="")
@@ -1340,14 +1340,15 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
                         }
                     }else{
                         if (!is.null(clre)){
-                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])){
+                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])||
+                            !(level==as.numeric(clre[1,k])&&rpx[j]==clre[2,k]&&rpx[i]==clre[3,k])){
                                 tr=paste("c",tempcell,sep="")
                                 varcols = c(varcols,tr)
                                 wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_cov_",rpx[i],"_",rpx[j],"'",sep="")))
                                 wrt(paste("DESC ",tr, paste("'sampling covariance'",sep="")))
                             }else{
                                 tempflag =0
-                                k=k+1
+                                if (k<ncol(clre)) k=k+1
                             }
                         }else{
                             tr=paste("c",tempcell,sep="")
@@ -1683,13 +1684,14 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
             for (i in 1:j){
                 if (i==j){
                     if (resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[i]==clre[3,k]){
-                        k=k+1
+                        if (k<ncol(clre)) k=k+1
                     }else{
                         RP=c(RP, paste("RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),sep=""))
                     }
                 }else{
-                    if (resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k]){
-                        k=k+1
+                    if ((resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])||
+                    (resid.lev==as.numeric(clre[1,k])&&rpx[j]==clre[2,k]&&rpx[i]==clre[3,k])){
+                        if (k<ncol(clre)) k=k+1
                     }else{
                         RP=c(RP, paste("RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),sep=""))
                     }

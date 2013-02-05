@@ -1,3 +1,7 @@
+Mon Feb 04 2013
+1. Bugs fixing
+   * an issue on dropping a covariance from a model  
+
 Tue Jan 15 2013
 1. Bugs fixing by Thomas Arkens
    * add multiple categorical variables in the fixed terms.

@@ -1748,15 +1748,16 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             for (i in 1:j){
                 if (i==j){
                     if (resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[i]==clre[3,k]){
-                        k=k+1
+                        if (k<ncol(clre)) k=k+1
                     }else{
                         wrt(paste("NAME c",cellnum," 'RP",resid.lev,"_var_",chartr(".", "_", rpx[i]),"'",sep=""))
                         wrt(paste("DESC c",cellnum," 'RP",resid.lev,":var(",chartr(".", "_", rpx[i]),")'",sep=""))
                         cellnum=cellnum+1
                     }
                 }else{
-                    if (resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k]){
-                        k=k+1
+                    if ((resid.lev==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])||
+                    (resid.lev==as.numeric(clre[1,k])&&rpx[j]==clre[2,k]&&rpx[i]==clre[3,k])){
+                        if (k<ncol(clre)) k=k+1
                     }else{
                         wrt(paste("NAME c",cellnum," 'RP",resid.lev,"_cov_",chartr(".", "_", rpx[i]),"_",chartr(".", "_", rpx[j]),"'",sep=""))
                         wrt(paste("DESC c",cellnum," 'RP",resid.lev,":cov(",chartr(".", "_", rpx[i]),",",chartr(".", "_", rpx[j]),")'",sep=""))
@@ -1856,7 +1857,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     wrt(paste("DESC ",tr, paste("'residual estimates'",sep="")))
                     tempcell =1 +tempcell
                 }else{
-                    ii = ii+1
+                    if (ii<ncol(clre)) ii = ii+1
                 }
             }else{
                 tr=paste("c",tempcell,sep="")
@@ -1879,7 +1880,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'residual variance'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -1902,7 +1903,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'residual standard error'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -1937,7 +1938,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'std standardised residual'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -1978,7 +1979,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'leverage residual'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -2031,7 +2032,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'deletion residual'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -2068,7 +2069,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("DESC ",tr, paste("'influence residual'",sep="")))
                         tempcell =1 +tempcell
                     }else{
-                        ii = ii+1
+                        if (ii<ncol(clre)) ii = ii+1
                     }
                 }else{
                     tr=paste("c",tempcell,sep="")
@@ -2114,7 +2115,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                                 wrt(paste("DESC ",tr, paste("'sampling variance'",sep="")))
                             }else{
                                 tempflag =0
-                                k = k+1
+                                if (k<ncol(clre)) k = k+1
                             }
                         }else{
                             tr=paste("c",tempcell,sep="")
@@ -2124,14 +2125,15 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                     }else{
                         if (!is.null(clre)){
-                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])){
+                            if (!(level==as.numeric(clre[1,k])&&rpx[i]==clre[2,k]&&rpx[j]==clre[3,k])||
+                    !(level==as.numeric(clre[1,k])&&rpx[j]==clre[2,k]&&rpx[i]==clre[3,k])){
                                 tr=paste("c",tempcell,sep="")
                                 varcols = c(varcols,tr)
                                 wrt(paste("NAME ",tr, paste("'lev_",level,"_resi_cov_",rpx[i],"_",rpx[j],"'",sep="")))
                                 wrt(paste("DESC ",tr, paste("'sampling covariance'",sep="")))
                             }else{
                                 tempflag =0
-                                k=k+1
+                                if (k<ncol(clre)) k=k+1
                             }
                         }else{
                             tr=paste("c",tempcell,sep="")
