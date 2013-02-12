@@ -1,11 +1,11 @@
-1bb067cec81b16a1eb21633034a184b6 *DESCRIPTION
+c6203376a9695694216717b6070ebacd *DESCRIPTION
 5949be60ce74ebc1e7448165274ddb38 *NAMESPACE
-85b0797de44a3ea5d0333a4baa67521e *NEWS
+7926d80b370915c166e2ea8b73ef5448 *NEWS
 5aa1a96d7ff6c0f8282b517c04855be8 *R/BD.R
 65a2dcf0572a585cb83c2113ad0b1e41 *R/Formula.translate.R
 2b2d4b8f832493f8d05959993cc5d25b *R/MCSE.R
 b00cda07e7b08537af86e37f6066d666 *R/MacroScript1.R
-38d5f34f088d38fb1f45e91d5c0bb3cb *R/MacroScript2.R
+f4e85b4e1c08a2d5e130560bf97b5ec6 *R/MacroScript2.R
 cd8507835e224410fb15154083c8a1e1 *R/Untoggle.R
 d6975a7fb1827e730f34fe2b16fe3ce3 *R/caterpillar.R
 911b053ff64ab80f3f0d071fcd805b6d *R/caterpillarR.R
@@ -50,7 +50,7 @@ aaa4f5422cf3a690ef97e0e65c4e760e *demo/Chapter22.R
 4e77344e124e90353d9b6d472322d420 *man/Formula.translate.Rd
 648e22174d384e528240d38a76113d9e *man/MacroScript1.Rd
 c2143997bda974db1ad676763c359579 *man/MacroScript2.Rd
-9ec470682771245533c1cf278e1dcba6 *man/R2MLwiN-package.Rd
+180d59bc2b74f77f8f4483b052a0df03 *man/R2MLwiN-package.Rd
 8a281b242bc1d44b4d8aaa8af6f9d1ae *man/Untoggle.Rd
 4f84dfc770053bf91c5081db8a0b41d6 *man/caterpillar.Rd
 47865ca1dd4ca5b3223153fe95de2378 *man/caterpillarR.Rd

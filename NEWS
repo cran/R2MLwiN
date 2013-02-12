@@ -1,3 +1,8 @@
+Tue Feb 12 2013
+1. Bugs fixing
+   * For cross-classified models, only the residuals and their SE are returned from MCMC fitting.
+2. Testing on MLwiN 2.27.
+
 Mon Feb 04 2013
 1. Bugs fixing
    * an issue on dropping a covariance from a model  

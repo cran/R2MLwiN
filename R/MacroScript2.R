@@ -2165,7 +2165,9 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
 
             wrt("RFUN")
             wrt(paste(c("ROUT   ",std_residual_sampling, tempcol4), collapse=" "))
-            wrt("RCOV 2")
+            # For cross-classified models the residuals and their SE are calculated; Otherwise,
+            # the residuals and full var-cov matrix are returned.
+            if (is.null(xclass)) wrt("RCOV 2") else wrt("RCOV 1")
             wrt("RESI")
             wrt("")
 
