@@ -20,7 +20,8 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 
 \section{Slots}{
   \describe{
-    \item{Nobs}{Computes the number of observations.}
+    \item{Nobs}{Computes the number of complete observations.}
+    \item{DataLength}{Total number of cases.}
     \item{D}{A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.}
     \item{Formula}{A character string specifying a multilevel model.}
     \item{levID}{  A character string (vector) of the specified level ID(s).}
@@ -31,7 +32,6 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
     \item{elapsed.time}{Calculates the CPU time used for fitting the model.}
     \item{LIKE}{The deviance statistic (-2*log(like)).}
-    \item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
     \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
 
   }
@@ -39,13 +39,11 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 
 \section{Methods}{
   \describe{
-
-    \item{print}{\code{signature(x = "mlwinfitIGLS")}: print the outputs of the fitted model. If any data.frame or matrix object of an instance of this class has many rows, then the first ten rows will be printing.
-    }
-    \item{summary}{\code{signature(object = "mlwinfitIGLS")}: summarizes the outputs of the fitted model including z-statistic, p-values, confident intervals and so on.
-    }
+    \item{summary}{\code{signature(object = "mlwinfitIGLS")}: summarizes the outputs of the fitted model including z-statistic, p-values, confidence intervals, etc.}
+\item{print}{summarizes the outputs of the fitted model including z-statistic, p-values, confident intervals, etc.}
+\item{show}{summarizes the outputs of the fitted model including z-statistic, p-values, confident intervals, etc.}
     \item{"\code{[}"}{\code{signature(object = "mlwinfitIGLS")}:
-      this method gets a slot of an instance of the S4 class. }
+      this method gets a slot of an instance of the S4 class.}
     \item{"\code{[[}"}{\code{signature(object = "mlwinfitIGLS")}:
       the same method as  "\code{[}". }
     \item{"\code{[<-}"}{\code{signature(object = "mlwinfitIGLS")}:
@@ -62,7 +60,7 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
@@ -78,9 +76,6 @@ levID=c('school','student')
 estoptions= list(EstM=0)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-
-##print method
-print(mymodel)
 
 ##summary method
 summary(mymodel)

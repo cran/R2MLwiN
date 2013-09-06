@@ -17,7 +17,7 @@ notation = NULL, nonfp = NA,
 clre, smat, Meth = 1,
 BUGO = NULL, mem.init = "default",
 weighting = NULL,
-bugofile = bugofile, modelfile = modelfile,
+modelfile = modelfile,
 initfile = initfile, datafile = datafile,
 macrofile = macrofile, IGLSfile = IGLSfile,
 resifile = resifile, resi.store = resi.store,
@@ -44,7 +44,7 @@ A data.frame object containing the data to be modelled.
   A character string (vector) of random part of random variable(s).
 }
   \item{D}{
-  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
+  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Unordered Multinomial"},  \code{"Ordered Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
 }
   \item{nonlinear}{
   LINEarise mode N order M. \code{N=0} specifies marginal quasi-likelihood linearization (MQL), whilst \code{N=1} specifies penalised quasi-likelihood linearization (PQL); \code{M=1} specifies first order approximation, whilst \code{M=2} specifies second order approximation. \code{nonlinear=c(N=0,M=1)} by default.
@@ -68,16 +68,13 @@ A matrix used to estimate some, but not all, of the variances and covariances fo
 Specifies which maximum likelihood estimation method to be used. If \code{Meth=0} estimation method is set to RIGLS. If \code{Meth=1} estimation method is set to IGLS (the default setting). If \code{Meth} is absent, alternate between IGLS and RIGLS.
 }
   \item{BUGO}{
-If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{"version"=4} specifies WinBUGS 1.4 format, whilst \code{"version"=3} corresponds to WinBUGS 1.3 format. \code{n.chain} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chain=1} by default.  \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
+If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=F} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
 }
   \item{mem.init}{
 A vector which sets and displays worksheet capacities for the current MLwiN session according to the value(s) specified. By default, the number of levels is \code{nlev}+1; worksheet size in thousands of cells is 6000; the number of columns is 2500; the number of explanatory variables is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the number of levels specified by \code{levID}, and \code{num_vars} is approximately the number of explanatory variables calculated initially.
 }
   \item{weighting}{
 A list of objects specified for using weights in an analysis, including \code{levels}, \code{weights}, \code{mode}, \code{FSDE} and \code{RSDE}. By default, \code{weighting} is \code{NULL}, i.e., equal weights for all units at all levels. If not \code{NULL}, \code{weights} is a string vector of names specifying the weights for all corresponding \code{levels} that is a integer vector of the same length of \code{weights}. \code{mode=0}: Weighting off (equal weights); \code{mode=1}: the specified raw weights are used at all levels; \code{mode=1}: the standardised weights are used at all levels. \code{FSDE} and \code{RSDE} set the type of standard error computation for fixed and random parameters. If \code{FSDE} and/or \code{RSDE} are/is ignored, \code{FSDE=2} and/or \code{RSDE=2} by default. If \code{FSDE=2} (or \code{RSDE=2}), compute robust or `sandwich' standard errors based on raw residuals. If \code{FSDE=0} (or \code{RSDE=0}), use standard, uncorrected, IGLS or RIGLS computation. Note that weights cannot be used with multivariate models.
-}
-  \item{bugofile}{
-A file name where the WinBUGS code (including model, initial values and data) will be saved in .txt format.
 }
   \item{modelfile}{
 A file name where the WinBUGS model will be saved in .txt format.
@@ -122,7 +119,7 @@ The MLwiN macro file is created in the temporary directory (\code{tempdir()}) an
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 

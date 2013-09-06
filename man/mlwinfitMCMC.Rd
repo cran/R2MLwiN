@@ -20,7 +20,8 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 
 \section{Slots}{
   \describe{
-    \item{Nobs}{Computes the number of observations.}
+    \item{Nobs}{Computes the number of complete observations.}
+    \item{DataLength}{Total number of cases.}
     \item{burnin}{An integer specifying length of the burn-in.}
     \item{iterations}{An integer specifying the number of iterations after burn-in.}
     \item{D}{A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.}
@@ -37,12 +38,11 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
     \item{elapsed.time}{Calculates the CPU time used for fitting the model.}
     \item{LIKE}{The deviance statistic (-2*log(like)).}
+    \item{MIdata}{If \code{dami} is not empty, then the complete response variable \code{y} are returned.}
     \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
-    \item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
     \item{fact.loadings}{If \code{fact} is not empty, then the factor loadings are returned.}
     \item{fact.cov}{If \code{fact} is not empty, then factor covariances are returned.}
     \item{fact.chains}{If \code{fact} is not empty, then the factor chains are returned.}
-    \item{esample}{If \code{dami} is not empty, then the complete response variable \code{y} are returned.}
     \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
     \item{resi.chains}{If \code{resi.store.levs} is not empty, then the residual chains at these levels are returned.}
   }
@@ -50,11 +50,11 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 
 \section{Methods}{
   \describe{
+    \item{summary}{\code{signature(object = "mlwinfitMCMC")}: summarizes the outputs of the fitted model including z-statistic and associated p-values (or Bayesian one-sided p-values), credible intervals, etc.
+    }
+\item{print}{summarizes the outputs of the fitted model including z-statistic and associated p-values (or Bayesian one-sided p-values), credible intervals, etc.}
+\item{show}{summarizes the outputs of the fitted model including z-statistic and associated p-values (or Bayesian one-sided p-values), credible intervals, etc.}
 
-    \item{print}{\code{signature(x = "mlwinfitMCMC")}: print the outputs of the fitted model. If any data.frame or matrix object of an instance of this class has many rows, then the first ten rows will be printing.
-    }
-    \item{summary}{\code{signature(object = "mlwinfitMCMC")}: summarizes the outputs of the fitted model including z-statistic, p-values, confident intervals and so on.
-    }
     \item{"\code{[}"}{\code{signature(object = "mlwinfitMCMC")}:
       this method gets a slot of an instance of the S4 class. }
     \item{"\code{[[}"}{\code{signature(object = "mlwinfitMCMC")}:
@@ -73,7 +73,7 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
@@ -89,9 +89,6 @@ levID=c('school','student')
 estoptions= list(EstM=1)
 ## Fit the model
 mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-
-##print method
-print(mymodel)
 
 ##summary method
 summary(mymodel)

@@ -2,19 +2,20 @@ predLines2 <-
 function(indata, chains, resi.chains, xname, lev=2, levID, selected=NULL, probs=c(.025,.975), Legend=T){
 
 ## This function is to draw predicted lines (medians, lower quantiles and upper quantiles) at higher levels (level>=2)
-
+    chains<-as.data.frame(chains)
+    resi.chains<-as.data.frame(resi.chains)
     categrv=indata[[rev(levID)[lev]]]
     if (is.null(selected)){
         selected =unique(categrv)
     }
 
     if (is.character(resi.chains)){
-        PACKages<-as.character(as.data.frame(installed.packages())$Package)
-        packs.req= "foreign"
-        test<-( packs.req %in% PACKages)
-        if (!all(test))
-    	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-        require(foreign)
+#        PACKages<-as.character(as.data.frame(installed.packages())$Package)
+#        packs.req= "foreign"
+#        test<-( packs.req %in% PACKages)
+#        if (!all(test))
+#    	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
+#        require(foreign)
         resi.chains=read.dta(resi.chains)
     }
 

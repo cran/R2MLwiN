@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -43,14 +43,14 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-summary(mymodel["chains"][["RP2_var_cons"]])
-sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u2")
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+summary(mymodel["chains"][,"RP2_var_cons"])
+sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u2")
 
 ## Parameter expansion at level 2
 estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u0")
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 24.3 Binary responses - Voting example . . . . . . . . . . . . . . . . 386
 
@@ -69,20 +69,20 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula="logit(votecons,cons)~(0|cons+defence+ unemp+ taxes+ privat)+(2|cons)"
 levID=c('area','voter')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["RP2_var_cons"]],acf.maxlag=500,"sigma2u0")
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
 
 ## Parameter expansion at level 2
 estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["RP2_var_cons"]],acf.maxlag=500,"sigma2u0")
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=500,"sigma2u0")
 
 # 24.4 The choice of prior distribution . . . . . . . . . . . . . . . . .390
 
 ## Uniform on the variance scale priors+Parameter expansion at level 2
 estoptions= list(EstM=1, mcmcMeth=list(priorcode=0),mcmcOptions=list(paex=c(2,1)))
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["RP2_var_cons"]],acf.maxlag=100,"sigma2u0")
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"RP2_var_cons"],acf.maxlag=100,"sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
 
@@ -96,11 +96,10 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 # User's input if necessary
 
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0),mcmcOptions=list(paex=c(2,1)),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
-summary(mymodel["chains.bugs"])
-apply(mymodel["chains.bugs"][[1]],2,effectiveSize)
-sixway(mymodel["chains.bugs"][[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
-sixway(mymodel["chains.bugs"][[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
+mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+apply(mymodel[[1]],2,effectiveSize)
+sixway(mymodel[[1]][,"sigma2.u2"],acf.maxlag=250,"sigma2.u2")
+sixway(mymodel[[1]][,"sigma2.v2"],acf.maxlag=100,"sigma2.v2")
 
 # 24.6 Parameter expansion and random slopes . . . . . . . . . . . . . . 396
 
@@ -118,12 +117,12 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 
 ## Parameter expansion at level 2
 estoptions= list(EstM=1, mcmcOptions=list(paex=c(2,1)))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .399
 

@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -48,12 +48,12 @@ hist(indata[["logearn"]],breaks=20)
 formula="logearn~(0|cons+age_40+numjobs)+(1|cons)"
 levID='id'
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 formula="logearn~(0|cons+age_40+numjobs+sex+parttime)+(1|cons)"
 levID='id'
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 round(cor(indata[,c("parttime","sex","numjobs")]),4)
 
 # 16.4 Fitting multiple membership models to the dataset . . . . . . . . 237
@@ -63,17 +63,17 @@ tabulate(indata[["numjobs"]])
 formula="logearn~(0|cons+age_40+sex+parttime)+(2|cons)+(1|cons)"
 levID=c('company','id')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class',resi.store=T,resi.store.levs=2)
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 # 16.5 Residuals in multiple membership models . . . . . . . . . . . . . 240
 
 lencateg = length(unique(indata[["company"]]))
-resi0=na.omit(mymodel["resi.chains"][["resi_lev2"]])
+resi0=na.omit(mymodel["resi.chains"][,"resi_lev2"])
 resi0=matrix(resi0, nrow =lencateg)
 resi0mean = apply(resi0,1,mean)
 resi0sd = apply(resi0,1,sd)
@@ -98,7 +98,7 @@ levID=c('company','id')
 ##Multiple membership
 xclass=list("class"=2,"N1"=4,"weight"='weight1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 #  16.6 Alternative weights for multiple membership models . . . . . . . .243
 
@@ -106,7 +106,7 @@ mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
 ## New weights
 xclass=list("class"=2,"N1"=4,"weight"='ew1',"id"=NA)
 estoptions= list(EstM=1,xclass=xclass,notation='class')
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin))
 
 # 16.7 Multiple membership multiple classification (MMMC) models . . . . 244
 

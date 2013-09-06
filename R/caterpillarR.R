@@ -5,11 +5,11 @@ function(resi, lev=2){
     ##Only work with full covariance specified
 
     PACKages<-as.character(as.data.frame(installed.packages())$Package)
-    packs.req= c("foreign","lme4")
+    packs.req= "lme4"
     test<-( packs.req %in% PACKages)
     if (!all(test))
 	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-    require(foreign); require(lme4)
+    require(lme4)
     if (is.character(resi)) myresi=read.dta(resi) else myresi=resi
     est.names=names(myresi)[grep(paste("lev_",lev,"_resi_est",sep=""),names(myresi))]
     if (length(est.names)==1){

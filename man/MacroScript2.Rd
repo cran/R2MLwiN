@@ -21,7 +21,6 @@ rate, tol, lclo,
 mcmcOptions, fact,
 xclass = NULL, BUGO = NULL,
 mem.init, nopause,
-bugofile = bugofile,
 modelfile = modelfile,
 initfile = initfile,
 datafile = datafile,
@@ -29,7 +28,7 @@ macrofile = macrofile,
 IGLSfile = IGLSfile,
 MCMCfile = MCMCfile,
 chainfile = chainfile,
-esamplefile = esamplefile,
+MIfile = MIfile,
 resifile = resifile,
 resi.store = resi.store,
 resioptions=resioptions,
@@ -61,7 +60,7 @@ A data.frame object containing the data to be modelled.
   A character string (vector) of random part of random variable(s).
 }
   \item{D}{
-  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
+  A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Unordered Multinomial"},  \code{"Ordered Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.
 }
   \item{nonlinear}{
   LINEarise mode N order M. \code{N=0} specifies marginal quasi-likelihood linearization (MQL), whilst \code{N=1} specifies penalised quasi-likelihood linearization (PQL); \code{M=1} specifies first order approximation, whilst \code{M=2} specifies second order approximation. \code{nonlinear=c(N=0,M=1)} by default.
@@ -147,16 +146,13 @@ A list of objects specified for factor analysis. See Value below.
 A list of objects specified for cross-classified and/or multiple membership models. See Value below.
 }
   \item{BUGO}{
-If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{"version"=4} specifies WinBUGS 1.4 format, whilst \code{"version"=3} corresponds to WinBUGS 1.3 format. \code{n.chain} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chain=1} by default.  \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If \code{OpenBugs=TRUE}, OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
+If the first entry of the vector is \code{TRUE}, the current model is outputted in BUGS code. \code{version=4} specifies WinBUGS 1.4 format, whilst \code{version=3} corresponds to WinBUGS 1.3 format. \code{n.chains} specifies the number of chains to be used in WinBUGS/OpenBUGS, \code{n.chains=1} by default. \code{debug} specifies whether BUGS is left open once the model has run, or not (\code{debug=F} by default). \code{seed} sets the random number generator in BUGS. \code{bugs} specifies the location of the WinBUGS/OpenBUGS executable. If\code{OpenBugs=TRUE} OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
 }
   \item{mem.init}{
 A vector which sets and displays worksheet capacities for the current MLwiN session according to the value(s) specified. By default, the number of levels is \code{nlev}+1; worksheet size in thousands of cells is 6000; the number of columns is 2500; the number of explanatory variables is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the number of levels specified by \code{levID}, and \code{num_vars} is approximately the number of explanatory variables calculated initially.
 }
   \item{nopause}{
 A logical value specifying whether the estimates are to be updated on screen or not, in MLwiN. Default \code{nopause=FALSE}, i.e. the screen is updated.
-}
-  \item{bugofile}{
-A file name where the WinBUGS code (including model, initial values and data) will be saved in .txt format.
 }
   \item{modelfile}{
 A file name where the WinBUGS model will be saved in .txt format.
@@ -179,7 +175,7 @@ A file name where the MCMC estimates will be saved. The default location is in t
   \item{chainfile}{
 A file name where the MCMC chains will be saved. The default location is in the temporary folder.
 }
-  \item{esamplefile}{
+  \item{MIfile}{
 A file name where the missing values will be saved. The default location is in the temporary folder.
 }
   \item{resifile}{
@@ -208,7 +204,7 @@ A logical value determining whether MLwiN is run in the background or not. The d
 \item{startval}{
 A list of numeric vectors specifying the starting values when using MCMC. \code{FP.b} corresponds to the estimates for the fixed part; \code{FP.v} specifies the variance/covariance estimates for the fixed part; \code{RP.b} specifies the variance estimates for the random part; \code{RP.v} corresponds to the variance/covariance matrix of the variance estimates for the random part. \code{startval=NULL} by default: i.e. the estimates obtained from IGLS are used as the starting values for MCMC.
 }
-\item{dami}{This command outputs a complete (i.e. including non-missing responses) response variable y. If \code{dami=0} then this response variable will be the value of y at the current iteration, which can be used for multiple imputation. If \code{dami=1} the value of y will be the mean estimate from the iterations produced. \code{dami=2} is as for \code{dami=1} but with the standard errors of the estimate additionally being stored. \code{dami=NULL} by default.
+\item{dami}{This command outputs a complete (i.e. including non-missing responses) response variable y. If \code{dami=c(0,<iter1>,<iter2>,...)} then the response variables returned will be the value of y at the iterations quoted (as integers \code{<iter1>,<iter2>}, etc.); these can be used for multiple imputation. If \code{dami=1} the value of y will be the mean estimate from the iterations produced. \code{dami=2} is as for \code{dami=1} but with the standard errors of the estimate additionally being stored. \code{dami=NULL} by default.
 }
 }
 
@@ -261,7 +257,7 @@ Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and \code{OtherVarM}, 
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 

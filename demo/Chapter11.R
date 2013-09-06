@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     mlwin=scan(what=character(0),sep ="\n")
     mlwin=gsub("\\", "/",mlwin, fixed=TRUE)
@@ -42,9 +42,9 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-mymodel1=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel1["chains"][["FP_uvbi"]])
-sixway(mymodel1["chains"][["FP_uvbi"]],"beta_1")
+(mymodel1=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+summary(mymodel1["chains"][,"FP_uvbi"])
+sixway(mymodel1["chains"][,"FP_uvbi"],"beta_1")
 
 # 11.2 Adding in region level random effects . . . . . . . . . . . . . . 157
 
@@ -54,9 +54,9 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-mymodel2=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel2["chains"][["FP_uvbi"]])
-sixway(mymodel2["chains"][["FP_uvbi"]],"beta_1")
+(mymodel2=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+summary(mymodel2["chains"][,"FP_uvbi"])
+sixway(mymodel2["chains"][,"FP_uvbi"],"beta_1")
 
 # 11.3 Including nation effects in the model . . . . . . . . . . . . . . 159
 
@@ -66,7 +66,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,seed=13))
 ## Fit the model
-mymodel3=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
+(mymodel3=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
 
 ## Define the model
 formula="log(obs,logexp)~(0|uvbi+nation[])+(2|cons)"
@@ -74,7 +74,7 @@ levID=c('nation','region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-mymodel4=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
+(mymodel4=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
 
 # 11.4 Interaction with UV exposure . . . . . . . . . . . . . . . . . . .161
 
@@ -84,16 +84,16 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-mymodel5=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel5["chains"][["FP_Belgium"]],acf.maxlag=5000,"beta_1")
+(mymodel5=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel5["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 
 # 11.5 Problems with univariate updating Metropolis procedures . . . . . 163
 
 ## NOTE THAT WE RUN 50,000 rather than 500,000 HERE
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000,thinning=10))
 ## Fit the model
-mymodel6=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel6["chains"][["FP_Belgium"]],"beta_1",thinning=10)
+(mymodel6=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel6["chains"][,"FP_Belgium"],"beta_1")
 
 ## Half of million interations (could take a few hours to run)
 ## Increasing memory size of the worksheet
@@ -112,7 +112,7 @@ sixway(mymodel6["chains"][["FP_Belgium"]],"beta_1",thinning=10)
 #Level 2: region     Level 1: county
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 #The fixed part estimates:
-#                            Coef.        Std. Err.            t            p-value       [95% Conf.      Interval]            ESS
+#                            Coef.        Std. Err.            t            p-value       [95% Cred.      Interval]            ESS
 #Belgium                   0.72601          0.74086         0.98             0.3271         -0.70808        2.17766         2162.6
 #W_Germany                 0.48100          0.12357         3.89          9.915e-05          0.24133        0.72734        13759.1
 #Denmark                   0.30241          0.87364         0.35             0.7293         -1.42342        1.99139         1099.5
@@ -133,11 +133,11 @@ sixway(mymodel6["chains"][["FP_Belgium"]],"beta_1",thinning=10)
 #Netherlands:uvbi         -0.10952          0.21999        -0.50             0.6186         -0.54969        0.32003         1224.9
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 #The random part estimates at the region level:
-#                   Coef.         Std. Err.       [95% Conf.      Interval]           ESS
+#                   Coef.         Std. Err.       [95% Cred.      Interval]           ESS
 #var_cons         0.03709           0.00923          0.02229        0.05825       73183.8
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 #The random part estimates at the county level:
-#                   Coef.         Std. Err.       [95% Conf.      Interval]       ESS
+#                   Coef.         Std. Err.       [95% Cred.      Interval]       ESS
 #bcons_1          1.00000           0.00000          1.00000        1.00000       0.0
 #-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 

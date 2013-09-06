@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -44,30 +44,30 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula="normexam~(0|cons)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-summary(mymodel["chains"][["FP_cons"]])
-sixway(mymodel["chains"][["FP_cons"]],"beta_0")
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+summary(mymodel["chains"][,"FP_cons"])
+sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
 ## Structured MCMC
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
-summary(mymodel["chains"][["FP_cons"]])
-sixway(mymodel["chains"][["FP_cons"]],"beta_0")
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
+summary(mymodel["chains"][,"FP_cons"])
+sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 
 # 21.3 A random intercepts model . . . . . . . . . . . . . . . . . . . . 334
 
 formula="normexam~(0|cons+standlrt)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 trajectories(mymodel["chains"],Range=c(1,500))
 
 # 21.4 Examining the residual chains . . . . . . . . . . . . . . . . . . 335
 
 estoptions= list(EstM=1, resi.store=T, resi.store.levs=2,mcmcMeth=list(iterations=5001),mcmcOptions=list(smcm=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 ## Each row represents each iteration
-resi=matrix(mymodel["resi.chains"][[1]],ncol=65,byrow=T)
+resi=matrix(mymodel["resi.chains"][,1],ncol=65,byrow=T)
 sixway(resi[,1],"school1")
 
 # 21.5 Random slopes model theory . . . . . . . . . . . . . . . . . . . .336
@@ -77,7 +77,7 @@ sixway(resi[,1],"school1")
 formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 sixway(mymodel["chains"][,"FP_cons"],"beta_0")
 sixway(mymodel["chains"][,"FP_standlrt"],"beta_1")

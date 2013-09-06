@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -56,14 +56,14 @@ round(cor(indata[,c("sex","fluent","ravens","english","behaviour")]),4)
 formula="c(english,probit(behaviour,denomb))~(0s|cons+sex+ravens)+(0c|fluent{1,0})+(1s|cons.english)"
 levID= 'id'
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
 formula="c(english,probit(behaviour,denomb))~(0s|cons+sex+ravens)+(0c|fluent{1,0})+(2s|cons)+(1s|cons.english)"
 levID=c('school', 'id')
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1,Lev1VarM=1))
-mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D=c("Mixed","Normal","Binomial"), indata, estoptions,MLwiNPath=mlwin))
 
 
 # 19.5 Rats dataset . . . . . . . . . . . . . . . . . . . . . . . . . . .295
@@ -90,9 +90,9 @@ library(foreign); indata =read.dta(inputfile)
 formula="c(y8,y15,y22,y29,y36)~(0|cons)+(1|cons)"
 levID=c('rat')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
-sixway(mymodel["chains"][["RP1_var_cons_y8"]],"sigma2u0")
+sixway(mymodel["chains"][,"RP1_var_cons_y8"],"sigma2u0")
 
 covM1=matrix(,5,5)
 colnames(covM1)=rownames(covM1)=c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")
@@ -104,7 +104,7 @@ round(cov2cor(t(covM1)),3)
 # 19.6 Fitting an autoregressive structure to the variance matrix . . . .298
 
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000),mcmcOptions=list(mcco=4))
-mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Multivariate Normal', indata, estoptions,MLwiNPath=mlwin))
 
 covM2=matrix(,5,5)
 colnames(covM2)=rownames(covM2)=c("cons.y8","cons.y15","cons.y22","cons.y29","cons.y36")

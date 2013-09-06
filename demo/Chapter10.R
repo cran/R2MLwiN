@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -58,22 +58,22 @@ levID=c('district','woman')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel1=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel1["chains"][["FP_age"]])
-sixway(mymodel1["chains"][["FP_age"]],"beta_1")
+(mymodel1=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+summary(mymodel1["chains"][,"FP_age"])
+sixway(mymodel1["chains"][,"FP_age"],"beta_1")
 
 ## 15,000 iterations
 estoptions= list(EstM=1,mcmcMeth=list(iterations=15000))
 ## Fit the model
-mymodel2=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel1["chains"][["FP_age"]],"beta_1")
+(mymodel2=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel1["chains"][,"FP_age"],"beta_1")
 
 ## Define the model
 formula="logit(use,denomb)~(0|cons+age+lc[nokids])"
 levID=c('district','woman')
 ## Change to 5000 iterations by default
 estoptions= list(EstM=1)
-mymodel3=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel3=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 # 10.2 Random effects logistic regression model . . . . . . . . . . . . .136
 
@@ -81,21 +81,21 @@ mymodel3=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlw
 formula="logit(use,denomb)~(0|cons+age+lc[nokids])+(2|cons)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel4=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel4["chains"][["RP2_var_cons"]])
-sixway(mymodel4["chains"][["RP2_var_cons"]],"sigma2u0")
+(mymodel4=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+summary(mymodel4["chains"][,"RP2_var_cons"])
+sixway(mymodel4["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # 10.3 Random coefficients for area type . . . . . . . . . . . . . . . . 139
 
 formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel5=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel5=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel6=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel6=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 # 10.4 Probit regression . . . . . . . . . . . . . . . . . . . . . . . . 141
 
@@ -106,17 +106,17 @@ levID=c('district','woman')
 
 ## Gibbs
 estoptions= list(EstM=1,mcmcMeth=list(fixM=1,residM=1))
-mymodel7=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel7=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 ## Univariate MH by default
 estoptions= list(EstM=1)
-mymodel8=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel8=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 cat("The mean parameter estimates\n")
 aa=cbind(mymodel7["FP"],mymodel8["FP"])
-ESS.aa=effectiveSize(mymodel7["chains"][,3:12])
+ESS.aa=effectiveSize(mymodel7["chains"][,2:11])
 bb=cbind(mymodel7["RP"],mymodel8["RP"])
-ESS.bb=effectiveSize(mymodel8["chains"][,3:12])
+ESS.bb=effectiveSize(mymodel8["chains"][,2:11])
 ctable=round(rbind(aa,bb),3)
 ctable=cbind(ctable[,1],round(ESS.aa),ctable[,2],round(ESS.bb))
 colnames(ctable)=c("Gibbs","ESS(Gibbs)","Metropolis", "ESS(Metropolis)")
@@ -136,14 +136,14 @@ print(sdtable)
 formula="logit(use,denomb)~(0|cons+age)+(2|cons)"
 levID=c('district','woman')
 estoptions= list(EstM=0)
-mymodel9=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
-summary(mymodel9["chains.bugs"][[1]][,"beta[1]"])
-sixway(mymodel9["chains.bugs"][[1]][,"beta[1]"],"beta[1]")
+mymodel9=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+summary(mymodel9[[1]][,"beta[1]"])
+sixway(mymodel9[[1]][,"beta[1]"],"beta[1]")
 
 estoptions= list(EstM=1)
-mymodel10=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
-summary(mymodel10["chains"][["FP_cons"]])
-sixway(mymodel10["chains"][["FP_cons"]],"beta0")
+(mymodel10=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
+summary(mymodel10["chains"][,"FP_cons"])
+sixway(mymodel10["chains"][,"FP_cons"],"beta0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -45,37 +45,37 @@ indata=cbind(indata,error,obslrt)
 formula="normexam~(0|cons+standlrt)+(1|cons)"
 levID='student'
 estoptions= list(EstM=0)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 
 formula="normexam~(0|cons+error)+(1|cons)"
 levID='student'
 estoptions= list(EstM=0)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 formula="normexam~(0|cons+obslrt)+(1|cons)"
 levID='student'
 estoptions= list(EstM=0)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 # 14.2 Measurement error modelling in multilevel models . . . . . . . . .205
 
 formula="normexam~(0|cons+standlrt)+(2|cons+standlrt)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 formula="normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 formula="normexam~(0|cons+obslrt)+(2|cons+obslrt)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1,merr=c(N=1,"obslrt",.2))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 # 14.3 Measurement errors in binomial models . . . . . . . . . . . . . . 208
 
@@ -101,15 +101,15 @@ indata=cbind(indata,obsage)
 formula="logit(use,denomb)~(0|cons+age)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 formula="logit(use,denomb)~(0|cons+obsage)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 ## Adjust for the measurement errors
 estoptions= list(EstM=1,merr=c(N=1,"obsage",25))
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 
 # 14.4 Measurement errors in more than one variable and
 #      misclassifications . . . . . . . . . . . . . . . . . . . . . . . .211

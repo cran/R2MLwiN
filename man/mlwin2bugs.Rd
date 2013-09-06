@@ -1,6 +1,5 @@
 \name{mlwin2bugs}
 \alias{mlwin2bugs}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 This function captures output files from MLwiN for estimation in WinBUGS/OpenBUGS.
 }
@@ -9,10 +8,9 @@ This function allows R to call WinBUGS using the output files from MLwiN. This f
 }
 \usage{
 mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, 
-n.chains, n.iter, n.burnin, n.thin, debug = T, bugs, 
-bugsWorkingDir = tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE)
+n.chains, n.iter, n.burnin, n.thin, debug = F, bugs, 
+bugsWorkingDir = tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{D}{
   A vector specifying the type of distribution used in the model.
@@ -63,7 +61,10 @@ A directory where all the intermediate files are to be stored.
 If \code{TRUE}, OpenBUGS is used, if \code{FALSE} (the default) WinBUGS is used.
 }
   \item{cleanBugsWorkingDir}{
-if \code{TRUE}, the generated files will be removed from the \code{bugsWorkingDir}.
+If \code{TRUE}, the generated files will be removed from the \code{bugsWorkingDir}.
+}
+  \item{seed}{
+A integer specifies a random seed.
 }
 }
 
@@ -84,12 +85,11 @@ A list of objects to specify factor analysis, as used in the argument \code{fact
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \note{
 This function is derived from \code{\link[rbugs]{rbugs}} (written by Jun Yan and Marcos Prates).
 }
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}

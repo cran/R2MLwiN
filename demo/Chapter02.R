@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -40,14 +40,14 @@ levID='student'
 ## Choose IGLS algoritm for estimation
 estoptions= list(EstM=0)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 # 2.1 Running the Gibbs Sampler . . . . . . . . . . . . . . . . . . . . . 26
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 estimates=mymodel["chains"]
 par(mfrow=c(2,2))
@@ -73,12 +73,12 @@ levID='student'
 ## Choose IGLS algoritm for estimation
 estoptions= list(EstM=0)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 ## Choose MCMC algoritm for estimation
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 # 2.4 Fitting school effects as fixed parameters . . . . . . . . . . . . .32
 
@@ -91,7 +91,7 @@ levID='student'
 ## Choose MCMC algoritm for estimation (IGLS will be used to obtain starting values for MCMC)
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 

@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -44,7 +44,7 @@ formula="log(use4,cons,use4_4)~ (0|cons)"
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel["FP"]["FP_cons_use4_1"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
 cat(paste("Pr(y = 2) =", round(exp(mymodel["FP"]["FP_cons_use4_2"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
@@ -57,7 +57,7 @@ formula="log(use4,cons,use4_4)~ (0|cons+lc[lc0])"
 levID=c('woman')
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"])+exp(mymodel["FP"]["FP_cons_use4_2"])+exp(mymodel["FP"]["FP_cons_use4_3"])),4),"\n"))
 cat(paste("Pr(y = 3) =", round(exp(mymodel["FP"]["FP_cons_use4_3"]+mymodel["FP"]["FP_lc2_use4_3"])/(1+exp(mymodel["FP"]["FP_cons_use4_1"]+mymodel["FP"]["FP_lc2_use4_1"])+
@@ -66,12 +66,12 @@ exp(mymodel["FP"]["FP_cons_use4_2"]+mymodel["FP"]["FP_lc2_use4_2"])+exp(mymodel[
 # 12.3 Interval estimates for conditional probabilities . . . . . . . . .175
 
 chains=mymodel["chains"]
-pred1=exp(chains[["FP_cons_use4_3"]])/(1+exp(chains[["FP_cons_use4_1"]])+exp(chains[["FP_cons_use4_2"]])+exp(chains[["FP_cons_use4_3"]]))
+pred1=exp(chains[,"FP_cons_use4_3"])/(1+exp(chains[,"FP_cons_use4_1"])+exp(chains[,"FP_cons_use4_2"])+exp(chains[,"FP_cons_use4_3"]))
 summary(pred1)
 sixway(pred1,"prob1")
 
-pred2=exp(chains[["FP_cons_use4_3"]]+chains[["FP_lc2_use4_3"]])/(1+exp(chains[["FP_cons_use4_1"]]+chains[["FP_lc2_use4_1"]])+
-exp(chains[["FP_cons_use4_2"]]+chains[["FP_lc2_use4_2"]])+exp(chains[["FP_cons_use4_3"]]+chains[["FP_lc2_use4_3"]]))
+pred2=exp(chains[,"FP_cons_use4_3"]+chains[,"FP_lc2_use4_3"])/(1+exp(chains[,"FP_cons_use4_1"]+chains[,"FP_lc2_use4_1"])+
+exp(chains[,"FP_cons_use4_2"]+chains[,"FP_lc2_use4_2"])+exp(chains[,"FP_cons_use4_3"]+chains[,"FP_lc2_use4_3"]))
 summary(pred2)
 sixway(pred2,"prob1")
 
@@ -84,13 +84,13 @@ levID=c('district','woman')
 #Uses IGLS
 estoptions= list(EstM=0, nonlinear=c(1,2))
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 
 ## Uses MCMC
 estoptions= list(EstM=1, nonlinear=c(1,2))
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["RP2_var_cons_use4_1"]],"sigma2v0")
+(mymodel=runMLwiN(formula, levID, D='Unordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"RP2_var_cons_use4_1"],"sigma2v0")
 
 RP3.cons=matrix(,3,3)
 RP3.cons[upper.tri(RP3.cons,diag=T)]=mymodel["RP"][1:6]

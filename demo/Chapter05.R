@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -47,17 +47,17 @@ levID=c('school','student')
 ## IGLS
 estoptions= list(EstM=0)
 ## Fit the model
-mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 ## Diffuse priors (Gamma priors)
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## Diffuse priors (Uniform priors)
 estoptions= list(EstM=1,mcmcMeth=list(priorcode=0))
 ## Fit the model
-mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel3["FP"])
 bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel3["RP"])
@@ -73,7 +73,7 @@ prior=list(fixe=list(standlrt=c(1,.01)))
 prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 sixway(mymodel4["chains"][,"FP_standlrt"],"beta_1")
 
 ## Informative normal prior for beta_1
@@ -81,7 +81,7 @@ prior=list(fixe=list(standlrt=c(1,.1)))
 prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 sixway(mymodel5["chains"][,"FP_standlrt"],"beta_1")
 
 # 5.4 Specifying an informative prior for a random parameter . . . . . . .65
@@ -91,7 +91,7 @@ prior=list(rp2=list(estimates=.2,size=100))
 prior=prior2macro(prior,formula,levID,D='Normal', indata)
 estoptions= list(EstM=1,mcmcMeth=list(priorParam=prior))
 ## Fit the model
-mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 
 # 5.5 Changing the random number seed and the parameter starting values  .66
@@ -100,22 +100,22 @@ sixway(mymodel6["chains"][,"RP2_var_cons"],"sigma^2_u0")
 startval=list(FP.b=c(-2,5),RP.b=c(2,4))
 estoptions= list(EstM=1,mcmcMeth=list(burnin=0, iterations=500,startval=startval))
 ## Fit the model
-mymodel7=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel7=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 rm(list=c("mymodel4","mymodel5","mymodel6","mymodel7"))
 
 ##Use different seeds
 estoptions= list(EstM=1,mcmcMeth=list(seed=1))
-mymodel8=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel8=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=2))
-mymodel9=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel9=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=3))
-mymodel10=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel10=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 estoptions= list(EstM=1,mcmcMeth=list(seed=4))
-mymodel11=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel11=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 aa=cbind(mymodel8["FP"],mymodel9["FP"],mymodel10["FP"],mymodel11["FP"])
 bb=cbind(mymodel8["RP"],mymodel9["RP"],mymodel10["RP"],mymodel11["RP"])

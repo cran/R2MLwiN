@@ -42,7 +42,7 @@ A label for the \code{y} axis. This is empty by default.
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 
@@ -55,7 +55,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
@@ -67,10 +67,10 @@ inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel["resi.chains"][[1]]
+resi.chain2 = mymodel["resi.chains"][,1]
 resi.chain2 = matrix(resi.chain2, nrow =lencateg)
 
 ## For each iteration, rank the schools

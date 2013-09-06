@@ -20,7 +20,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -44,12 +44,12 @@ library(foreign); indata =read.dta("http://www.bristol.ac.uk/cmm/media/runmlwin/
 formula="normexam~(0|cons)+(2|cons)+(1|cons)"
 levID=c('school','student')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 # 22.3 Model Comparison and structured MVN models . . . . . . . . . . . .349
 
@@ -59,19 +59,19 @@ levID=c('school','student')
 
 ## Gibbs
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## SMCMC
 estoptions= list(EstM=1, mcmcOptions=list(smcm=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 # 22.4 Assessing the need for the level 2 variance . . . . . . . . . . . 350
 
-sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u0")
+sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 set.seed(1)
 indata[["temp"]]=double2singlePrecision(rnorm(4059))
@@ -82,18 +82,18 @@ levID=c('school','student')
 
 ##IGLS
 estoptions= list(EstM=0)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## Gibbs
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## Structured MVN
 estoptions= list(EstM=1, mcmcOptions=list(smvn=1))
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
-summary(mymodel["chains"][["RP2_var_cons"]])
-sixway(mymodel["chains"][["RP2_var_cons"]],"sigma2u0")
+summary(mymodel["chains"][,"RP2_var_cons"])
+sixway(mymodel["chains"][,"RP2_var_cons"],"sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .355
 

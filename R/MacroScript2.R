@@ -1,6 +1,6 @@
 MacroScript2 <-
-function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,     nopause,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-     chainfile=chainfile,esamplefile=esamplefile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
+function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,     nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
+     chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
 
 
     nlev=length(levID)
@@ -1298,7 +1298,43 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     if(D[1]=="Multivariate Normal") DD=4
     if(D[1]=="Multinomial") {if (as.numeric(D[4])==0) DD=6 else DD=7; wrt("CLRV 2")}
 
-
+    if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
+#       if(D[1]=="Normal") DD=1
+#       if(D[1]=="Binomial") DD=2
+#       if(D[1]=="Poisson") DD=3
+#       if(D[1]=='Multivariate Normal') DD=4
+#       if(D[1]=="Multinomial") {if (as.numeric(D[4])==0) DD=6 else DD=7}
+      
+      
+      #         tempcell= 998
+      #         for (j in nrp:1){
+      #             rpx=rp[[j]]
+      #             len.rpx=length(rp[[j]])
+      #             wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
+      #             wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
+      #             wrt("RFUN")
+      #             wrt("RCOV   2")
+      #             tempcol=(tempcell+len.rpx):tempcell
+      #             tempvec=tempvec2=NULL
+      #             for (i in 1:(len.rpx+1)) tempvec=paste(tempvec, paste("c", tempcol[i],sep=""))
+      #             for (i in 1:len.rpx) tempvec2=paste(tempvec2, paste("c", tempcol[i],sep=""))
+      #             wrt(paste("ROUT   ",tempvec,sep=""))
+      #             wrt("MISR 0")
+      #             wrt("RESI")
+      #             wrt("MISR 1")
+      #             wrt(paste("JOIN   c",997, tempvec2," c",997,sep=""))
+      #             wrt(paste("JOIN   c",996," c", tempcol[len.rpx+1]," c",996,sep=""))
+      #             wrt(paste("ERAS   ",tempvec,sep=""))
+      #         }
+      
+      version=as.numeric(BUGO["version"])
+      if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
+#      if (!is.null(bugofile)) wrt(paste("BUGO ",version," ",DD," ",DD2," c997 ", "'",bugofile,"'",sep=""))
+      wrt(paste("BUGO 6 ",DD," ",DD2, " c997 ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
+      wrt("ERAS   c997 c996")
+    }else{
+    #wrt(paste("STOR ",paste(tempfile("worksheet_"),".dta",sep="")))
+  
     wrt("NOTE   fit the model in MCMC")
     wrt(paste("MTOT   ",iterations,sep=""))
     wrt(paste("LCLO   ",lclo,sep=""))
@@ -1315,7 +1351,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     wrt("")
     if (!is.null(dami)&&dami[1]==0&&length(dami)>1){
         ndami=length(dami)
-        tempmvcell=300
+        tempmvcell=301
         mvnames=rep(NA,ndami-1)
         for (i in 2:ndami){
             wrt(paste("MCMC 1 ",dami[i]-dami[i-1]," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
@@ -1328,17 +1364,18 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             tempmvcell=tempmvcell+1
         }
         if (dami[ndami]<iterations){
-            wrt(paste("MCMC 1 ",iterations-dami[ndami]," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
+            wrt(paste("MCMC 1 ",(iterations/thinning)-dami[ndami]," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
             wrt("PUPN c1003 c1004")
             wrt("AVER c1091 b99 b100")
             wrt("PAUS 1")
         }
-        wrt("CALC   '_esample'=abso('_esample'-1)")
-        wrt(paste("PSTA '",esamplefile, "' ",paste(mvnames,collapse=" ")," '_esample'",sep=""))
+        wrt("NAME c300 '_MissingInd'")
+        wrt("CALC   '_MissingInd'=abso('_esample'-1)")
+        wrt(paste("PSTA '",MIfile, "' ",paste(mvnames,collapse=" ")," '_MissingInd'",sep=""))
         wrt(paste("ERAS  ",paste(mvnames,collapse=" "),sep=""))
     }else{
         if (debugmode&&(!nopause)){
-            for (i in 1:floor(iterations/refresh)){
+            for (i in 1:floor((iterations/thinning)/refresh)){
                 wrt(paste("MCMC 1 ",refresh," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
                 wrt("PUPN c1003 c1004")
                 wrt("AVER c1091 b99 b100")
@@ -1346,13 +1383,13 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             }
             is.wholenumber <-function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
             if(!is.wholenumber(iterations/refresh)){
-                wrt(paste("MCMC 1 ",iterations%%refresh," ", thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
+                wrt(paste("MCMC 1 ",(iterations/thinning)%%refresh," ", thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
                 wrt("PUPN c1003 c1004")
                 wrt("AVER c1091 b99 b100")
                 wrt("PAUS 1")
             }
         }else{
-            wrt(paste("MCMC 1 ",iterations," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
+            wrt(paste("MCMC 1 ",iterations/thinning," ",thinning," c1090 c1091 c1003 c1004 1 ",DD,sep="") )
             wrt("PUPN c1003 c1004")
             wrt("AVER c1091 b99 b100")
         }
@@ -1405,25 +1442,26 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         wrt("CASE 0:")
         wrt("LEAVE")
         wrt("CASE:")
-        wrt("CALC   '_esample'=abso('_esample'-1)")
+        wrt("NAME c300 '_MissingInd'")
+        wrt("CALC   '_MissingInd'=abso('_esample'-1)")
         if (dami==0){
-            wrt("DAMI 0 c300")
-            wrt("NAME c300 '_est'")
-            wrt(paste("PSTA '",esamplefile, "' '_est' '_esample' ",sep=""))
-            wrt("ERAS  c300")
+            wrt("DAMI 0 c301")
+            wrt("NAME c301 '_est'")
+            wrt(paste("PSTA '",MIfile, "' '_est' '_esample' ",sep=""))
+            wrt("ERAS  '_est'")
         }
         if (dami==1){
-            wrt("DAMI 1 c300")
-            wrt("NAME c300 '_est'")
-            wrt(paste("PSTA '",esamplefile, "' '_est' '_esample' ",sep=""))
-            wrt("ERAS  c300")
+            wrt("DAMI 1 c301")
+            wrt("NAME c301 '_est'")
+            wrt(paste("PSTA '",MIfile, "' '_est' '_esample' ",sep=""))
+            wrt("ERAS  '_est'")
         }
         if (dami==2){
-            wrt("DAMI 2 c300 c301")
-            wrt("NAME c300 '_est'")
-            wrt("NAME c301 '_SDs'")
-            wrt(paste("PSTA '",esamplefile, "' '_est' '_SDs' '_esample' ",sep=""))
-            wrt("ERAS  c300 c301")
+            wrt("DAMI 2 c301 c302")
+            wrt("NAME c301 '_est'")
+            wrt("NAME c302 '_SDs'")
+            wrt(paste("PSTA '",MIfile, "' '_est' '_SDs' '_esample' ",sep=""))
+            wrt("ERAS  '_est' '_SDs'")
         }
         wrt("ENDS")
         wrt("")
@@ -1814,10 +1852,10 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     lencell=cellnum-num_beg
     num_end =cellnum-1
 
-    wrt(paste("CODE ",iterations, lencell, 1, "c1300"))
+    wrt(paste("CODE ",iterations/thinning, lencell, 1, "c1300"))
     wrt("CALC c1300 = c1300 * 1")
     wrt("NAME   c1300 'itnum'")
-    wrt(paste("CODE ",lencell, 1,iterations, "c1301"))
+    wrt(paste("CODE ",lencell, 1,iterations/thinning, "c1301"))
     wrt("NAME   c1301 'parnum'")
     wrt("NAME   c1302 'iteration'")
     wrt("DESC   c1302 '\\Iteration'")
@@ -1827,7 +1865,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
 
     wrt(paste("UNVE ",lencell,"'parnum' 'itnum' 'mcmcchains' 'iteration'",tempstr))
     if(D[1]=='Multinomial'&&as.numeric(D["mode"])==1){
-        wrt(paste("PUT ",iterations, 1, paste("c",cellnum,sep="")))
+        wrt(paste("PUT ",iterations/thinning, 1, paste("c",cellnum,sep="")))
         wrt(paste("NAME c",cellnum," 'RP1_bcons_1'",sep=""))
         wrt(paste("DESC c",cellnum," 'RP1:bcons_1'",sep=""))
         tempstr=paste(tempstr, paste("c",cellnum,sep=""))
@@ -2214,40 +2252,6 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             wrt(paste("PSTA '",resichains,"' ",paste(resiname,collapse=" "),sep=""))
         }
     }
-    if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
-        if(D[1]=="Normal") DD=1
-        if(D[1]=="Binomial") DD=2
-        if(D[1]=="Poisson") DD=3
-        if(D[1]=='Multivariate Normal') DD=4
-        if(D[1]=="Multinomial") {if (as.numeric(D[4])==0) DD=6 else DD=7}
-
-        tempcell= 998
-        for (j in nrp:1){
-            rpx=rp[[j]]
-            len.rpx=length(rp[[j]])
-            wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
-            wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
-            wrt("RFUN")
-            wrt("RCOV   2")
-            tempcol=(tempcell+len.rpx):tempcell
-            tempvec=tempvec2=NULL
-            for (i in 1:(len.rpx+1)) tempvec=paste(tempvec, paste("c", tempcol[i],sep=""))
-            for (i in 1:len.rpx) tempvec2=paste(tempvec2, paste("c", tempcol[i],sep=""))
-            wrt(paste("ROUT   ",tempvec,sep=""))
-            wrt("MISR 0")
-            wrt("RESI")
-            wrt("MISR 1")
-            wrt(paste("JOIN   c",997, tempvec2," c",997,sep=""))
-            wrt(paste("JOIN   c",996," c", tempcol[len.rpx+1]," c",996,sep=""))
-            wrt(paste("ERAS   ",tempvec,sep=""))
-        }
-
-        version=as.numeric(BUGO[1])
-        if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
-        if (!is.null(bugofile)) wrt(paste("BUGO ",version," ",DD," ",DD2," c997 ", "'",bugofile,"'",sep=""))
-        wrt(paste("BUGO 6 ",DD," ",DD2, " c997 ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
-        wrt("ERAS   c997 c996")
-    }
-    #wrt(paste("STOR ",paste(tempfile("worksheet_"),".dta",sep="")))
+    }  
     if (!debugmode) wrt("EXIT")
 }

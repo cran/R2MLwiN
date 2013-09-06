@@ -39,7 +39,7 @@ A logical value indicating whether a legend is to be added.
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 \seealso{
@@ -52,7 +52,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
@@ -65,7 +65,7 @@ wsfile=paste(wspath,"tutorial.ws",sep="")
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)
 library(foreign);indata =read.dta(inputfile)
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,MLwiNPath=mlwin))
 
 resi=mymodel["residual"]
 FP=mymodel["FP"]

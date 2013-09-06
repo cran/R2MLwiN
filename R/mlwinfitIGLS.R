@@ -1,10 +1,10 @@
       #' An S4 class that stores the outputs of the fitted model.
       #' @slot a contains an R object
       #' @export
-      setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",
+      setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",
         D="ANY", Formula="character", levID="character", estIGLS ="data.frame",
         FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
-        elapsed.time="numeric",chains.bugs="ANY",residual="data.frame"))
+        elapsed.time="numeric",residual="data.frame"))
 
 
         #' extract parts of mlwinfitIGLS
@@ -19,6 +19,7 @@
             signature="mlwinfitIGLS",
             definition=function(x,i,j,drop){
                 if(i=="Nobs"){return(x@Nobs)}else {}
+                if(i=="DataLength"){return(x@DataLength)}else {}
                 if(i=="D"){return(x@D)}else {}
                 if(i=="Formula"){return(x@Formula)}else {}
                 if(i=="levID"){return(x@levID)}else {}
@@ -29,7 +30,7 @@
                 if(i=="RP.cov"){return(x@RP.cov)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
-                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
+#                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="residual"){return(x@residual)}else {}
             }
         )
@@ -44,7 +45,8 @@
             f= "[[",
             signature="mlwinfitIGLS",
             definition=function(x,i,j,drop){
-                if(i=="Nobs"){return(x@Nobs)}else {}
+                if(i=="Nobs"){return(x@Nobs)}else {}  
+                if(i=="DataLength"){return(x@DataLength)}else {}
                 if(i=="D"){return(x@D)}else {}
                 if(i=="Formula"){return(x@Formula)}else {}
                 if(i=="levID"){return(x@levID)}else {}
@@ -55,7 +57,7 @@
                 if(i=="RP.cov"){return(x@RP.cov)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
-                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
+#                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="residual"){return(x@residual)}else {}
             }
         )
@@ -71,6 +73,7 @@
             signature="mlwinfitIGLS",
             definition=function(x,i,j,value){
                 if(i=="Nobs"){x@Nobs<-value}else {}
+                if(i=="DataLength"){x@DataLength<-value}else {}
                 if(i=="D"){x@D<-value}else {}
                 if(i=="Formula"){x@Formula<-value}else {}
                 if(i=="levID"){x@levID<-value}else {}
@@ -81,7 +84,7 @@
                 if(i=="RP.cov"){x@RP.cov<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
-                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
+#                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="residual"){x@residual<-value}else {}
                 validObject(x)
                 return (x)
@@ -98,6 +101,7 @@
             signature="mlwinfitIGLS",
             definition=function(x,i,j,value){
                 if(i=="Nobs"){x@Nobs<-value}else {}
+                if(i=="DataLength"){x@DataLength<-value}else {}
                 if(i=="D"){x@D<-value}else {}
                 if(i=="Formula"){x@Formula<-value}else {}
                 if(i=="levID"){x@levID<-value}else {}
@@ -108,39 +112,26 @@
                 if(i=="RP.cov"){x@RP.cov<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
-                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
+#                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="residual"){x@residual<-value}else {}
                 validObject(x)
                 return (x)
             }
         )
-        setMethod("print", "mlwinfitIGLS",
-            function (x,  ...)
-            {
-                cat("*** Class mlwinfitIGLS, method Print *** \n")
-                cat(paste("* Nobs =", x@Nobs,"\n"));cat("\n")
-                cat(paste("* D = '", x@D,"'\n",sep=""));cat("\n")
-                cat(paste("* LIKE =", round(x@LIKE,4),"\n"));cat("\n")
-                cat(paste("* elapsed.time = ",round(x@elapsed.time,3),"\n"));cat("\n")
-                cat("* Formula = \n"); cat(paste(x@Formula,"\n"));cat("\n")
-                cat("* levID = \n"); print(x@levID);cat("\n")
-                cat("* estIGLS = \n"); print(x@estIGLS);cat("\n")
-                cat("* FP = \n"); print(x@FP);cat("\n")
-                cat("* RP = \n"); print(x@RP);cat("\n")
-                cat("* FP.cov = \n"); print(x@FP.cov);cat("\n")
-                cat("* RP.cov = \n"); print(x@RP.cov);cat("\n")
-                ncolshow <- 10
-                if (length(x@chains.bugs)!=0) {cat("* chains.bugs = \n");print(x@chains.bugs[1:ncolshow,]);cat("...\n")}
-                if (length(x@residual)!=0) {cat("* residual = \n");print(x@residual[1:ncolshow,]);cat("...\n")}
-                cat("******* End Print (mlwinfitIGLS) ******* \n")
-            }
-        )
-
         setMethod("summary",
-            signature(object = "mlwinfitIGLS"),
-            function (object,  ...)
+                  signature(object = "mlwinfitIGLS"),
+                  function (object,  ...)
             {
+                    object
 
+            }
+        )
+
+      printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"),...)
+      
+                  {
+
+                object <- summary(x)
                 align2right=function(titlename,ele){
                     #for printing the table on the screen
                     all.ele=c(titlename,ele)
@@ -196,7 +187,7 @@
                 cat(paste(rep("-",50),collapse="*"),"\n")
                 cat("MLwiN multilevel model",paste("(",object@D[1],")",sep=""),"\n")
                 cat("Estimation algorithm:  IGLS        Elapsed time :",paste(round(object@elapsed.time,2),"s",sep=""), "\n")
-                cat("Number of obs: ",object@Nobs,"\n")
+                cat("Number of obs: ",object@Nobs,"(from total",object@DataLength,")\n")
                 cat(paste("Deviance statistic: ", round(object@LIKE,1)),"\n")
                 cat(paste(rep("-",50),collapse="-"),"\n")
                 cat("The model formula:\n")
@@ -225,17 +216,19 @@
                 FP.names2=gsub("FP+\\_","",FP.names)
 
                 printcol0=align2left("        ",FP.names2)
-                printcol1=align2right("Coef.",format(round(FP.print[1,],5),nsmall = 5))
-                printcol2=align2right("Std. Err.",format(round(FP.print[2,],5),nsmall = 5))
+                printcol1=align2right("Coef.",format(round(FP.print[1,],digits),nsmall = digits))
+                printcol2=align2right("Std. Err.",format(round(FP.print[2,],digits),nsmall = digits))
                 printcol3=align2right("z",format(round(FP.print[3,],2),nsmall = 2))
                 printcol4=align2right("Pr(>|z|)",formatC(FP.print[4,]))
                 printcol4b=align2right("   ",strstar)
-                printcol5=align2right("[95% Conf.",format(round(FP.print[5,],5),nsmall = 5))
-                printcol6=align2right("Interval]",format(round(FP.print[6,],5),nsmall = 5))
+                printcol5=align2right("[95% Conf.",format(round(FP.print[5,],digits),nsmall = digits))
+                printcol6=align2right("Interval]",format(round(FP.print[6,],digits),nsmall = digits))
                 for (i in 1:(ncol(FP.print)+1)){
                     cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i]," ",printcol4b[i]," ",printcol5[i]," ",printcol6[i],"\n")
                 }
+                if(signif.stars){
                 cat("Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 ","\n")
+                }
                 nlev=length(object@levID)
                 if (is.na(object@levID[length(object@levID)])){
                     mlwinlev=(nlev-1):1
@@ -256,17 +249,19 @@
                             RPx.names=gsub(paste("RP+",mlwinlev[i],"+\\_",sep=""),"",RP.names[RPx.pos])
                             RPx = as.matrix(RP.print[,RPx.pos],nrow=4)
                             printcol0=align2left("        ",RPx.names)
-                            printcol1=align2right("Coef.",format(round(RPx[1,],5),nsmall = 5))
-                            printcol2=align2right("Std. Err.",format(round(RPx[2,],5),nsmall = 5))
-                            printcol5=align2right("[95% Conf.",format(round(RPx[3,],5),nsmall = 5))
-                            printcol6=align2right("Interval]",format(round(RPx[4,],5),nsmall = 5))
+                            printcol1=align2right("Coef.",format(round(RPx[1,],digits),nsmall = digits))
+                            printcol2=align2right("Std. Err.",format(round(RPx[2,],digits),nsmall = digits))
+#                            printcol5=align2right("[95% Conf.",format(round(RPx[3,],digits),nsmall = digits))
+#                            printcol6=align2right("Interval]",format(round(RPx[4,],digits),nsmall = digits))
                             cat("The random part estimates at the",levID2[i],"level:","\n")
                             for (i in 1:(ncol(RPx)+1)){
-                                cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol5[i]," ",printcol6[i],"\n")
+ #                               cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol5[i]," ",printcol6[i],"\n")
+                              cat(printcol0[i]," ",printcol1[i]," ",printcol2[i],"\n")                            
                             }
                         }
                 }
                 cat(paste(rep("-",50),collapse="*"),"\n")
 
             }
-        )
+      setMethod("print", "mlwinfitIGLS", printIGLS)
+      setMethod("show",  "mlwinfitIGLS", function(object) printIGLS(object))

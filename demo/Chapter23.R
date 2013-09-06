@@ -22,7 +22,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -61,12 +61,12 @@ while (!file.access(winbugs,mode=0)==0||!file.access(winbugs,mode=1)==0||!file.a
 formula="logit(use,denomb)~(0|cons+age+lc[nokids]+urban)+(2|cons+urban)"
 levID=c('district','woman')
 estoptions= list(EstM=1)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcOptions=list(orth=1))
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,MLwiNPath=mlwin))
 trajectories(mymodel["chains"])
 
 # 23.4 A Poisson example . . . . . . . . . . . . . . . . . . . . . . . . 364
@@ -85,13 +85,13 @@ levID=c('region','county')
 ## Choose option(s) for inference
 estoptions= list(EstM=1,mcmcMeth=list(iterations=50000))
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["FP_Belgium"]],acf.maxlag=5000,"beta_1")
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=5000,"beta_1")
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcMeth=list(iterations=50000), mcmcOptions=list(orth=1))
-mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin)
-sixway(mymodel["chains"][["FP_Belgium"]],acf.maxlag=100,"beta_1")
+(mymodel=runMLwiN(formula, levID, D="Poisson", indata, estoptions,MLwiNPath=mlwin))
+sixway(mymodel["chains"][,"FP_Belgium"],acf.maxlag=100,"beta_1")
 
 # 23.5 An Ordered multinomial example . . . . . . . . . . . . . . . . . .368
 
@@ -116,13 +116,13 @@ levID=c('estab','pupil')
 ##MCMC
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 trajectories(mymodel["chains"])
 
 ##Orthogonal update
 estoptions= list(EstM=1, mcmcOptions=list(orth=1))
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D='Ordered Multinomial', indata, estoptions,MLwiNPath=mlwin))
 trajectories(mymodel["chains"])
 
 # 23.6 The WinBUGS interface . . . . . . . . . . . . . . . . . . . . . . 372
@@ -160,10 +160,9 @@ levID=c('district','woman')
 
 ##Orthogonal update (WinBUGS)
 estoptions= list(EstM=1, mcmcOptions=list(orth=1),show.file=T)
-mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
-summary(mymodel["chains.bugs"])
-apply(mymodel["chains.bugs"][[1]],2,effectiveSize)
-sixway(mymodel["chains.bugs"][[1]][,"beta[1]"],"beta[1]")
+mymodel=runMLwiN(formula, levID, D="Binomial", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F),MLwiNPath=mlwin)
+apply(mymodel[[1]],2,effectiveSize)
+sixway(mymodel[[1]][,"beta[1]"],"beta[1]")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .379
 

@@ -26,7 +26,7 @@ A caterpillar plot of the residuals at the requested level of the random part of
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 
@@ -38,18 +38,14 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 
-
 ## Example: Normal
-formula="normexam~(0|cons+standlrt+girl)+(2|cons+standlrt)+(1|cons+standlrt+girl)"
+formula="normexam~(0|cons)+(2|cons)+(1|cons)"
 levID=c('school','student')
-clre=matrix(,nrow=3,ncol=2)
-clre[1,1]=1; clre[2,1]='standlrt'; clre[3,1]='standlrt'
-clre[1,2]=1; clre[2,2]='girl'; clre[3,2]='girl'
-estoptions= list(EstM=1,mcmcMeth=list(nopause=TRUE),resi.store=TRUE,clre=clre)
+estoptions= list(resi.store=TRUE)
 wsfile=paste(wspath,"tutorial.ws",sep="")
 inputfile=paste(tempdir(),"/tutorial.dta",sep="")
 ws2foreign(wsfile, foreignfile=inputfile, MLwiNPath=mlwin)

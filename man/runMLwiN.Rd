@@ -10,7 +10,7 @@ This function executes MLwiN and then brings results back to R. A summary of the
 \usage{
 runMLwiN(Formula, levID, D = "Normal", indata,
 estoptions = list(EstM = 0), BUGO = NULL,
-MLwiNPath = "C:/Program Files (x86)/MLwiN v2.26/", workdir=tempdir())
+MLwiNPath = "C:/Program Files (x86)/MLwiN v2.27/", workdir=tempdir())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,7 +33,7 @@ A list of options used for estimating the model. See Value below.
 A vector specifying BUGS options. If non-null, then WinBUGS/OpenBUGS, in conjunction with MLwiN, are used for modelling. see Value below.
 }
   \item{MLwiNPath}{
-A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.26/".
+A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.27/".
 }
 
   \item{workdir}{
@@ -75,10 +75,13 @@ If \code{TRUE}, the generated files will be removed from the \code{workdir}.
 
 The argument \code{BUGO} is a vector specifying BUGS options as follows:
 \item{version}{This indicates the version of WinBUGS where \code{3} = version 1.3 and \code{4} = version 1.4.}
-\item{n.chains}{This specifies the number of chains used in the BUGS algorithm. Currently we support \code{n.chains}=1 only.}
+\item{n.chains}{This specifies the number of chains used in the BUGS algorithm.}
+\item{debug}{This determines whether BUGS stays open following completion of the model run; \code{debug=F} by default.}
+\item{seed}{This sets the random number generator in BUGS.}
 \item{bugs}{This specifies the path of the BUGS executable.}
 \item{OpenBugs}{If \code{OpenBugs=TRUE}, OpenBUGS is used. Otherwise, WinBUGS is used.}
 
+If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}} object.
 
 If the IGLS algorithm is used, (i.e., \code{EstM=0}), then the outputs are
 \item{estIGLS}{Captures the parameter estimates from MLwiN using the IGLS algorithm. <_FP_b column> has the fixed part estimates and its variances and covariances are stored in <_FP_v column>; <_RP_b column> has the random part estimates and its variances and covariances are stored in <_RP_v column>; The likelihood statistic is stored in <_Stats column>.}
@@ -87,7 +90,6 @@ If the IGLS algorithm is used, (i.e., \code{EstM=0}), then the outputs are
 \item{FP.cov}{Displays a covariance matrix of the fixed part estimates.}
 \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
 \item{LIKE}{The likelihood statistic (-2*log(like))}
-\item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
 \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
 
 If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
@@ -99,7 +101,6 @@ If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
 \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
 \item{LIKE}{The likelihood statistic (-2*log(like))}
 \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
-\item{chains.bugs}{If \code{BUGO} is used, then the output chains from WinBUGS/OpenBUGS are returned.}
 \item{fact.loadings}{If \code{fact} is not empty, then the factor loadings are returned.}
 \item{fact.cov}{If \code{fact} is not empty, then factor covariances are returned.}
 \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
@@ -111,7 +112,7 @@ If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
 Note that (1) if \code{EstM=1}, the IGLS algorithm is preprocessed to obtain the starting values of all the parameters for the MCMC algorithm; (2) from Version 2.26, a new mlnscript.exe is called for both x64 and i386 if MLwiN is running in the background (i.e. debugmode = FALSE); the debug mode is currently not available for the 64 bit MLwiN.
 }
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 
@@ -161,7 +162,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 file.show(system.file("demo", "Chapter03.R", package="R2MLwiN"))
 
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 
 ## To run the demo for Chapter03
 demo(Chapter03)

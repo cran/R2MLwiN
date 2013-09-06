@@ -1,5 +1,5 @@
 double2singlePrecision <- function(x) {
-    ## A wraped function is used to change double to single
+    ## A wrapped function is used to change double to single
     if(is.matrix(x)||is.data.frame(x)){
        flag=0
        if(is.data.frame(x)) flag=1

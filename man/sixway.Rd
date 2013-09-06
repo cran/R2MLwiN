@@ -8,12 +8,12 @@ Draws a sixway plot of MCMC diagnostics.
 This function produces a variety of diagnostic plots and statistics for MCMC chains.
 }
 \usage{
-sixway(chain, name=NULL, acf.maxlag=100, pacf.maxlag=10, thinning=1)
+sixway(chain, name=NULL, acf.maxlag=100, pacf.maxlag=10)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{chain}{
-A numeric vector storing the MCMC chain for a chosen parameter.
+A numeric vector, or \code{\link{mcmc}} object (in which case uses its \code{thin} argument, otherwise assumes thinning=1), storing the MCMC chain for a chosen parameter.
 }
   \item{name}{
 The parameter name. If \code{name=NULL}, the parameter name is "x" by default.
@@ -24,14 +24,11 @@ Maximum lag at which to calculate the auto-correlation function. \code{acf.maxla
   \item{pacf.maxlag}{
 Maximum lag at which to calculate the partial auto-correlation function. \code{pacf.maxlag=10} by default.
 }
-  \item{thinning}{
-An integer specifying the frequency with which successive values in the Markov chain are stored. By default \code{thinning=1}.
-}
 }
 
 \value{
 A variety of plots and statistics are displayed in an R graphic window, including the following:
-\item{trace plot}{the plotted trajectory of an MCMC chain for a model parameter (all the chain's iterations all plotted);}
+\item{trace plot}{the plotted trajectory of an MCMC chain for a model parameter (only the stored chain iterations are plotted);}
 \item{kernel density plot}{kernel density estimates are computed using \code{\link{density}};}
 \item{autocorrelation function}{the function \code{\link{acf}} is used to compute and plot estimates of the autocorrelation function;}
 \item{partial autocorrelation function}{the function \code{\link{pacf}} computes and plots estimates of the partial autocorrelation function;}
@@ -41,7 +38,7 @@ A variety of plots and statistics are displayed in an R graphic window, includin
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 \seealso{
@@ -52,7 +49,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 

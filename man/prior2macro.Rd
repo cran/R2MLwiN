@@ -44,7 +44,7 @@ A long vector is returned in the format of MLwiN macro language. This includes a
 MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 

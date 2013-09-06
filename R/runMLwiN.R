@@ -1,12 +1,12 @@
 runMLwiN <-
-function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.26/",workdir=tempdir()) {
+function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.27/",workdir=tempdir()) {
 
-    PACKages<-as.character(as.data.frame(installed.packages())$Package)
-    packs.req= c("foreign","rbugs","coda")
-    test<-( packs.req %in% PACKages)
-    if (!all(test))
-	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-    require(foreign); require(rbugs); require(coda)
+#    PACKages<-as.character(as.data.frame(installed.packages())$Package)
+#    packs.req= c("foreign","rbugs","coda")
+#    test<-( packs.req %in% PACKages)
+#    if (!all(test))
+#	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
+#    require(foreign); require(rbugs); require(coda)
 
     EstM=estoptions$EstM
     if (is.null(EstM)) EstM=0
@@ -20,8 +20,9 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     resioptions=estoptions$resioptions
     if (is.null(resioptions)) resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")
     if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
-        stop("variance will not be calculated together with standardiased or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
+        stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
     }
+    
     resi.store.levs=estoptions$resi.store.levs
 
     weighting = estoptions$weighting
@@ -59,7 +60,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     IGLSfile =gsub("\\", "/", tempfile("IGLSfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
     if (EstM==1) MCMCfile =gsub("\\", "/", tempfile("MCMCfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
     if (EstM==1) chainfile =gsub("\\", "/", tempfile("chainfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
-    if (!is.null(BUGO))  bugofile=gsub("\\", "/", tempfile("bugofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE) else bugofile=NULL
+#    if (!is.null(BUGO))  bugofile=gsub("\\", "/", tempfile("bugofile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE) else bugofile=NULL
     if (!is.null(BUGO))  modelfile=gsub("\\", "/", tempfile("modelfile_",tmpdir =workdir, fileext=".txt"), fixed=TRUE) else modelfile=NULL
     if (!is.null(BUGO))  initfile=gsub("\\", "/", tempfile("initfile_",tmpdir =workdir,fileext=".txt"), fixed=TRUE) else initfile=NULL
     if (!is.null(BUGO))  datafile=gsub("\\", "/", tempfile("datafile_",tmpdir =workdir,fileext=".txt"), fixed=TRUE) else datafile=NULL
@@ -117,60 +118,26 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     fact =estoptions$fact
     xclass=estoptions$xclass
 
-    align2right=function(titlename,ele){
-        #for printing the table on the screen
-        all.ele=c(titlename,ele)
-        len.all.ele=nchar(all.ele)
-        max.len.ele=max(len.all.ele)
-        for (j in 1:length(all.ele)){
-            if (len.all.ele[j]<max.len.ele){
-                len.diff=max.len.ele-len.all.ele[j]
-                all.ele[j]=paste(paste(rep(" ",len.diff),collapse=""),all.ele[j],sep="")
-            }
+    finalClean <- function(clean.files){
+      if (clean.files){
+        file.remove(dtafile)
+        file.remove(macrofile)
+        file.remove(IGLSfile)
+        if (EstM==1 && is.null(BUGO)) file.remove(MCMCfile)
+        if (EstM==1 && is.null(BUGO)) file.remove(chainfile)
+        #if (!is.null(BUGO))  file.remove(bugofile)
+        if (!is.null(BUGO))  file.remove(modelfile)
+        if (resi.store&& is.null(BUGO)) file.remove(resifile)
+        if (EstM==1 && is.null(BUGO)){
+          if (!is.null(resi.store.levs)) file.remove(resichains)
+          if (!is.null(fact)) file.remove(FACTchainfile)
+          if (!is.null(dami)) file.remove(MIfile)
         }
-
-        all.ele
-    }
-
-    align2left=function(titlename,ele){
-        #for printing the table on the screen
-        all.ele=c(titlename,ele)
-        len.all.ele=nchar(all.ele)
-        max.len.ele=max(len.all.ele)
-        for (j in 1:length(all.ele)){
-            if (len.all.ele[j]<max.len.ele){
-                len.diff=max.len.ele-len.all.ele[j]
-                all.ele[j]=paste(all.ele[j],paste(rep(" ",len.diff),collapse=""),sep="")
-            }
-        }
-
-        all.ele
-    }
-
-    signifstar = function(pval){
-        starstr="Error"
-        if (pval>=0&&pval<=1){
-            if(pval<0.001){
-                starstr='***'
-            }
-            if(pval>=0.001&&pval<0.01){
-                starstr='** '
-            }
-            if(pval>=0.01&&pval<0.05){
-                starstr='*  '
-            }
-            if(pval>=0.05&&pval<0.1){
-                starstr='.  '
-            }
-            if(pval>=0.1){
-                starstr='   '
-            }
-        }
-        starstr
+      } 
     }
     if (EstM==0){
         MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
-        BUGO,mem.init, weighting, bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
+        BUGO,mem.init, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
         iterations=estoptions$mcmcMeth$iterations
         if(is.null(iterations)) iterations=5000
         burnin=estoptions$mcmcMeth$burnin
@@ -186,21 +153,22 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         if (file.access(MLwiNPath1)==0) setwd(MLwiNPath1) else setwd(MLwiNPath)
         if (debugmode){
             if (file.access("mlwin.exe", mode=1)==0){
-                cmd=paste("mlwin.exe /run", macrofile)
+                cmd=paste("mlwin.exe /run \"", macrofile, "\"", sep="")
             }else{
                 if (file.access("mlnscript.exe", mode=1)==0){
-                    cmd=paste("mlnscript.exe /run", macrofile)
+                    cmd=paste("mlnscript.exe /run \"", macrofile, "\"", sep="")
                 }
             }
         }else{
             if (file.access("mlnscript.exe", mode=1)==0){
-                cmd=paste("mlnscript.exe /run", macrofile)
+                cmd=paste("mlnscript.exe /run \"", macrofile, "\"", sep="")
             }else{
-                cmd=paste("mlwin.exe /nogui /run", macrofile)
+                cmd=paste("mlwin.exe /nogui /run \"", macrofile, "\"", sep="")
             }
         }
         time1=proc.time()
         shell(cmd)
+        cat("\n")
         time2=proc.time()-time1
         setwd(WD)
         estIGLS <-read.dta(IGLSfile)
@@ -218,103 +186,32 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
             }
         }
         names(RP)=RP.names
-        LIKE=na.omit(estIGLS[,dim(estIGLS)[2]])[1]
+        LIKE=estIGLS[,dim(estIGLS)[2]][3]
         if(LIKE==1) LIKE=NA
-        cat("\n")
-        cat(paste(rep("-",50),collapse="*"),"\n")
-        cat("MLwiN multilevel model",paste("(",D[1],")",sep=""),"\n")
-        cat("Estimation algorithm:  IGLS        Elapsed time :",paste(round(time2[3],2),"s",sep=""), "\n")
-        cat("Number of obs: ",length(indata[[1]]),"\n")
-        cat(paste("Deviance statistic: ", round(LIKE,1)),"\n")
-        cat(paste(rep("-",50),collapse="-"),"\n")
-        cat("The model formula:\n")
-        cat(gsub("[[:space:]]","",Formula),"\n")
-        levID.display=""
-        if (is.na(levID0[length(levID0)])){
-            levID0=levID0[-length(levID0)]
-        }
-        for (i in 1:length(levID0)){
-            levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
-        }
-        cat(levID.display,"\n")
-        cat(paste(rep("-",50),collapse="-"),"\n")
-
-
+        Missing=estIGLS[,dim(estIGLS)[2]][9]
         estIGLS2=na.omit(estIGLS[,2])
         FP.cov=matrix(NA,length(FP),length(FP))
         k=1
         for (i in 1:length(FP)){
-            for (j in 1:i){
-                FP.cov[i,j]=estIGLS2[k]
-                k=k+1
-            }
+          for (j in 1:i){
+            FP.cov[i,j]=estIGLS2[k]
+            k=k+1
+          }
         }
         colnames(FP.cov)=rownames(FP.cov)=FP.names
         estIGLS4=na.omit(estIGLS[,4])
         RP.cov=matrix(NA,length(RP),length(RP))
         k=1
         for (i in 1:length(RP)){
-            for (j in 1:i){
-                RP.cov[i,j]=estIGLS4[k]
-                k=k+1
-            }
+          for (j in 1:i){
+            RP.cov[i,j]=estIGLS4[k]
+            k=k+1
+          }
         }
         colnames(RP.cov)=rownames(RP.cov)=RP.names
-
-        cat("The fixed part estimates: ","\n")
-        FP.print=rbind(FP,sqrt(diag(FP.cov)))
-        z.score=FP.print[1,]/FP.print[2,]
-        p.value=2 * pnorm(abs(z.score), lower.tail = FALSE)
-        strstar=as.vector(sapply(p.value,signifstar))
-        qt025=FP.print[1,]-qnorm(.975)*FP.print[2,]
-        qt975=FP.print[1,]+qnorm(.975)*FP.print[2,]
-        FP.print=rbind(FP.print,z.score,p.value,qt025,qt975)
-        FP.names2=gsub("FP+\\_","",FP.names)
-
-        printcol0=align2left("        ",FP.names2)
-        printcol1=align2right("Coef.",format(round(FP.print[1,],5),nsmall = 5))
-        printcol2=align2right("Std. Err.",format(round(FP.print[2,],5),nsmall = 5))
-        printcol3=align2right("z",format(round(FP.print[3,],2),nsmall = 2))
-        printcol4=align2right("Pr(>|z|)",formatC(FP.print[4,]))
-        printcol4b=align2right("   ",strstar)
-        printcol5=align2right("[95% Conf.",format(round(FP.print[5,],5),nsmall = 5))
-        printcol6=align2right("Interval]",format(round(FP.print[6,],5),nsmall = 5))
-        for (i in 1:(ncol(FP.print)+1)){
-            cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i]," ",printcol4b[i]," ",printcol5[i]," ",printcol6[i],"\n")
-        }
-        cat("Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 ","\n")
-        nlev=length(levID)
-        if (is.na(levID[length(levID)])){
-            mlwinlev=(nlev-1):1
-            levID2=levID0
-        }else{
-            mlwinlev=nlev:1
-            levID2=levID
-        }
-
-        RP.print=rbind(RP,sqrt(diag(RP.cov)))
-        qt025=RP.print[1,]-qnorm(.975)*RP.print[2,]
-        qt975=RP.print[1,]+qnorm(.975)*RP.print[2,]
-        RP.print=rbind(RP.print,qt025,qt975)
-        for (i in 1:length(mlwinlev)){
-                RPx.pos=grep(paste("RP",mlwinlev[i],sep=""),RP.names)
-                if (length(RPx.pos)!=0){
-                    cat(paste(rep("-",50),collapse="-"),"\n")
-                    RPx.names=gsub(paste("RP+",mlwinlev[i],"+\\_",sep=""),"",RP.names[RPx.pos])
-                    RPx = as.matrix(RP.print[,RPx.pos],nrow=4)
-                    printcol0=align2left("        ",RPx.names)
-                    printcol1=align2right("Coef.",format(round(RPx[1,],5),nsmall = 5))
-                    printcol2=align2right("Std. Err.",format(round(RPx[2,],5),nsmall = 5))
-                    printcol5=align2right("[95% Conf.",format(round(RPx[3,],5),nsmall = 5))
-                    printcol6=align2right("Interval]",format(round(RPx[4,],5),nsmall = 5))
-                    cat("The random part estimates at the",levID2[i],"level:","\n")
-                    for (i in 1:(ncol(RPx)+1)){
-                        cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol5[i]," ",printcol6[i],"\n")
-                    }
-                }
-        }
-        cat(paste(rep("-",50),collapse="*"),"\n")
-
+        
+        if (is.null(BUGO)){
+    }
     }
 
     # MCMC algorithm (using the starting values obtain from IGLS algorithm)
@@ -375,9 +272,9 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         if (is.null(nopause)) nopause=F
         dami=mcmcMeth$dami
         if (!is.null(dami)){
-            esamplefile=gsub("\\", "/", tempfile("esamplefile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
+            MIfile=gsub("\\", "/", tempfile("MIfile_",tmpdir =workdir, fileext=".dta"), fixed=TRUE)
         }else{
-            dami=esamplefile=NULL
+            dami=MIfile=NULL
         }
         if (!is.null(fact)){
             FACTchainfile=gsub("\\", "/", tempfile("factchainfile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
@@ -407,8 +304,8 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 
 
         MacroScript2(indata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,
-        nopause,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-        chainfile=chainfile,esamplefile=esamplefile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
+        nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
+        chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
         WD <- getwd()
         if (x64){
             MLwiNPath1=paste(MLwiNPath,'/x64/',sep='')
@@ -434,220 +331,117 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         cat("MLwiN is running, please wait......\n")
         time1=proc.time()
         shell(cmd)
+        cat("\n")
         time2=proc.time()-time1
         setwd(WD)
-
-        estMCMC <-read.dta(MCMCfile)
-        chains <- read.dta(chainfile)
-
-        chain.names=names(chains)
-        FP.names=chain.names[grep('FP',chain.names)]
-        RP.names=chain.names[grep('RP',chain.names)]
-        FP=as.vector(na.omit(estMCMC[,1]))
-        names(FP)=FP.names
-        RP=as.vector(na.omit(estMCMC[,3]))
-        levID0=levID
-        if (is.na(levID0[length(levID0)])){
-            tmp.RP.names=gsub("RP","",RP.names)
-            for (i in 1:length(RP.names)){
-                tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
-                tmpno=as.integer(tmpstrlist[1])-1
-                RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
-            }
-            chain.names[grep('RP',chain.names)] =RP.names
-            names(chains)=chain.names
-        }
-        names(RP)=RP.names
-        Chains=mcmc(data=chains[,-c(1,2)])
-        ESS=effectiveSize(Chains)
-        cat("\n")
-        cat(paste(rep("-",50),collapse="*"),"\n")
-        cat("MLwiN multilevel model",paste("(",D[1],")",sep=""),"\n")
-        if (is.null(xclass)){
-            cat("Estimation algorithm:  MCMC      Elapsed time :",paste(round(time2[3],2),"s",sep=""), "\n")
-        }else{
-            cat("Estimation algorithm:  MCMC      Cross-classified              Elapsed time :",paste(round(time2[3],2),"s",sep=""), "\n")
-        }
-        cat("Number of obs: ",length(indata[[1]]),"            Number of iter.:",iterations,"            Burn-in:", burnin , "\n")
-
-
-        if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
-            BDIC=na.omit(estMCMC[,dim(estMCMC)[2]])[c(3,4,2,1)]
-            BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
-            names(BDIC)=BDIC.names
-            cat("Bayesian Deviance Information Criterion (DIC)\n")
-            cat("Dbar      D(thetabar)    pD      DIC\n")
-            cat(formatC(BDIC,format="f",digits=3,width=-10),"\n")
-        }else{
-            LIKE=na.omit(estMCMC[,dim(estMCMC)[2]])[1]
-            if(LIKE==1) LIKE=NA
-            cat(paste("Deviance statistic: ", round(LIKE,1)),"\n")
-        }
-        cat(paste(rep("-",50),collapse="-"),"\n")
-        cat("The model formula:\n")
-        cat(gsub("[[:space:]]","",Formula),"\n")
-        levID.display=""
-        if (is.na(levID0[length(levID0)])){
-            levID0=levID0[-length(levID0)]
-        }
-        for (i in 1:length(levID0)){
-            levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
-        }
-        cat(levID.display,"\n")
-        cat(paste(rep("-",50),collapse="-"),"\n")
-        if (!is.null(fact)){
-            loadings=na.omit(estMCMC[,5])
-            load.names=rep(NA,length(loadings))
-            k=1
-            for (i in 1:fact$nfact){
-                for (j in resp){
-                    load.names[k]=paste("load",i,"_",j,sep="")
-                    k=k+1
-                }
-            }
-            loadings.sd=na.omit(estMCMC[,6])
-            qt025=loadings-qnorm(.975)*loadings.sd
-            qt975=loadings+qnorm(.975)*loadings.sd
-            loads=rbind(loadings,loadings.sd,qt025,qt975)
-            colnames(loads)=load.names
-
-            for (j in 1:fact$nfact){
-                cat("The estimates of factor",j,"loadings:\n")
-                loadx.names=load.names[grep(paste("load+",j,"+\\_",sep=""),load.names)]
-                loadx=loads[,loadx.names]
-                printcol0=align2left("        ",loadx.names)
-                printcol1=align2right("Coef.",format(round(loadx[1,],5),nsmall = 5))
-                printcol2=align2right("Std. Err.",format(round(loadx[2,],5),nsmall = 5))
-                printcol3=align2right("[95% Conf.",format(round(loadx[3,],5),nsmall = 5))
-                printcol4=align2right("Interval]",format(round(loadx[4,],5),nsmall = 5))
-                for (i in 1:(ncol(loadx)+1)){
-                    cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i],"\n")
-                }
-                cat(paste(rep("-",50),collapse="-"),"\n")
-            }
-
-            fact.cov=fact.cov.names=na.omit(estMCMC[,7])
-            fact.cov.sd=na.omit(estMCMC[,8])
-            k=1
-            for (i in 1:fact$nfact){
-                for(j in 1:i){
-                    if(i==j){
-                        fact.cov.names[k]=paste("var_fact",i,sep="")
-                    }else{
-                        fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
-                    }
-                    k=k+1
-                }
-            }
-            qt025=fact.cov-qnorm(.975)*fact.cov.sd
-            qt975=fact.cov+qnorm(.975)*fact.cov.sd
-            fcov=rbind(fact.cov,fact.cov.sd,qt025,qt975)
-            colnames(fcov)=fact.cov.names
-
-            cat("The estimates of factor covariances:\n")
-            printcol0=align2left("        ",fact.cov.names)
-            printcol1=align2right("Coef.",format(round(fcov[1,],5),nsmall = 5))
-            printcol2=align2right("Std. Err.",format(round(fcov[2,],5),nsmall = 5))
-            printcol3=align2right("[95% Conf.",format(round(fcov[3,],5),nsmall = 5))
-            printcol4=align2right("Interval]",format(round(fcov[4,],5),nsmall = 5))
-            for (i in 1:(ncol(fcov)+1)){
-                cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i],"\n")
-            }
-            cat(paste(rep("-",50),collapse="-"),"\n")
-
-        }
-
-
-        estMCMC2=na.omit(estMCMC[,2])
-        FP.cov=matrix(NA,length(FP),length(FP))
-        k=1
-        for (i in 1:length(FP)){
-            for (j in 1:i){
-                FP.cov[i,j]=estMCMC2[k]
-                k=k+1
-            }
-        }
-        colnames(FP.cov)=rownames(FP.cov)=FP.names
-        estMCMC4=na.omit(estMCMC[,4])
-        RP.cov=matrix(NA,length(RP),length(RP))
-        k=1
-        for (i in 1:length(RP)){
-            for (j in 1:i){
-                RP.cov[i,j]=estMCMC4[k]
-                k=k+1
-            }
-        }
-        colnames(RP.cov)=rownames(RP.cov)=RP.names
-
-        cat("The fixed part estimates: ","\n")
-        FP.print=rbind(FP,sqrt(diag(FP.cov)))
-        if (sum(grepl("bcons",colnames(Chains)))>0){
-            bcons.pos=grep("bcons",colnames(Chains))
-            Chains[1,bcons.pos]=Chains[1,bcons.pos]-0.001
-        }
-
-        t.stats=apply(Chains,2,function(x) mean(x)/sd(x))
-        p.values=2*pnorm(abs(t.stats),lower.tail =F)
-        strstar=as.vector(sapply(p.values,signifstar))
-        t.stat=NULL
-        for (i in FP.names)  t.stat=c(t.stat, t.stats[[i]])
-        p.value=NULL
-        for (i in FP.names)  p.value=c(p.value, p.values[[i]])
-        qt025=NULL
-        for (i in FP.names)  qt025=c(qt025, quantile(Chains[,i],.025))
-        qt975=NULL
-        for (i in FP.names)  qt975=c(qt975, quantile(Chains[,i],.975))
-        FP.print=rbind(FP.print,t.stat,p.value,qt025,qt975,ESS[FP.names])
-        FP.names2=gsub("FP+\\_","",FP.names)
-
-        printcol0=align2left("        ",FP.names2)
-        printcol1=align2right("Coef.",format(round(FP.print[1,],5),nsmall = 5))
-        printcol2=align2right("Std. Err.",format(round(FP.print[2,],5),nsmall = 5))
-        printcol3=align2right("z",format(round(FP.print[3,],2),nsmall = 2))
-        printcol4=align2right("Pr(>|z|)",formatC(FP.print[4,]))
-        printcol4b=align2right("   ",strstar)
-        printcol5=align2right("[95% Conf.",format(round(FP.print[5,],5),nsmall = 5))
-        printcol6=align2right("Interval]",format(round(FP.print[6,],5),nsmall = 5))
-        printcol7=align2right("ESS",format(round(FP.print[7,]),nsmall=0))
-        for (i in 1:(ncol(FP.print)+1)){
-            cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol3[i]," ",printcol4[i]," ",printcol4b[i]," ",printcol5[i]," ",printcol6[i]," ",printcol7[i],"\n")
-        }
-        cat("Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 ","\n")
-
         nlev=length(levID)
-        if (is.na(levID[length(levID)])){
+        if (is.null(BUGO)){
+          estMCMC <-read.dta(MCMCfile)
+          chains <- read.dta(chainfile)
+
+          chain.names=names(chains)
+          FP.names=chain.names[grep('FP',chain.names)]
+          RP.names=chain.names[grep('RP',chain.names)]
+          FP=as.vector(na.omit(estMCMC[,1]))
+          names(FP)=FP.names
+          RP=as.vector(na.omit(estMCMC[,3]))
+          levID0=levID
+          if (is.na(levID0[length(levID0)])){
+              tmp.RP.names=gsub("RP","",RP.names)
+              for (i in 1:length(RP.names)){
+                  tmpstrlist=unlist(strsplit(tmp.RP.names[i],"\\_"))
+                  tmpno=as.integer(tmpstrlist[1])-1
+                  RP.names[i]=paste("RP",tmpno,"_",paste(tmpstrlist[-1],collapse="_"),sep="")
+              }
+              chain.names[grep('RP',chain.names)] =RP.names
+              names(chains)=chain.names
+          }
+          names(RP)=RP.names
+          chains=mcmc(data=chains[,-1], thin = thinning)        
+          ESS=effectiveSize(chains)
+
+          if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
+              BDIC=estMCMC[,dim(estMCMC)[2]][c(5,6,4,3)]
+              BDIC.names=c("Dbar", "D(thetabar)",  "pD", "DIC")
+              names(BDIC)=BDIC.names
+          }else{
+              LIKE=estMCMC[,dim(estMCMC)[2]][3]
+              if(LIKE==1) LIKE=NA
+          }
+          Missing=estMCMC[,dim(estMCMC)[2]][9]
+          levID.display=""
+          if (is.na(levID0[length(levID0)])){
+              levID0=levID0[-length(levID0)]
+          }
+          for (i in 1:length(levID0)){
+              levID.display=paste(levID.display,"Level ",length(levID0)+1-i,": ",levID0[i],"     ",sep="")
+          }
+          if (!is.null(fact)){
+              loadings=na.omit(estMCMC[,5])
+              load.names=rep(NA,length(loadings))
+              k=1
+              for (i in 1:fact$nfact){
+                  for (j in resp){
+                      load.names[k]=paste("load",i,"_",j,sep="")
+                      k=k+1
+                  }
+              }
+              loadings.sd=na.omit(estMCMC[,6])
+              qt025=loadings-qnorm(.975)*loadings.sd
+              qt975=loadings+qnorm(.975)*loadings.sd
+              loads=rbind(loadings,loadings.sd,qt025,qt975)
+              colnames(loads)=load.names
+
+              fact.cov=fact.cov.names=na.omit(estMCMC[,7])
+              fact.cov.sd=na.omit(estMCMC[,8])
+              k=1
+              for (i in 1:fact$nfact){
+                  for(j in 1:i){
+                      if(i==j){
+                          fact.cov.names[k]=paste("var_fact",i,sep="")
+                      }else{
+                          fact.cov.names[k]=paste("cov_fact",i,"_fact",j,sep="")
+                      }
+                      k=k+1
+                  }
+              }
+           }
+
+
+          estMCMC2=na.omit(estMCMC[,2])
+          FP.cov=matrix(NA,length(FP),length(FP))
+          k=1
+          for (i in 1:length(FP)){
+              for (j in 1:i){
+                  FP.cov[i,j]=estMCMC2[k]
+                  k=k+1
+              }
+          }
+          colnames(FP.cov)=rownames(FP.cov)=FP.names
+          estMCMC4=na.omit(estMCMC[,4])
+          RP.cov=matrix(NA,length(RP),length(RP))
+          k=1
+          for (i in 1:length(RP)){
+              for (j in 1:i){
+                  RP.cov[i,j]=estMCMC4[k]
+                  k=k+1
+              }
+          }
+          colnames(RP.cov)=rownames(RP.cov)=RP.names
+
+          if (sum(grepl("bcons",colnames(chains)))>0){
+              bcons.pos=grep("bcons",colnames(chains))
+              chains[1,bcons.pos]=chains[1,bcons.pos]-0.001
+          }
+          
+          if (is.na(levID[length(levID)])){
             mlwinlev=(nlev-1):1
             levID2=levID0
-        }else{
+          }else{
             mlwinlev=nlev:1
             levID2=levID
-        }
-
-        RP.print=rbind(RP,sqrt(diag(RP.cov)))
-        qt025=NULL
-        for (i in RP.names)  qt025=c(qt025, quantile(Chains[,i],.025))
-        qt975=NULL
-        for (i in RP.names)  qt975=c(qt975, quantile(Chains[,i],.975))
-        RP.print=rbind(RP.print,qt025,qt975,ESS[RP.names])
-        for (i in 1:length(mlwinlev)){
-                RPx.pos=grep(paste("RP",mlwinlev[i],sep=""),RP.names)
-                if (length(RPx.pos)!=0){
-                    cat(paste(rep("-",50),collapse="-"),"\n")
-                    RPx.names=gsub(paste("RP+",mlwinlev[i],"+\\_",sep=""),"",RP.names[RPx.pos])
-                    RPx = as.matrix(RP.print[,RPx.pos],nrow=4)
-                    printcol0=align2left("        ",RPx.names)
-                    printcol1=align2right("Coef.",format(round(RPx[1,],5),nsmall = 5))
-                    printcol2=align2right("Std. Err.",format(round(RPx[2,],5),nsmall = 5))
-                    printcol5=align2right("[95% Conf.",format(round(RPx[3,],5),nsmall = 5))
-                    printcol6=align2right("Interval]",format(round(RPx[4,],5),nsmall = 5))
-                    printcol7=align2right("ESS",format(round(RPx[5,]),nsmall = 0))
-                    cat("The random part estimates at the",levID2[i],"level:","\n")
-                    for (i in 1:(ncol(RPx)+1)){
-                        cat(printcol0[i]," ",printcol1[i]," ",printcol2[i]," ",printcol5[i]," ",printcol6[i]," ",printcol7[i],"\n")
-                    }
-                }
-        }
-        cat(paste(rep("-",50),collapse="*"),"\n")
+          }
+      }
     }
 
     if (show.file) file.show(macrofile)
@@ -678,18 +472,55 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
             }
         }
         #if(show.file) file.show(bugEst)
-        chains.bugs.mcmc=mlwin2bugs(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = as.numeric(BUGO[2]), n.iter = n.iter, n.burnin=burnin, n.thin=thinning, debug=T, bugs=BUGO[3],
-        bugsWorkingDir=workdir, OpenBugs = as.logical(BUGO[4]), cleanBugsWorkingDir=clean.files)
+        debug=as.logical(BUGO["debug"])
+        if (is.na(debug)){
+        debug=F
+        }
+        OpenBugs=as.logical(BUGO["OpenBugs"])
+        if (is.na(OpenBugs)){
+          OpenBugs=F
+        }
+        version=as.integer(BUGO["version"])
+        if (is.na(version)){
+          version=4
+        }
+        n.chains=as.integer(BUGO["n.chains"])
+        if (is.na(n.chains)){
+          n.chains=1
+        }
+        bugs.seed=BUGO["seed"]
+        bugs=BUGO["bugs"]
+        if (is.na(bugs.seed)){
+          bugs.seed=NULL
+        }
+        if (is.na(bugs)){
+          stop("Need to specify path to the BUGS executable.")
+        }
+        chains.bugs.mcmc=mlwin2bugs(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains, n.iter = n.iter, n.burnin=burnin, n.thin=thinning, debug=debug, bugs=bugs,
+        bugsWorkingDir=workdir, OpenBugs = OpenBugs, cleanBugsWorkingDir=clean.files, seed = bugs.seed)
         time2=proc.time()-time1
     }else{
         if (D[1]=="Mixed"&&(!is.null(BUGO)))  warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
     }
-
+    
+    if (resi.store&& is.null(BUGO)){
+      resiraw=read.dta(resifile)
+      residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
+      if(length(residelpos)==0){
+      }else{
+        resisavename=names(resiraw)[-residelpos]
+      }
+    }
+    
+    if (EstM==1 && is.null(BUGO) && !is.null(resi.store.levs)){
+      resiChains=mcmc(data=read.dta(resichains),thin = thinning)
+    }
+        
     if (EstM==0){
-
-
+        if (is.null(BUGO)){
         outIGLS=new("mlwinfitIGLS")
-        outIGLS["Nobs"]=nrow(indata)
+        outIGLS["Nobs"]=nrow(indata)-Missing
+        outIGLS["DataLength"]=nrow(indata)
         outIGLS["D"]=D
         outIGLS["Formula"]=Formula
         outIGLS["levID"]=levID
@@ -700,29 +531,29 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         outIGLS["RP.cov"]=RP.cov
         outIGLS["LIKE"]=LIKE
         outIGLS["elapsed.time"]=time2[3]
-        if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-            outIGLS["chains.bugs"]=chains.bugs.mcmc
-        }
 
         if (resi.store){
-            resiraw=read.dta(resifile)
-            residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
             if(length(residelpos)==0){
                 outIGLS["residual"]=resiraw
             }else{
-                resisavename=names(resiraw)[-residelpos]
                 outIGLS["residual"]=resiraw[resisavename]
             }
         }
-
-    }
+                
+        finalClean(clean.files)
+        return(outIGLS)
+        }
+          else{
+            finalClean(clean.files)
+            print(summary(chains.bugs.mcmc))
+            return(chains.bugs.mcmc)
+        }
+        }
     if (EstM==1){
-
-
-
+      if (is.null(BUGO)){
         outMCMC=new("mlwinfitMCMC")
-
-        outMCMC["Nobs"]=nrow(indata)
+        outMCMC["Nobs"]=nrow(indata)-Missing
+        outMCMC["DataLength"]=nrow(indata)
         outMCMC["burnin"]=burnin
         outMCMC["iterations"]=iterations
         outMCMC["D"]=D
@@ -743,54 +574,35 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         }else{
             outMCMC["LIKE"]=LIKE
         }
-        if ((!is.null(BUGO))&&!(D[1]=="Mixed")){
-            outMCMC["chains.bugs"]=chains.bugs.mcmc
-        }
         if (!is.null(fact)){
             outMCMC["fact.loadings"]=loadings
             outMCMC["fact.cov"]=fact.cov
-            outMCMC["fact.chains"]=read.dta(FACTchainfile)
+            outMCMC["fact.chains"]=mcmc(data=read.dta(FACTchainfile),thin = thinning)
+            
         }
-        if (!is.null(resi.store.levs)){
-            outMCMC["resi.chains"]=read.dta(resichains)
-        }
+         if (!is.null(resi.store.levs)){
+             outMCMC["resi.chains"]=resiChains
+         }
         if (!is.null(dami)){
-            outMCMC["esample"]=read.dta(esamplefile)
+            outMCMC["MIdata"]=read.dta(MIfile)
         }
 
         if (resi.store){
-            resiraw=read.dta(resifile)
-            residelpos=grep("^[c]?[[:digit:]]+$", names(resiraw))
             if(length(residelpos)==0){
                 outMCMC["residual"]=resiraw
             }else{
-                resisavename=names(resiraw)[-residelpos]
                 outMCMC["residual"]=resiraw[resisavename]
             }
         }
-
-
+        finalClean(clean.files)
+        return(outMCMC)
+      }
+      else{
+        finalClean(clean.files)
+        print(summary(chains.bugs.mcmc))
+        return(chains.bugs.mcmc)
+      }
+      
     }
 
-    if (clean.files){
-        file.remove(dtafile)
-        file.remove(macrofile)
-        file.remove(IGLSfile)
-        if (EstM==1) file.remove(MCMCfile)
-        if (EstM==1) file.remove(chainfile)
-        if (!is.null(BUGO))  file.remove(bugofile)
-        if (!is.null(BUGO))  file.remove(modelfile)
-        if (resi.store) file.remove(resifile)
-        if (EstM==1){
-            if (!is.null(resi.store.levs)) file.remove(resichains)
-            if (!is.null(fact)) file.remove(FACTchainfile)
-            if (!is.null(dami)) file.remove(esamplefile)
-        }
-    }
-
-    if (EstM==0){
-        outIGLS
-    }else {
-        if (EstM==1) outMCMC
-    }
 }

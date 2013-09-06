@@ -9,12 +9,12 @@ function(indata,FP,resi,xname, lev=2, levID, selected=NULL, Legend=T){
     }
 
     if (is.character(resi)){
-        PACKages<-as.character(as.data.frame(installed.packages())$Package)
-        packs.req= "foreign"
-        test<-( packs.req %in% PACKages)
-        if (!all(test))
-    	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-        require(foreign)
+#        PACKages<-as.character(as.data.frame(installed.packages())$Package)
+#        packs.req= "foreign"
+#        test<-( packs.req %in% PACKages)
+#        if (!all(test))
+#    	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
+#        require(foreign)
         myresi=read.dta(resi)
     }else{
         myresi=resi

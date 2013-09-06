@@ -1,6 +1,6 @@
 MacroScript1 <-
 function(indata,dtafile,resp, levID, expl, rp, D='Normal', nonlinear=c(0,1), categ=NULL,notation=NULL, nonfp=NA, clre,smat, Meth=1,
-BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode){
+BUGO=NULL,mem.init="default",weighting=NULL,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode){
 
     nlev=length(levID)
 
@@ -1770,9 +1770,9 @@ BUGO=NULL,mem.init="default",weighting=NULL,bugofile=bugofile,modelfile=modelfil
             wrt(paste("ERAS   ",tempvec,sep=""))
         }
 
-        version=as.numeric(BUGO[1])
+        version=as.numeric(BUGO["version"])
         if(D[1]=='Normal'||D[1]=='Multivariate Normal') DD2=0
-        if (!is.null(bugofile)) wrt(paste("BUGO ",version," ",DD," ",DD2," c997 ", "'",bugofile,"'",sep=""))
+        #if (!is.null(bugofile)) wrt(paste("BUGO ",version," ",DD," ",DD2," c997 ", "'",bugofile,"'",sep=""))
         wrt(paste("BUGO 6 ",DD," ",DD2, " c997 ","'",modelfile,"' ","'",initfile,"' ","'",datafile,"'",sep=""))
         wrt("ERAS   c997 c996")
     }

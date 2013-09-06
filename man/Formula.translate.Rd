@@ -30,7 +30,7 @@ A data.frame object containing the data to be modelled.
 \item{\code{~}}{ is used to separate response variable(s) and explanatory variable(s);}
 \item{\code{()}}{ are used to specify each random variable in the model together with its fixed/random part information;}
 \item{\code{|}}{ separates explanatory variable(s) (placed to the right of \code{|}) from the fixed/random part information (placed to the left of \code{|}) when placed within \code{()};}
-\item{\code{[]}}{ when placed immediately after an explanatory variable, indicates that the variable is categorical. The string in the \code{[]} represents the reference category; if empty, no reference category is used;}
+\item{\code{[]}}{ when placed immediately after an explanatory variable, indicates that the variable is categorical. The string in the \code{[]} represents the reference category; if empty, no reference category is used; See note.}
 \item{\code{:}}{ indicates an interaction term: i.e. the variables adjacent to \code{:}, and separated by it, are interacted with each other;}
 \item{\code{0}}{ when placed to the left of \code{|} within \code{()} indicates that the variables to the right of \code{|} within the same \code{()} are to be added to the fixed part of the model;}
 \item{\code{1}}{ when placed to the left of \code{|} within \code{()} indicates that the coefficients of the variables placed to the right of \code{|} within the same \code{()} are to be allowed to randomly vary at level 1;}
@@ -46,10 +46,11 @@ Outputs an R list object, which is then used as the input for \code{\link{MacroS
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 \note{
-Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable.
+Note that some characters listed above have special meanings in the formula, so avoid using them when you name the random variable. Alphanumeric characters (i.e. `[:alnum:]') are recommended for naming the random variable. 
+Note that use \code{[]} notation only in the fixed part when there is no categorical variable in the random effects. If there is one in the random part, the categorical variable has to be converted into a set of bianry variables (e.g., using \code{\link[R2MLwiN]{Untoggle}}) used in the \code{\link[R2MLwiN]{Formula.translate}}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

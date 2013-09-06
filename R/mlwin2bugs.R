@@ -1,13 +1,7 @@
 mlwin2bugs <-
-function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=T, bugs,
-    bugsWorkingDir=tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE){
+function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=F, bugs,
+    bugsWorkingDir=tempdir(), OpenBugs = F, cleanBugsWorkingDir = FALSE, seed = NULL){
 
-    PACKages<-as.character(as.data.frame(installed.packages())$Package)
-    packs.req= "rbugs"
-    test<-( packs.req %in% PACKages)
-    if (!all(test))
-	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
-    require(rbugs)
     rbugs2=function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
         n.burnin = floor(n.iter/2), n.thin = max(1, floor(n.chains *
             (n.iter - n.burnin)/1000)), dic = FALSE, debug = FALSE,
@@ -15,6 +9,7 @@ function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains
         cleanBugsWorkingDir = FALSE, genFilesOnly = FALSE, verbose = FALSE,
         seed = NULL)
     {
+
         Windows = FALSE
         os.type <- .Platform$OS.type
         if (length(bugsWorkingDir) == 0)
@@ -88,7 +83,7 @@ function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains
           coda.files <- c(fnames$codaIndexFile, fnames$codaFiles) ##Modified by Marcos
           log.file <- file.path(workingDir, "log.txt") ##Modified by Marcos
           file.remove(c(model.file, log.file, data.file, ##Modified by Marcos
-                        inits.files, script.file, coda.files)) ##Modified by Marcos
+                        inits.files[1], script.file, coda.files)) ##Modified by Marcos
         }
        
         all
@@ -128,9 +123,9 @@ function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains
         }
     }
     if (!is.null(addmore)) parameters=c(parameters,addmore)
-    chains.bugs=rbugs2(data.file = datafile, inits.files=initfile,
-    paramSet=parameters, model=modelfile, bugEst=bugEst, n.chains = n.chains, n.iter = n.iter, n.burnin=n.burnin, n.thin=n.thin, debug=T, bugs=bugs,
-    bugsWorkingDir=bugsWorkingDir, OpenBugs=OpenBugs, cleanBugsWorkingDir=cleanBugsWorkingDir)
+    chains.bugs=rbugs2(data.file = datafile, inits.files=rep(initfile,n.chains),
+    paramSet=parameters, model=modelfile, bugEst=bugEst, n.chains = n.chains, n.iter = n.iter, n.burnin=n.burnin, n.thin=n.thin, debug=debug, bugs=bugs,
+    bugsWorkingDir=bugsWorkingDir, OpenBugs=OpenBugs, cleanBugsWorkingDir=cleanBugsWorkingDir, seed = seed)
     chains.bugs.mcmc=rbugs2coda(chains.bugs,burnin=1,n.thin)
     #assign("chains.bugs.mcmc",chains.bugs.mcmc,envir = .GlobalEnv)
     chains.bugs.mcmc

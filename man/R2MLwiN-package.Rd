@@ -6,15 +6,15 @@
 R2MLwiN: Running MLwiN from within R
 }
 \description{
-R2MLwiN is an R command interface to the MLwiN multilevel modelling software package, allowing users to fit multilevel models using MLwiN from within the R environment.
+R2MLwiN is an R command interface to the MLwiN multilevel modelling software package, allowing users to fit multilevel models using MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 
 MLwiN uses both classical and Bayesian approaches to fitting multilevel models, and can model continuous, binomial, count, multivariate, ordered categorical and unordered categorical responses. The data structures it can model include hierarchical, cross-classified and/or multiple membership.
 }
 \details{
 \tabular{ll}{
 Package: \tab R2MLwiN\cr
-Version: \tab 0.1-5\cr
-Date: \tab 2013-02-12\cr
+Version: \tab 0.1-6\cr
+Date: \tab 2013-09-06\cr
 License: \tab  GPL (>= 2)\cr
 }
 To use the package, the following objects should be specified:
@@ -27,13 +27,12 @@ To use the package, the following objects should be specified:
  (6)\tab  a vector specifying BUGS options. If non-null, WinBUGS/OpenBUGS are used, in conjunction\cr
  \tab with MLwiN, for modelling.\cr
  (7)\tab  a path to the folder where the MLwiN executable is saved;\cr
- (8)\tab a path to the folder where the output files are to be saved. By default, the temporary directory\cr
- \tab (\code{\link{tempdir}}) is used.
+ (8)\tab a path to the folder where the output files are to be saved. By default, the temporary directory (\code{\link{tempdir}}) is used.\cr
 }
-Once these objects are specified, the runMLwiN function can be used to call MLwiN from R. After execution, the estimates and other statistics are displayed as a table in the RGui, an MLwiN macro script appears on the screen, the outputs of all parameter estimates (the chains, residuals and BUGs outputs) are stored, and the results can be used for further output analysis, as approriate.
+Once these objects are specified, the \code{\link{runMLwiN}} function can be used to call MLwiN from R. After execution, the estimates and other statistics are returned to R and can be displayed as a table in the RGui, and the outputs of all parameter estimates (the chains, residuals and BUGs outputs) are also returned for further post-processing in R, as appropriate.
 }
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 
 Maintainer: Zhengzheng Zhang \email{zhengzheng236@gmail.com}
 }
@@ -52,7 +51,7 @@ MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for Multilevel
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder 
 wspath=paste(mlwin,"/samples/",sep="")
 
@@ -67,11 +66,11 @@ levID=c('school','student')
 ## Choose option(s) for inference
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 ## The R2MLwiN package includes scripts to replicate all the analyses in
 ## Browne, W.J. (2009) MCMC estimation in MLwiN Version 2.13.
-## Version 2.25 is available online; download from the following link:
+## Version 2.27 is available online; download from the following link:
 ## http://www.bristol.ac.uk/cmm/software/mlwin/download/mcmc-print.pdf
 ## Centre for Multilevel Modelling, University of Bristol
 

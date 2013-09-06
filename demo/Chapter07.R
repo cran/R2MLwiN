@@ -18,7 +18,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -64,29 +64,27 @@ levID=c('school','student')
 ## Uses the results from IGLS to create initial values for bugs
 estoptions= list(EstM=0, show.file=T)
 ## Fit the model by calling winbugs using the rbugs package
-mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=winbugs, OpenBugs = F), MLwiNPath=mlwin, workdir = tempdir())
+mymodel=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=winbugs, OpenBugs = F), MLwiNPath=mlwin, workdir = tempdir())
 
 ## Alternatively uses openbugs
 ## Uses the results from IGLS to create initial values for bugs
 estoptions= list(EstM=0, show.file=T)
 ## Fit the model by calling openbugs using the rbugs package
-mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,bugs=openbugs, OpenBugs = T), MLwiNPath=mlwin, workdir = tempdir())
-chain=mymodel1["chains.bugs"][[1]][,2]
-##summary(mymodel1["chains.bugs"])
-summary(chain)
-sixway(chain,"beta[2]")
+mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions,BUGO=c(version=4,n.chains=1,debug=F,seed=1,bugs=openbugs, OpenBugs = T), MLwiNPath=mlwin, workdir = tempdir())
+summary(mymodel1[[1]][,"beta[2]"])
+sixway(mymodel1[[1]][,"beta[2]"])
 
 # 7.2 So why have a WinBUGS interface ? . . . . . . . . . . . . . . . . . 92
 # 7.3 t distributed school residuals . . . . . . . . . . . . . . . . . . .92
 
 ## Download the model, initial, data files
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/7_3a_WinBUGS_model.txt", paste(tempdir(),"/7_3a_WinBUGS_model.txt",sep=""), method="auto")
-file.show(paste(tempdir(),"/7_3a_WinBUGS_model.txt",sep="")); modelfile=paste(tempdir(),"/7_3a_WinBUGS_model.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/7_3a_WinBUGS_inits.txt", paste(tempdir(),"/7_3a_WinBUGS_inits.txt",sep=""), method="auto")
-file.show(paste(tempdir(),"/7_3a_WinBUGS_inits.txt",sep="")); initfile=paste(tempdir(),"/7_3a_WinBUGS_inits.txt",sep="")
-download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/7_3a_WinBUGS_data.txt", paste(tempdir(),"/7_3a_WinBUGS_data.txt",sep=""), method="auto")
-datafile=paste(tempdir(),"/7_3a_WinBUGS_data.txt",sep="")
-bugEst=paste(tempdir(),"/7_3a_log.txt",sep="")
+download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_model.txt", paste(tempdir(),"/tutorial1_model.txt",sep=""), method="auto")
+file.show(paste(tempdir(),"/tutorial1_model.txt",sep="")); modelfile=paste(tempdir(),"/tutorial1_model.txt",sep="")
+download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_inits.txt", paste(tempdir(),"/tutorial1_inits.txt",sep=""), method="auto")
+file.show(paste(tempdir(),"/tutorial1_inits.txt",sep="")); initfile=paste(tempdir(),"/tutorial1_inits.txt",sep="")
+download.file("http://www.bristol.ac.uk/cmm/media/runmlwin/tutorial1_data.txt", paste(tempdir(),"/tutorial1_data.txt",sep=""), method="auto")
+datafile=paste(tempdir(),"/tutorial1_data.txt",sep="")
+bugEst=paste(tempdir(),"/tutorial1_log.txt",sep="")
 
 chains.bugs1=mlwin2bugs(D="t",levID, datafile, initfile, modelfile, bugEst, fact=NULL, addmore=NULL, n.chains = 1, n.iter = 5500, n.burnin=500, n.thin=1, debug=T, bugs=winbugs,
         bugsWorkingDir=tempdir(), OpenBugs = F)

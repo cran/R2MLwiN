@@ -13,7 +13,7 @@ ws2foreign(wsfile, foreignfile, MLwiNPath, x64=FALSE)
 \arguments{
 \item{wsfile}{A file name specifying the data file (with a specific extension) to be converted.}
 \item{foreignfile}{A file name specifying the data file (with a specific extension) after conversion.}
-\item{MLwiNPath}{A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.26/".}
+\item{MLwiNPath}{A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.27/".}
 \item{x64}{A logical value indicating whether the 64 bit version of MLwiN is used. If \code{FALSE} (by default), the 32 bit version is called.}
 }
 \details{
@@ -24,7 +24,7 @@ The converted data file (with a specific extension) will be saved in a given fol
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 \seealso{
@@ -34,7 +34,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 \dontrun{
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wsfile=paste(mlwin,"/samples/tutorial.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder

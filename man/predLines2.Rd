@@ -14,7 +14,7 @@ selected = NULL, probs=c(.025,.975), Legend=T)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{indata}{
-A data.frame object containing the data modelled.
+An object (converts to data.frame) containing the data modelled.
 }
   \item{chains}{
 The parameter chains from MLwiN.
@@ -43,7 +43,7 @@ A logical value indicating whether a legend is to be added.
 }
 
 \author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 \seealso{
@@ -56,7 +56,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G.B., and Browne, W.J. (201
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.26/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
 ## MLwiN sample worksheet folder
 wspath=paste(mlwin,"/samples/",sep="")
 

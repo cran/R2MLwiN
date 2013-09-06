@@ -1,3 +1,30 @@
+Fri Sep 06 2013
+1. Bug fixing
+   * When a model is run using MCMC, iterations (as set by the user in mcmcMeth) now refers to total chain run (post-burnin), rather than stored iterations only (relevant when thinning >1).
+   * An MLwiN MCMC run no longer redundantly occurs when use BUGO with EstM=1 (e.g. when setting mcmcOptions).
+   * Changed assignment of BUGO arguments from being solely determined by the order in which they're written, to instead determined by keywords.
+   * MCSE algorithm now handles thinning appropriately.
+   * sixway now handles thinning appropriately, and also swapped trace plot axis labels so that now correctly-labelled.
+   * Corrected the summary and print functions to operate as expected.
+   * Corrected error in number of observations returned in model summary: now corresponds to non-missing observations (with total in parentheses).
+   * 'Conf' interval now referred to as 'Cred' interval in MLwiN MCMC output.
+   * Corrected error when workdir path contains spaces.
+   * Corrected generation of missing indicator in imputation data.
+
+2. Changes
+   * BUGO (used to call WinBUGS / OpenBUGS) now supports >1 chain.
+   * Added debug and seed options to BUGO.
+   * Removed redundant creation of combined BUGS files (bugofile; all BUGS files still returned separately).
+   * Calling BUGS now returns summary of mcmc.list instead of MLwiN IGLS output (chains.bugs no longer returned).
+   * All chains returned from an MCMC run in MLwiN are now mcmc objects.
+   * Added option to display Bayesian one-sided p-value instead of z-ratio and its associated p-value in MCMC output from MLwiN (the default is z.ratio = T).
+   * Global options 'digits' and 'show.signif.stars' now enabled, allowing users to specify the number of digits to display in the summary model output, as well as whether to display the stars which signify p-value thresholds, or not.
+   * MCSE now handles mcmc objects, and handles thinning appropriately.
+   * sixway now takes an mcmc object.
+   * In sixway, Raftery-Lewis now returns error message when chain's too short for it to be calculated.
+   * Changed default version MLwiN to 2.27.
+   * Updated demos and help files.
+
 Tue Feb 12 2013
 1. Bugs fixing
    * For cross-classified models, only the residuals and their SE are returned from MCMC fitting.

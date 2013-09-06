@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.26/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     cat("Please specify the MLwiN folder including the MLwiN executable:\n")
     mlwin=scan(what=character(0),sep ="\n")
@@ -43,12 +43,12 @@ levID=c('school','student')
 ## IGLS
 estoptions= list(EstM=0)
 ## Fit the model
-mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir())
+(mymodel1=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin, workdir = tempdir()))
 
 ## Gibbs
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 # 4.1 Metropolis Hastings (MH) sampling for the variance components model 46
 
@@ -59,13 +59,13 @@ mymodel2=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwi
 ## MH Adaptive with defaults
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2))
 ## Fit the model
-mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel3=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 sixway(mymodel3["chains"][,"FP_standlrt"],"beta_1")
 
 ## MH Scale Factor =5.8
 estoptions= list(EstM=1,mcmcMeth=list(fixM=2,residM=2,Lev1VarM=2, adaption=0))
 ## Fit the model
-mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel4=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 aa=cbind(mymodel1["FP"],mymodel2["FP"],mymodel4["FP"],mymodel3["FP"])
 bb=cbind(mymodel1["RP"],mymodel2["RP"],mymodel4["RP"],mymodel3["RP"])
@@ -79,7 +79,7 @@ rm(list=c("mymodel1","mymodel2","mymodel3","mymodel4"))
 ## MH Adaptive with defaults
 estoptions= list(EstM=1,mcmcMeth=list(fixM=3,residM=2,Lev1VarM=2, rate=40))
 ## Fit the model
-mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel5=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 estimates=mymodel5["chains"]
 par(mfrow=c(3,2))
@@ -98,10 +98,10 @@ rm(mymodel5)
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51
 
 estoptions= list(EstM=1,resi.store=TRUE,resi.store.levs=2,mcmcMeth=list(iterations=5001))
-mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin)
+(mymodel6=runMLwiN(formula, levID, D="Normal", indata, estoptions, MLwiNPath=mlwin))
 
 lencateg = length(unique(indata[["school"]]))
-resi.chain2 = mymodel6["resi.chains"][[1]]
+resi.chain2 = mymodel6["resi.chains"][,1]
 resi.chain2 = matrix(resi.chain2, nrow =lencateg)
 sixway(resi.chain2[1,],name="u0_1")
 
@@ -138,7 +138,7 @@ caterpillarR(mymodel6["residual"], lev=2)
 
 # 4.9 Estimating a function of parameters . . . . . . . . . . . . . . . . 58
 estimates=mymodel6["chains"]
-isc = estimates[["RP2_var_cons"]]/(estimates[["RP2_var_cons"]]+estimates[["RP1_var_cons"]])
+isc = estimates[,"RP2_var_cons"]/(estimates[,"RP2_var_cons"]+estimates[,"RP1_var_cons"])
 summary(isc)
 sixway(isc,"isc")
 rm(mymodel6)
