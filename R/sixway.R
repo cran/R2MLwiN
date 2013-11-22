@@ -1,15 +1,25 @@
 sixway <-
-function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10){
+function(chain,name=NULL,acf.maxlag=100,pacf.maxlag=10, ...){
 
-#if (thinning>1) {
-#    N=length(chain)*thinning
-#    chain=chain[thinning*(1:N)]
-#}
+args <- list(...)
+
+if(length(args) > 0 && "mar" %in% names(args)) {
+  mar <- args[["mar"]]
+}else{
+  mar <- c(4, 4, 2, 1)/2
+}
+
+if(length(args) > 0 && "mgp" %in% names(args)) {
+  mgp <- args[["mgp"]]
+}else{
+  mgp <- c(1,.25,0)
+}
+
+
 if (is.null(name)) name="x"
-#getOption( "device" )()
-#dev.new()
+
 windows()
-mypar <- par(mar = c(4, 4, 2, 1)/2,mgp=c(1,.25,0))
+mypar <- par(mar = mar, mgp=mgp, ...)
 on.exit(par(mypar))
 split.screen( figs = c( 4, 1 ) )
 split.screen( figs = c( 1, 2 ), screen = 1 )
@@ -39,12 +49,12 @@ mcse=MCSE(chain, rho, ll=.5, ul=20)
 plot(mcse[,1],mcse[,2],type='l',xlab="updates",ylab="MCSE",tcl=-.1,cex.axis=.8)
 
 
-#PACKages<-as.character(as.data.frame(installed.packages())$Package)
-#packs.req= "coda"
-#test<-( packs.req %in% PACKages)
-#if (!all(test))
-#    install.packages(packs.req[!test],repos="http://cran.r-project.org")
-#require(coda)
+# PACKages<-as.character(as.data.frame(installed.packages())$Package)
+# packs.req= "coda"
+# test<-( packs.req %in% PACKages)
+# if (!all(test))
+#     install.packages(packs.req[!test],repos="http://cran.r-project.org")
+# require(coda)
 
 RL1=raftery.diag(chain, q=0.025, r=0.005, s=0.95, converge.eps=0.001)
 #N1=RL1$resmatrix[1,"N"]

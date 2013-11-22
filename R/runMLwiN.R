@@ -7,7 +7,10 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 #    if (!all(test))
 #	       install.packages(packs.req[!test],repos="http://cran.r-project.org")
 #    require(foreign); require(rbugs); require(coda)
-
+    
+    # the current function call
+    cl <- match.call()
+    
     EstM=estoptions$EstM
     if (is.null(EstM)) EstM=0
 
@@ -69,7 +72,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     if (resi.store) resifile=gsub("\\", "/", tempfile("resifile_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
     if (!is.null(resi.store.levs)) resichains=gsub("\\", "/", tempfile("resichains_",tmpdir =workdir,fileext=".dta"), fixed=TRUE)
 
-    write.dta(indata, dtafile)
+    write.dta(indata, dtafile, version = 10)
 
 
     invars=Formula.translate(Formula,levID, D,indata)
@@ -531,6 +534,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         outIGLS["RP.cov"]=RP.cov
         outIGLS["LIKE"]=LIKE
         outIGLS["elapsed.time"]=time2[3]
+        outIGLS["call"]=cl
 
         if (resi.store){
             if(length(residelpos)==0){
@@ -569,6 +573,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
         outMCMC["RP.cov"]=RP.cov
         outMCMC["chains"]=chains
         outMCMC["elapsed.time"]=time2[3]
+        outMCMC["call"]=cl
         if (!(D[1]=="Mixed")&&is.null(merr)&&is.null(fact)){
             outMCMC["BDIC"]=BDIC
         }else{

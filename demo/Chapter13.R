@@ -63,7 +63,7 @@ estoptions= list(EstM=1, resi.store=T)
 
 resi=mymodel["residual"]
 FP=mymodel["FP"]
-predLines3(indata,FP,xname="gcseav", group="gender")
+predCurves(mymodel, indata, xname="gcseav", group="gender")
 
 # 13.3 Ordered multinomial modelling . . . . . . . . . . . . . . . . . . 186
 

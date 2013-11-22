@@ -1,19 +1,19 @@
-      #' An S4 class that stores the outputs of the fitted model.
-      #' @slot a contains an R object
-      #' @export
+      # An S4 class that stores the outputs of the fitted model.
+      # @slot a contains an R object
+      # @export
       setClass(Class = "mlwinfitIGLS", representation = representation(Nobs="numeric",DataLength="numeric",
-        D="ANY", Formula="character", levID="character", estIGLS ="data.frame",
+        D="ANY", Formula="ANY", levID="character", estIGLS ="data.frame",
         FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", LIKE="ANY",
-        elapsed.time="numeric",residual="data.frame"))
+        elapsed.time="numeric", call="ANY",residual="data.frame"))
 
 
-        #' extract parts of mlwinfitIGLS
-        #'
-        #' @name [
-        #' @aliases [,mlwinfitIGLS-method
-        #' @docType methods
-        #' @rdname extract-methods
-        #'
+        # extract parts of mlwinfitIGLS
+        #
+        # @name [
+        # @aliases [,mlwinfitIGLS-method
+        # @docType methods
+        # @rdname extract-methods
+        #
         setMethod(
             f= "[",
             signature="mlwinfitIGLS",
@@ -29,18 +29,19 @@
                 if(i=="FP.cov"){return(x@FP.cov)}else {}
                 if(i=="RP.cov"){return(x@RP.cov)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
+                if(i=="call"){return(x@call)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
 #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="residual"){return(x@residual)}else {}
             }
         )
-        #' extract parts of mlwinfitIGLS
-        #'
-        #' @name [
-        #' @aliases [,mlwinfitIGLS-method
-        #' @docType methods
-        #' @rdname extract-methods
-        #'
+        # extract parts of mlwinfitIGLS
+        #
+        # @name [
+        # @aliases [,mlwinfitIGLS-method
+        # @docType methods
+        # @rdname extract-methods
+        #
         setMethod(
             f= "[[",
             signature="mlwinfitIGLS",
@@ -56,18 +57,19 @@
                 if(i=="FP.cov"){return(x@FP.cov)}else {}
                 if(i=="RP.cov"){return(x@RP.cov)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
+                if(i=="call"){return(x@call)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
 #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="residual"){return(x@residual)}else {}
             }
         )
 
-        #' replace names of mlwinfitIGLS
-        #'
-        #' @name [
-        #' @aliases [<-,mlwinfitIGLS-method
-        #' @docType methods
-        #' @rdname extract-methods
+        # replace names of mlwinfitIGLS
+        #
+        # @name [
+        # @aliases [<-,mlwinfitIGLS-method
+        # @docType methods
+        # @rdname extract-methods
         setReplaceMethod(
             f= "[",
             signature="mlwinfitIGLS",
@@ -83,6 +85,7 @@
                 if(i=="FP.cov"){x@FP.cov<-value}else {}
                 if(i=="RP.cov"){x@RP.cov<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
+                if(i=="call"){x@call<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
 #                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="residual"){x@residual<-value}else {}
@@ -90,12 +93,12 @@
                 return (x)
             }
         )
-        #' replace names of mlwinfitIGLS
-        #'
-        #' @name [
-        #' @aliases [<-,mlwinfitIGLS-method
-        #' @docType methods
-        #' @rdname extract-methods
+        # replace names of mlwinfitIGLS
+        #
+        # @name [
+        # @aliases [<-,mlwinfitIGLS-method
+        # @docType methods
+        # @rdname extract-methods
         setReplaceMethod(
             f= "[[",
             signature="mlwinfitIGLS",
@@ -111,6 +114,7 @@
                 if(i=="FP.cov"){x@FP.cov<-value}else {}
                 if(i=="RP.cov"){x@RP.cov<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
+                if(i=="call"){x@call<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
 #                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="residual"){x@residual<-value}else {}
@@ -191,7 +195,7 @@
                 cat(paste("Deviance statistic: ", round(object@LIKE,1)),"\n")
                 cat(paste(rep("-",50),collapse="-"),"\n")
                 cat("The model formula:\n")
-                cat(gsub("[[:space:]]","",object@Formula),"\n")
+                print(object@Formula)#cat(gsub("[[:space:]]","",object@Formula),"\n")
                 levID0=object@levID
                 levID.display=""
                 if (is.na(levID0[length(levID0)])){
@@ -265,3 +269,51 @@
             }
       setMethod("print", "mlwinfitIGLS", printIGLS)
       setMethod("show",  "mlwinfitIGLS", function(object) printIGLS(object))
+
+
+    updateMLwiN <- function (object, Formula., levID., estoptions., ..., 
+    keep.order = TRUE, evaluate = TRUE)
+    {
+        my.update.formula <- function(old, new, keep.order = TRUE, 
+            ...) {
+            env <- environment(as.formula(old))
+            tmp <- update.formula(as.formula(old), as.formula(new))
+            out <- formula(terms.formula(tmp, simplify = TRUE, keep.order = keep.order))
+            environment(out) <- env
+            return(out)
+        }
+        if (is.null(newcall <- getCall(object)))
+            stop("need an object with call component")
+        extras <- match.call(expand.dots = FALSE)$...
+        if (length(newcall$Formula)) 
+            newcall$Formula <- eval(newcall$Formula) 
+        if (!missing(Formula.)) 
+            newcall$Formula <- my.update.formula(as.formula(newcall$Formula), 
+                Formula., keep.order = keep.order)        
+        if (!missing(levID.)) 
+            newcall$levID <- {
+                if (length(newcall$levID)) 
+                    my.update.formula(as.formula(newcall$levID), 
+                      levID., keep.order = keep.order)
+                else levID.
+            }
+        if (!missing(estoptions.)) 
+            newcall$estoptions <- {
+                if (length(newcall$estoptions)) 
+                    my.update.formula(as.formula(newcall$estoptions), estoptions., 
+                      keep.order = keep.order)
+                else estoptions.
+            }      
+        if (length(extras)) {
+            existing <- !is.na(match(names(extras), names(newcall)))
+            for (a in names(extras)[existing]) newcall[[a]] <- extras[[a]]
+            if (any(!existing)) {
+                newcall <- c(as.list(newcall), extras[!existing])
+                newcall <- as.call(newcall)
+            }
+        }
+        if (evaluate)
+            eval(newcall, sys.parent())
+        else newcall
+    }
+    setMethod("update", "mlwinfitIGLS", updateMLwiN)

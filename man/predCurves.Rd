@@ -1,21 +1,22 @@
-\name{predLines3}
-\alias{predLines3}
+\name{predCurves}
+\alias{predCurves}
 \title{
-Draws predicted curves (lines) using estimates from the fixed part of a model.
+Draws predicted curves (lines) using estimates from the fixed part of a fitted model.
 }
 \description{
-This function draws predicted curves (lines) against an explanatory variable for each group of a categorical variable.
+This function draws predicted curves (lines) against an explanatory variable for each category of a categorical variable.
 }
 \usage{
-predLines3(indata, FP, xname, group = NULL, Legend = T)
+predCurves(object, indata, xname, group = NULL, legend = T, 
+legend.space="top", legend.ncol=2, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{object}{
+Either "mlwinfitIGLS" or "mlwinfitMCMC" class object.
+}
   \item{indata}{
 A data.frame object containing the data.
-}
-  \item{FP}{
-A vector of the fixed part estimates.
 }
   \item{xname}{
 A name of an explanatory variable.
@@ -23,17 +24,26 @@ A name of an explanatory variable.
   \item{group}{
 A character name or a factor (or vector) specifying a categorical variable. \code{group=NULL} by default.
 }
-  \item{Legend}{
+  \item{legend}{
 A logical value indicating whether a legend for \code{group} is to be added.
 }
+  \item{legend.space}{
+A character string specifies one of the four sides, which can be one of "top", "bottom", "left" and "right". 
+Default, \code{legend.space="top"}.
 }
-
+  \item{legend.ncol}{
+An integer specifies a number of columns, possibly divided into blocks, each containing some rows. Default, \code{legend.ncol=2}.
+}
+  \item{...}{
+Other arguments to be pased to \code{\link[lattice]{xyplot}}.
+}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012) Centre for Multilevel Modelling, University of Bristol.
 }
 
 \seealso{
-\code{\link{predLines2}}
+\code{\link{predLines}}
 }
 \examples{
 
@@ -57,10 +67,9 @@ formula="a-point ~ (0|cons+gcseav+gcse^2+gcse^3+gender)+(1|cons )"
 levID='pupil'
 estoptions= list(EstM=1)
 ## Fit the model
-mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions,MLwiNPath=mlwin)
+mymodel=runMLwiN(formula, levID, D='Normal', indata, estoptions, MLwiNPath=mlwin)
 
-FP=mymodel["FP"]
-predLines3(indata,FP,xname="gcseav", group="gender")
+predCurves(mymodel, indata,xname="gcseav", group="gender")
 }
 }
 

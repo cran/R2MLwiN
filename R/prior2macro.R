@@ -4,16 +4,41 @@ function(prior,formula,levID,D, indata){
 
     #fixed effect
     nlev=length(levID)
-    formula=gsub('[[:space:]]','',formula)
+#    formula=gsub('[[:space:]]','',formula)
     cc=c(0:nlev)
 
+    if(is.character(formula)){
+        formula <- gsub('\\{','\\(',formula)
+        formula <- gsub('\\}','\\)',formula)
+        formula <- gsub('[[:space:]]','',formula)        
+        if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",formula))>0){
+            for (i in cc){
+                formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),formula)
+                formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),formula)
+            }
+        }
+        formula <- as.formula(formula)
+    }
+    Terms <- terms.formula(formula, keep.order=TRUE)
+    resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
+    resp <- gsub('[[:space:]]','',resp)
+    left <- attr(Terms,"term.labels")
+    left <- gsub('\\(','\\{', left)
+    left <- gsub('\\)','\\}', left)
+    left <- gsub('[[:space:]]','',left)
+    if(sum(grepl("\\`+[[:digit:]]+[[:alpha:]]+\\`+\\|",left))>0){
+        for (i in cc){
+            left=sub(paste("\\`",i,"s`\\|",sep=""),paste(i,"s\\|",sep=""),left)
+            left=sub(paste("\\`",i,"c`\\|",sep=""),paste(i,"c\\|",sep=""),left)
+        }
+    }
     cflag=0
-
-    if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",formula))>0) cflag=1
-
-    formula=unlist(strsplit(formula,"~"))
-
-    resp=formula[1]
+    if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",left))>0) cflag=1
+#    if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",formula))>0) cflag=1
+#
+#    formula=unlist(strsplit(formula,"~"))
+#
+#    resp=formula[1]
     if (D[1]=='Multivariate Normal'){
         resp=sub("c\\(","",resp)
         resp=sub("\\)","",resp)
@@ -135,10 +160,10 @@ function(prior,formula,levID,D, indata){
     }else{
         names.resp=resp
     }
-    left=formula[2]
-    left=unlist(strsplit(left,"\\+\\("))
-    left=unlist(strsplit(left,"\\("))
-    left=unlist(strsplit(left,"\\)"))
+#    left=formula[2]
+#    left=unlist(strsplit(left,"\\+\\("))
+#    left=unlist(strsplit(left,"\\("))
+#    left=unlist(strsplit(left,"\\)"))
 
     categ=NULL
     categstr=unique(unlist(regmatches(left,gregexpr("[[:alnum:]]+\\[+[[:alnum:]]+\\]",left))))

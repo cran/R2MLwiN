@@ -15,7 +15,7 @@ MLwiNPath = "C:/Program Files (x86)/MLwiN v2.27/", workdir=tempdir())
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Formula}{
-A character string specifying the model formula. See \code{\link{Formula.translate}} for details.
+A formula object (or a character string) specifying the model formula. See \code{\link{Formula.translate}} for details.
 }
   \item{levID}{
 A character (vector) specifying the level ID(s).
@@ -89,6 +89,7 @@ If the IGLS algorithm is used, (i.e., \code{EstM=0}), then the outputs are
 \item{RP }{Displays the random part estimates.}
 \item{FP.cov}{Displays a covariance matrix of the fixed part estimates.}
 \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
+\item{call}{The matched call.}
 \item{LIKE}{The likelihood statistic (-2*log(like))}
 \item{residual}{If \code{resi.store} is \code{TRUE}, then the residual estimates at all levels are returned.}
 
@@ -99,6 +100,7 @@ If the MCMC algorithm is used, (i.e., \code{EstM=1}), then the outputs are
 \item{RP }{Displays the random part estimates.}
 \item{FP.cov}{Displays a covariance matrix of the fixed part estimates.}
 \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
+\item{call}{The matched call.}
 \item{LIKE}{The likelihood statistic (-2*log(like))}
 \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
 \item{fact.loadings}{If \code{fact} is not empty, then the factor loadings are returned.}

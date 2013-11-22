@@ -1,3 +1,16 @@
+Thu Nov 21 2013
+1. Bug fixing
+   * sixway now allows user to specify some graphic parameters (see par()); This fixes errors, e.g., "figure margins too large".
+   * Corrected error when workdir path contains spaces in ws2foreign.r.
+   * fixed a bug in Formula.translate. The backward compatibility was not working; this has been removed since we support R 2.14.0 onwards.
+   * Write.dta now saves as version=10 to circumvent problem of MLwiN mishandling missing values in .dta files saved under earlier versions of Stata. (Although this will be addressed in future release of MLwiN.)
+
+2. Changes
+   * Added an option to use R formula objects (i.e., without quotes around the character formula). NOTE that if an R formula is used, 0c, 0s,..., have to be changed to `0c`, `0s`,.... Any curly bracket, {}, has to be changed to a round bracket, (). 
+   * Added an update method for mlwinfitIGLS and mlwinfitMCMC class objects.
+   * Added some example datasets and their related help files.
+   * predLines(i.e., predLines1 & predLines2) and predCurves(i.e., predLines3) now depend on lattice package.
+   
 Fri Sep 06 2013
 1. Bug fixing
    * When a model is run using MCMC, iterations (as set by the user in mcmcMeth) now refers to total chain run (post-burnin), rather than stored iterations only (relevant when thinning >1).
@@ -32,7 +45,7 @@ Tue Feb 12 2013
 
 Mon Feb 04 2013
 1. Bugs fixing
-   * an issue on dropping a covariance from a model  
+   * an issue on dropping a covariance from a model
 
 Tue Jan 15 2013
 1. Bugs fixing by Thomas Arkens
@@ -43,16 +56,16 @@ Tue Jan 15 2013
 
 Thu Nov 15 2012
 1. New features
-   * add various options for calculating residuals at all levels.   
+   * add various options for calculating residuals at all levels.
 
 Thu Oct 18 2012
 1. New features
    * add functionality to centre the explanatory variables.
 
 Tue Oct 09 2012
-1. Changes 
+1. Changes
    * the output of a fitted model is now a S4 class object consisting of print, "[", "[<-" and summary methods.
    * drop "$" to get an element of the output object.
 
-2. New features 
+2. New features
    * add macros to do weighting on all the levels when using IGLS.

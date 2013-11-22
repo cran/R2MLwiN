@@ -15,9 +15,9 @@ ws2foreign=function(wsfile, foreignfile, MLwiNPath = "C:\\Program Files (x86)\\M
     }
     if (file.access(MLwiNPath1)==0) setwd(MLwiNPath1) else setwd(MLwiNPath)
     if (file.access("mlnscript.exe", mode=1)==0){
-        cmd=paste("mlnscript.exe /run", temptfile)
+        cmd=paste("mlnscript.exe /run \"", temptfile, "\"", sep="")
     }else{
-        cmd=paste("mlwin.exe /nogui /run", temptfile)
+        cmd=paste("mlwin.exe /nogui /run \"", temptfile, "\"", sep="")
     }
     shell(cmd)
     setwd(WD)

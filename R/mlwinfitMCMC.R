@@ -1,7 +1,7 @@
         setClass(Class = "mlwinfitMCMC", representation = representation(Nobs="numeric",DataLength="numeric",burnin="numeric",iterations="numeric",
         D="ANY", Formula="ANY", levID="character", merr="ANY", fact="ANY", xclass="ANY", estMCMC ="data.frame",
         FP="numeric", RP="numeric", RP.cov="matrix", FP.cov="matrix", chains="ANY",
-        elapsed.time="numeric",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",
+        elapsed.time="numeric", call="ANY",BDIC="numeric",LIKE="ANY",fact.loadings="numeric",
         fact.cov="numeric",fact.chains="ANY",MIdata="data.frame",residual="data.frame",resi.chains="ANY"))
 
 
@@ -27,6 +27,7 @@
                 if(i=="chains"){return(x@chains)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
                 if(i=="BDIC"){return(x@BDIC)}else {}
+                if(i=="call"){return(x@call)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
 #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="fact.loadings"){return(x@fact.loadings)}else {}
@@ -61,6 +62,7 @@
                 if(i=="chains"){x@chains<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
                 if(i=="BDIC"){x@BDIC<-value}else {}
+                if(i=="call"){x@call<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
 #                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="fact.loadings"){x@fact.loadings<-value}else {}
@@ -96,6 +98,7 @@
                 if(i=="chains"){return(x@chains)}else {}
                 if(i=="elapsed.time"){return(x@elapsed.time)}else {}
                 if(i=="BDIC"){return(x@BDIC)}else {}
+                if(i=="call"){return(x@call)}else {}
                 if(i=="LIKE"){return(x@LIKE)}else {}
 #                if(i=="chains.bugs"){return(x@chains.bugs)}else {}
                 if(i=="fact.loadings"){return(x@fact.loadings)}else {}
@@ -130,6 +133,7 @@
                 if(i=="chains"){x@chains<-value}else {}
                 if(i=="elapsed.time"){x@elapsed.time<-value}else {}
                 if(i=="BDIC"){x@BDIC<-value}else {}
+                if(i=="call"){x@call<-value}else {}
                 if(i=="LIKE"){x@LIKE<-value}else {}
 #                if(i=="chains.bugs"){x@chains.bugs<-value}else {}
                 if(i=="fact.loadings"){x@fact.loadings<-value}else {}
@@ -413,3 +417,4 @@
 
         setMethod("print", "mlwinfitMCMC", printMCMC)
         setMethod("show",  "mlwinfitMCMC", function(object) printMCMC(object))
+        setMethod("update", "mlwinfitMCMC", updateMLwiN)

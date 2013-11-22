@@ -13,8 +13,8 @@ MLwiN uses both classical and Bayesian approaches to fitting multilevel models, 
 \details{
 \tabular{ll}{
 Package: \tab R2MLwiN\cr
-Version: \tab 0.1-6\cr
-Date: \tab 2013-09-06\cr
+Version: \tab 0.1-7\cr
+Date: \tab 2013-11-22\cr
 License: \tab  GPL (>= 2)\cr
 }
 To use the package, the following objects should be specified:
@@ -44,7 +44,7 @@ MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for Multilevel
 
 \seealso{
 \code{\link{Formula.translate}},\code{\link{ws2foreign}},\code{\link[foreign]{read.dta}},\code{\link{runMLwiN}},\code{\link{MacroScript1}},\code{\link{MacroScript2}},\cr
-\code{\link{caterpillar}},\code{\link{predLines1}},\code{\link{predLines2}},\code{\link{sixway}}
+\code{\link{caterpillar}},\code{\link{predLines}},\code{\link{predCurves}},\code{\link{sixway}}
 }
 \examples{
 \dontrun{

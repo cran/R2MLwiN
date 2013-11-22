@@ -1,81 +1,48 @@
 Formula.translate <-
 function(Formula,levID, D='Normal',indata){
 
-    regmatches <- function (x, m, invert = FALSE)
-    {
-        ##This function is available in the base package from R.2.14.0
-        ##Includes this here for backwards compatiblility
-        if (length(x) != length(m))
-            stop(gettextf("%s and %s must have the same length",
-                sQuote("x"), sQuote("m")), domain = NA)
-        ili <- is.list(m)
-        useBytes <- if (ili)
-            any(unlist(lapply(m, attr, "useBytes")))
-        else any(attr(m, "useBytes"))
-        if (useBytes) {
-            asc <- iconv(x, "latin1", "ASCII")
-            ind <- is.na(asc) | (asc != x)
-            if (any(ind))
-                Encoding(x[ind]) <- "bytes"
+    nlev=length(levID)
+    cc=c(0:nlev)
+    if(is.character(Formula)){
+        Formula <- gsub('\\{','\\(',Formula)
+        Formula <- gsub('\\}','\\)',Formula)
+        Formula <- gsub('[[:space:]]','',Formula)        
+        if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",Formula))>0){
+            for (i in cc){
+                Formula=sub(paste(i,"s\\|",sep=""),paste("\\`",i,"s`\\|",sep=""),Formula)
+                Formula=sub(paste(i,"c\\|",sep=""),paste("\\`",i,"c`\\|",sep=""),Formula)
+            }
         }
-        if (!ili && !invert) {
-            so <- m[ind <- (!is.na(m) & (m > -1L))]
-            eo <- so + attr(m, "match.length")[ind] - 1L
-            return(substring(x[ind], so, eo))
-        }
-        y <- if (invert) {
-            Map(function(u, so, ml) {
-                if ((n <- length(so)) == 1L) {
-                    if (is.na(so))
-                      return(character())
-                    else if (so == -1L)
-                      return(u)
-                }
-                beg <- if (n > 1L) {
-                    eo <- so + ml - 1L
-                    if (any(eo[-n] >= so[-1L]))
-                      stop(gettextf("need non-overlapping matches for %s",
-                        sQuote("invert = TRUE")), domain = NA)
-                    c(1L, eo + 1L)
-                }
-                else {
-                    c(1L, so + ml)
-                }
-                end <- c(so - 1L, nchar(u))
-                substring(u, beg, end)
-            }, x, m, if (ili)
-                lapply(m, attr, "match.length")
-            else attr(m, "match.length"), USE.NAMES = FALSE)
-        }
-        else {
-            Map(function(u, so, ml) {
-                if (length(so) == 1L) {
-                    if (is.na(so) || (so == -1L))
-                      return(character())
-                }
-                substring(u, so, so + ml - 1L)
-            }, x, m, lapply(m, attr, "match.length"), USE.NAMES = FALSE)
-        }
-        names(y) <- names(x)
-        y
+        Formula <- as.formula(Formula)
     }
-
+    Terms <- terms.formula(Formula, keep.order=TRUE)
+    resp <- rownames(attr(Terms,"factors"))[attr(Terms,"response")]
+    resp <- gsub('[[:space:]]','',resp)
+    left <- attr(Terms,"term.labels")
+    left <- gsub('\\(','\\{', left)
+    left <- gsub('\\)','\\}', left)
+    left <- gsub('[[:space:]]','',left)
+    if(sum(grepl("\\`+[[:digit:]]+[[:alpha:]]+\\`+\\|",left))>0){
+        for (i in cc){
+            left=sub(paste("\\`",i,"s`\\|",sep=""),paste(i,"s\\|",sep=""),left)
+            left=sub(paste("\\`",i,"c`\\|",sep=""),paste(i,"c\\|",sep=""),left)
+        }
+    }
 
     if (D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial'||D[1]=='Multivariate Normal'||D[1]=='Mixed'){
 
         nlev=length(levID)
-        Formula=gsub('[[:space:]]','',Formula)
         cc=c(0:nlev)
         cflag=0
-        if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",Formula))>0) cflag=1
+        if(sum(grepl("\\(+[[:digit:]]+[[:alpha:]]+\\|",left))>0) cflag=1
         if(cflag==0){
             for (i in cc){
-                Formula=sub(paste(i,"\\|",sep=""),paste(i,"s\\|",sep=""),Formula)
+                left=sub(paste(i,"\\|",sep=""),paste(i,"s\\|",sep=""),left)
             }
         }
 
-        Formula=strsplit(Formula,"~")[[1]]
-        resp=Formula[1]
+        #Formula=strsplit(Formula,"~")[[1]]
+        #resp=Formula[1]
         if (D[1]=='Multivariate Normal'){
             resp=sub("c\\(","",resp)
             resp=sub("\\)","",resp)
@@ -207,23 +174,23 @@ function(Formula,levID, D='Normal',indata){
                 }
             }
         }
-        left=Formula[2]
-        left=unlist(strsplit(left,"\\+\\("))
-        left=unlist(strsplit(left,"\\("))
-        left=unlist(strsplit(left,"\\)"))
+        #left=Formula[2]
+        #left=unlist(strsplit(left,"\\+\\("))
+        #left=unlist(strsplit(left,"\\("))
+        #left=unlist(strsplit(left,"\\)"))
         nleft=length(left)
 
         categ=NULL
     	leftsplit <- strsplit(left, "(\\+)|(\\|)")
 	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
 
-        Rversion = R.Version()
-        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+#        Rversion = R.Version()
+#        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
 			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
-        }
-        else {
-            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
-        }
+#        }
+#        else {
+#            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
+#        }
         ncategstr=length(categstr)
         if (ncategstr>0){
             categ=matrix(,nrow=3,ncol=ncategstr)
@@ -624,9 +591,9 @@ function(Formula,levID, D='Normal',indata){
         names(D)=c("Distr","link","offset")
         D[1]='Binomial'
         nlev=length(levID)
-        Formula=gsub('[[:space:]]','',Formula)
-        Formula=strsplit(Formula,"~")[[1]]
-        resp=Formula[1]
+        #Formula=gsub('[[:space:]]','',Formula)
+        #Formula=strsplit(Formula,"~")[[1]]
+        #resp=Formula[1]
         if ((grepl("logit",resp))){
             D[2]="logit"
             resp=sub("logit\\(","",resp)
@@ -652,23 +619,23 @@ function(Formula,levID, D='Normal',indata){
         D[3]=resp[2]
         resp=resp[-2]
 
-        left=Formula[2]
-        left=unlist(strsplit(left,"\\+\\("))
-        left=unlist(strsplit(left,"\\("))
-        left=unlist(strsplit(left,"\\)"))
+        #left=Formula[2]
+        #left=unlist(strsplit(left,"\\+\\("))
+        #left=unlist(strsplit(left,"\\("))
+        #left=unlist(strsplit(left,"\\)"))
         nleft=length(left)
 
         categ=NULL
     	leftsplit <- strsplit(left, "(\\+)|(\\|)")
 	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
 
-        Rversion = R.Version()
-        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+#        Rversion = R.Version()
+#        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
 			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
-        }
-        else {
-            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
-        }
+#        }
+#        else {
+#            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
+#        }
         ncategstr=length(categstr)
         if (ncategstr>0){
             categ=matrix(,nrow=3,ncol=ncategstr)
@@ -751,9 +718,9 @@ function(Formula,levID, D='Normal',indata){
 
     if (D[1]=='Poisson'|| D[1]=='Negbinom'){
         nlev=length(levID)
-        Formula=gsub('[[:space:]]','',Formula)
-        Formula=strsplit(Formula,"~")[[1]]
-        resp=Formula[1]
+        #Formula=gsub('[[:space:]]','',Formula)
+        #Formula=strsplit(Formula,"~")[[1]]
+        #resp=Formula[1]
         resp=sub("log\\(","",resp)
         resp=sub("\\)","",resp)
         resp=strsplit(resp,",")[[1]]
@@ -771,22 +738,22 @@ function(Formula,levID, D='Normal',indata){
             D[2]=F
         }
 
-        left=Formula[2]
-        left=unlist(strsplit(left,"\\+\\("))
-        left=unlist(strsplit(left,"\\("))
-        left=unlist(strsplit(left,"\\)"))
+        #left=Formula[2]
+        #left=unlist(strsplit(left,"\\+\\("))
+        #left=unlist(strsplit(left,"\\("))
+        #left=unlist(strsplit(left,"\\)"))
         nleft=length(left)
 
         categ=NULL
     	leftsplit <- strsplit(left, "(\\+)|(\\|)")
 	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
-        Rversion = R.Version()
-        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+#        Rversion = R.Version()
+#        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
 			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
-        }
-        else {
-            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
-        }
+#        }
+#        else {
+#            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
+#        }
         ncategstr=length(categstr)
         if (ncategstr>0){
             categ=matrix(,nrow=3,ncol=ncategstr)
@@ -868,27 +835,27 @@ function(Formula,levID, D='Normal',indata){
 
     if (D[1]=='Normal'){
         nlev=length(levID)
-        Formula=gsub('[[:space:]]','',Formula)
-        Formula=strsplit(Formula,"~")[[1]]
-        resp=Formula[1]
+        #Formula=gsub('[[:space:]]','',Formula)
+        #Formula=strsplit(Formula,"~")[[1]]
+        #resp=Formula[1]
 
 
-        left=Formula[2]
-        left=unlist(strsplit(left,"\\+\\("))
-        left=unlist(strsplit(left,"\\("))
-        left=unlist(strsplit(left,"\\)"))
+        #left=Formula[2]
+        #left=unlist(strsplit(left,"\\+\\("))
+        #left=unlist(strsplit(left,"\\("))
+        #left=unlist(strsplit(left,"\\)"))
         nleft=length(left)
 
         categ=NULL
     	leftsplit <- strsplit(left, "(\\+)|(\\|)")
 	    categstr <- unique(unlist(sapply(leftsplit, function(x){unlist(regmatches(x, gregexpr("([[:alnum:]]*(\\_|\\-|\\^|\\&)*[[:alnum:]])+(\\[+\\]|\\[+[[:print:]]+\\])", x)))})))
-        Rversion = R.Version()
-        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
+#        Rversion = R.Version()
+#        if ((as.numeric(Rversion$major) >= 2) && (as.numeric(Rversion$minor) >= 14)) {
 			left = sapply(regmatches(left, gregexpr("\\[[^]]*\\]", left), invert = TRUE),function(x)paste(x, collapse=""))
-        }
-        else {
-            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
-        }
+#        }
+#        else {
+#            left = gsub("(\\[+\\]|\\[+[[:print:]]+\\])", "", left)
+#        }
         ncategstr=length(categstr)
         if (ncategstr>0){
             categ=matrix(,nrow=3,ncol=ncategstr)

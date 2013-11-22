@@ -8,7 +8,7 @@ Draws a sixway plot of MCMC diagnostics.
 This function produces a variety of diagnostic plots and statistics for MCMC chains.
 }
 \usage{
-sixway(chain, name=NULL, acf.maxlag=100, pacf.maxlag=10)
+sixway(chain, name=NULL, acf.maxlag=100, pacf.maxlag=10, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +23,9 @@ Maximum lag at which to calculate the auto-correlation function. \code{acf.maxla
 }
   \item{pacf.maxlag}{
 Maximum lag at which to calculate the partial auto-correlation function. \code{pacf.maxlag=10} by default.
+}
+  \item{...}{
+Other graphical parameters (see \code{\link[graphics]{par}} for details).
 }
 }
 

@@ -1,4 +1,4 @@
 
-export(caterpillar, caterpillarR, double2singlePrecision, Formula.translate, MacroScript1, MacroScript2, mlwin2bugs, predLines1, predLines2, predLines3, prior2macro, runMLwiN, sixway, trajectories, Untoggle, ws2foreign)
+export(caterpillar, caterpillarR, double2singlePrecision, Formula.translate, MacroScript1, MacroScript2, mlwin2bugs, predLines, predCurves, prior2macro, runMLwiN, sixway, trajectories, Untoggle, ws2foreign)
 exportClasses(mlwinfitIGLS, mlwinfitMCMC)
-exportMethods("[","[[","[<-","[[<-",summary, print)
+exportMethods("[","[[","[<-","[[<-",summary, print, update)

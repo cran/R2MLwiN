@@ -8,6 +8,7 @@
 \alias{[[<-,mlwinfitMCMC-method}
 \alias{print,mlwinfitMCMC-method}
 \alias{summary,mlwinfitMCMC-method}
+\alias{update,mlwinfitMCMC-method}
 \title{S4 class: mlwinfitMCMC}
 \description{
 This S4 class object is used to save the outputs from the fitted multilevel model using MCMC.
@@ -25,7 +26,7 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     \item{burnin}{An integer specifying length of the burn-in.}
     \item{iterations}{An integer specifying the number of iterations after burn-in.}
     \item{D}{A vector specifying the type of distribution to be modelled, which can include \code{"Normal"}, \code{"Binomial"} \code{"Poisson"}, \code{"Multinomial"}, \code{"Multivariate Normal"}, or \code{"Mixed"}.}
-    \item{Formula}{A character string specifying a multilevel model.}
+    \item{Formula}{A formula object (or a character string) specifying a multilevel model.}
     \item{levID}{  A character string (vector) of the specified level ID(s).}
     \item{merr}{A vector which sets-up measurement errors on predictor variables.}
     \item{fact}{A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.}
@@ -37,6 +38,7 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     \item{FP.cov}{Displays a covariance matrix of the fixed part estimates.}
     \item{RP.cov}{Displays a covariance matrix of the random part estimates.}
     \item{elapsed.time}{Calculates the CPU time used for fitting the model.}
+    \item{call}{The matched call.}
     \item{LIKE}{The deviance statistic (-2*log(like)).}
     \item{MIdata}{If \code{dami} is not empty, then the complete response variable \code{y} are returned.}
     \item{BDIC}{Bayesian Deviance Information Criterion (DIC)}
@@ -54,7 +56,8 @@ This S4 class object is used to save the outputs from the fitted multilevel mode
     }
 \item{print}{summarizes the outputs of the fitted model including z-statistic and associated p-values (or Bayesian one-sided p-values), credible intervals, etc.}
 \item{show}{summarizes the outputs of the fitted model including z-statistic and associated p-values (or Bayesian one-sided p-values), credible intervals, etc.}
-
+\item{update}{see \code{\link[stats]{update}} on how to update fitted models. Note that "." syntax does not work for the \code{R2MLwiN} model\code{Formula}; 
+a full formula object has to be specified to replace the old formula object.}
     \item{"\code{[}"}{\code{signature(object = "mlwinfitMCMC")}:
       this method gets a slot of an instance of the S4 class. }
     \item{"\code{[[}"}{\code{signature(object = "mlwinfitMCMC")}:
