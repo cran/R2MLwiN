@@ -1,5 +1,5 @@
 runMLwiN <-
-function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.27/",workdir=tempdir()) {
+function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL, MLwiNPath="C:/Program Files (x86)/MLwiN v2.29/",workdir=tempdir()) {
 
 #    PACKages<-as.character(as.data.frame(installed.packages())$Package)
 #    packs.req= c("foreign","rbugs","coda")

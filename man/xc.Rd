@@ -32,7 +32,7 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 \examples{
 \dontrun{
 # NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
+MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
 data(xc)
 # Fit cross-classified model, partitioning variance in ATTAIN across
 # and within primary (PID) and secondary (SID) school

@@ -30,7 +30,7 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 \examples{
 \dontrun{
 # NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
+MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
 data(jspmix1)
 # behaviour coded 0/1
 jspmix1$behaviour <- as.numeric(jspmix1$behaviour) - 1

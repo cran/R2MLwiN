@@ -1,4 +1,4 @@
-ws2foreign=function(wsfile, foreignfile, MLwiNPath = "C:\\Program Files (x86)\\MLwiN v2.27\\", x64=FALSE){
+ws2foreign=function(wsfile, foreignfile, MLwiNPath = "C:\\Program Files (x86)\\MLwiN v2.29\\", x64=FALSE){
     ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
     temptfile =gsub("\\", "/", tempfile("coversion_",fileext=".txt"),fixed=TRUE)
     cat(file=temptfile)

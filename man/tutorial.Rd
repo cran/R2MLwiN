@@ -33,7 +33,7 @@ See \code{mlmRev} package for an alternative format of the same dataset.
 \examples{
 \dontrun{
 # NB: hange path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
+MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
 data(tutorial)
 
 # Fit 2-level variance components model, using IGLS (default estimation method)

@@ -1,4 +1,8 @@
-
+importFrom("rbugs", runBugs, rbugs2coda)
+importFrom("coda", mcmc, mcmc.list, as.mcmc.list, read.coda, effectiveSize, raftery.diag, thin)
+importFrom("lattice", xyplot, Rows, trellis.par.get, trellis.par.set, panel.xyplot)
+importFrom("foreign", read.dta, write.dta)
+importFrom("methods", show)
 export(caterpillar, caterpillarR, double2singlePrecision, Formula.translate, MacroScript1, MacroScript2, mlwin2bugs, predLines, predCurves, prior2macro, runMLwiN, sixway, trajectories, Untoggle, ws2foreign)
 exportClasses(mlwinfitIGLS, mlwinfitMCMC)
 exportMethods("[","[[","[<-","[[<-",summary, print, update)

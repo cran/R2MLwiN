@@ -13,8 +13,8 @@ MLwiN uses both classical and Bayesian approaches to fitting multilevel models, 
 \details{
 \tabular{ll}{
 Package: \tab R2MLwiN\cr
-Version: \tab 0.1-7\cr
-Date: \tab 2013-11-22\cr
+Version: \tab 0.1-8\cr
+Date: \tab 2014-01-07\cr
 License: \tab  GPL (>= 2)\cr
 }
 To use the package, the following objects should be specified:
@@ -51,7 +51,7 @@ MCMC estimation in MLwiN Version 2.25. Browne, W.J. (2012) Centre for Multilevel
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
+mlwin ="C:/Program Files (x86)/MLwiN v2.29/"
 ## MLwiN sample worksheet folder 
 wspath=paste(mlwin,"/samples/",sep="")
 

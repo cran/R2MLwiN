@@ -1,13 +1,13 @@
 Package: R2MLwiN
-Version: 0.1-7
-Date: 2013-11-22
+Version: 0.1-8
+Date: 2014-01-24
 Title: Running MLwiN from within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
-Depends: R (>= 2.14.0), methods, lattice, coda (>= 0.16-1), foreign (>=
-        0.8-46), rbugs (>= 0.5-7)
+Depends: R (>= 2.14.0), coda (>= 0.16-1), foreign (>= 0.8-46), rbugs
+        (>= 0.5-7), methods, lattice
 Suggests: lme4 (>= 0.999999-0)
 OS_type: windows
 Description: R2MLwiN is an R command interface to the MLwiN multilevel
@@ -17,7 +17,7 @@ License: GPL (>= 2)
 URL: http://www.r-project.org,
         http://www.bristol.ac.uk/cmm/software/mlwin/
 SystemRequirements: MLwiN, (WinBUGs, OpenBUGs optional)
-Packaged: 2013-11-23 22:08:31 UTC; Zhengzheng
+Packaged: 2014-01-29 04:30:15 UTC; Administrator
 Author: Zhengzheng Zhang [aut, cre],
   Chris Charlton [aut],
   Richard Parker [aut],
@@ -26,4 +26,4 @@ Author: Zhengzheng Zhang [aut, cre],
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-11-24 01:03:42
+Date/Publication: 2014-01-29 19:35:48

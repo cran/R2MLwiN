@@ -51,7 +51,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 library(R2MLwiN)
 ## Modify the following paths as appropriate.
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
 ## MLwiN sample worksheet folder
 wsfile=paste(mlwin,"/samples/alevchem.ws",sep="")
 ## the tutorial.dta will be save under the temporary folder

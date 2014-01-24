@@ -41,7 +41,7 @@ Rasbash, J., Browne, W. J., Healy, M., Cameron, B., Charlton, C. M. J. (2013) ML
 \examples{
 \dontrun{
 # NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
+MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
 data(wage1)
 # fit age_40 and numjobs as fixed effects, with random effects for companies, 
 # in multiple membership model

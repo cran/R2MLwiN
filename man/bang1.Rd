@@ -38,7 +38,7 @@ See \code{mlmRev} package for an alternative format of the same dataset, with fe
 \examples{
 \dontrun{
 # NB: change path as appropriate
-MLwiN <- "C:/Program Files (x86)/MLwiN v2.27/"
+MLwiN <- "C:/Program Files (x86)/MLwiN v2.29/"
 data(bang1)
 bang1$use <- as.numeric(bang1$use) - 1
 bang1$urban <- as.numeric(bang1$urban) - 1

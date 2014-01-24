@@ -16,7 +16,7 @@
 library(R2MLwiN)
 ## Input the MLwiN tutorial data set
 # MLwiN folder
-if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.27/"
+if(!exists("mlwin")) mlwin ="C:/Program Files (x86)/MLwiN v2.29/"
 while (!file.access(mlwin,mode=0)==0||!file.access(mlwin,mode=1)==0||!file.access(mlwin,mode=4)==0){
     mlwin=scan(what=character(0),sep ="\n")
     mlwin=gsub("\\", "/",mlwin, fixed=TRUE)

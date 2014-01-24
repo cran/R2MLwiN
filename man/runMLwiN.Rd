@@ -10,7 +10,7 @@ This function executes MLwiN and then brings results back to R. A summary of the
 \usage{
 runMLwiN(Formula, levID, D = "Normal", indata,
 estoptions = list(EstM = 0), BUGO = NULL,
-MLwiNPath = "C:/Program Files (x86)/MLwiN v2.27/", workdir=tempdir())
+MLwiNPath = "C:/Program Files (x86)/MLwiN v2.29/", workdir=tempdir())
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,7 +33,7 @@ A list of options used for estimating the model. See Value below.
 A vector specifying BUGS options. If non-null, then WinBUGS/OpenBUGS, in conjunction with MLwiN, are used for modelling. see Value below.
 }
   \item{MLwiNPath}{
-A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.27/".
+A path to the MLwiN folder. By default, \code{MLwiNPath} = "C:/Program Files (x86)/MLwiN v2.29/".
 }
 
   \item{workdir}{
@@ -164,7 +164,7 @@ Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne, W.J. (2012)
 file.show(system.file("demo", "Chapter03.R", package="R2MLwiN"))
 
 ## MLwiN folder
-mlwin = "C:/Program Files (x86)/MLwiN v2.27/"
+mlwin = "C:/Program Files (x86)/MLwiN v2.29/"
 
 ## To run the demo for Chapter03
 demo(Chapter03)
