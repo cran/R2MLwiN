@@ -97,8 +97,8 @@ function(Formula,levID, D='Normal',indata){
         }
         if (D[1]=="Mixed") D=as.list(D)
         if (D[[1]]=="Mixed"){
-            resp=sub("c\\(","",resp)
-            resp=sub("\\)","",resp)
+            resp=sub("^c\\(","",resp)
+            resp=sub("\\)$","",resp)
             resp=strsplit(resp,",")[[1]]
             lenD=length(D)-1
             resp2=rep(NA,lenD)
@@ -120,7 +120,6 @@ function(Formula,levID, D='Normal',indata){
 
             }
             resp=resp2
-
             for (i in 1:length(resp)){
                 respx=resp[i]
                 if (D[[i+1]]=="Normal"){

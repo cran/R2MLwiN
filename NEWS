@@ -1,3 +1,16 @@
+Thu Mar 7 2014
+1. Bug fixing
+   * Fixed residuals for multivariate response models
+   * Appropriate MCMC residuals now returned
+   * Fixed bug: now allows for >2 responses in multivariate response model
+   * Fixed CaterpillarR function
+2. Changes
+   * Removed option to specify resioptions = c("sampling") for MCMC estimation
+
+Wed Feb 26 2014
+1. Changes
+   * Added 'optimat' option
+
 Fri Jan 24 2014
 1. Bug fixing
    * Fixed bug in Untoggle which was mis-assigning names to categories

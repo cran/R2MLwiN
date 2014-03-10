@@ -15,7 +15,7 @@ function(resi, lev=2){
     if (length(est.names)==1){
         est=as.matrix(na.omit(myresi[[est.names]]),ncol=1)
         colnames(est)=sub("_resi_est","",est.names)
-        var=na.omit(myresi[,grep(paste("lev_",lev,"_resi_var_",sep=""),names(myresi))])
+        var=na.omit(myresi[,grep(paste("lev_",lev,"_resi_(var|variance)_",sep=""),names(myresi))])
         d1=length(est)
         tt=array(,c(1,1,d1))
         tt[1,1,]=var
@@ -36,7 +36,7 @@ function(resi, lev=2){
         for (i in 1:length(est.names)){
             for (j in 1:i){
                 if (i==j){
-                    tmatch=grep(paste("lev_",lev,"_resi_var_",tempnames[i],sep=""),names(myresi))
+                    tmatch=grep(paste("lev_",lev,"_resi_(var|variance)_",tempnames[i],sep=""),names(myresi))
                     if (length(tmatch)!=0){
                         cov.lower[ccount,]=na.omit(myresi[,tmatch])
                     }else{

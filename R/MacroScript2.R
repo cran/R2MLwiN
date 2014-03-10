@@ -1,6 +1,10 @@
 MacroScript2 <-
-function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,     nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-     chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
+function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
+     seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
+     OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass=NULL,BUGO=NULL,mem.init,optimat=F,
+     nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
+     chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,
+     FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode, startval=startval, dami=dami){
 
 
     nlev=length(levID)
@@ -112,7 +116,13 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     }else{
         wrt(paste("INIT    ",mem.init[1],mem.init[2],mem.init[3],mem.init[4],mem.init[5]))
     }
-
+    wrt("NOTE     Limit the maximum matrix size")
+    if (optimat){
+        wrt("OPTS   1")
+    }else{
+        wrt("OPTS   0")
+    }
+    
 
     wrt("MONI    0")
     wrt("NOTE    Import the R data into MLwiN")
@@ -1248,30 +1258,39 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         tempcell= 998
         for (j in nrp:1){
             if (as.numeric(sub("rp","",rp.names[j]))!=1){
-                if (as.numeric(sub("rp","",rp.names[j]))==2){
-                    rpx=rp[[j]]
-                    len.rpx=length(rpx)
-                    if (D[1]=="Mixed"){
-                        rpx=c(rpx,"bcons")
-                        len.rpx=length(rpx)
-                    }
-                    wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
-                    wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
-                    wrt("RFUN")
-                    wrt("RCOV   2")
-                    tempcol=(tempcell+len.rpx):tempcell
-                    tempvec=tempvec2=NULL
-                    for (i in 1:(len.rpx+1)) tempvec=paste(tempvec, paste("c", tempcol[i],sep=""))
-                    for (i in 1:len.rpx) tempvec2=paste(tempvec2, paste("c", tempcol[i],sep=""))
-                    wrt(paste("ROUT   ",tempvec,sep=""))
-                    wrt("RESI")
-                    wrt(paste("JOIN   c",997, tempvec2," c",997,sep=""))
-                    wrt(paste("JOIN   c",996," c", tempcol[len.rpx+1]," c",996,sep=""))
-                    wrt(paste("ERAS   ",tempvec,sep=""))
-                }else{
+              rpx=rp[[j]]
+              len.rpx = length(rpx)
+              if (as.numeric(sub("rp","",rp.names[j]))==2 & D[[1]][1]=="Mixed"){
+                for (i in 2:length(D)){
+                  if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
+                    len.rpx = len.rpx + 1
+                  }
+                }
+              }
+#                 if (as.numeric(sub("rp","",rp.names[j]))==2){
+#                     rpx=rp[[j]]
+#                     len.rpx=length(rpx)
+#                     if (D[1]=="Mixed"){
+#                         rpx=c(rpx,"bcons")
+#                         len.rpx=length(rpx)
+#                     }
+#                     wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
+#                     wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
+#                     wrt("RFUN")
+#                     wrt("RCOV   2")
+#                     tempcol=(tempcell+len.rpx):tempcell
+#                     tempvec=tempvec2=NULL
+#                     for (i in 1:(len.rpx+1)) tempvec=paste(tempvec, paste("c", tempcol[i],sep=""))
+#                     for (i in 1:len.rpx) tempvec2=paste(tempvec2, paste("c", tempcol[i],sep=""))
+#                     wrt(paste("ROUT   ",tempvec,sep=""))
+#                     wrt("RESI")
+#                     wrt(paste("JOIN   c",997, tempvec2," c",997,sep=""))
+#                     wrt(paste("JOIN   c",996," c", tempcol[len.rpx+1]," c",996,sep=""))
+#                     wrt(paste("ERAS   ",tempvec,sep=""))
+#                 }else{
 
-                        rpx=rp[[j]]
-                        len.rpx=length(rp[[j]])
+#                         rpx=rp[[j]]
+#                         len.rpx=length(rp[[j]])
                         wrt(paste("NOTE Calculate MCMC starting values for level ",as.numeric(sub("rp","",rp.names[j]))," residuals",sep=""))
                         wrt(paste("RLEV   ",as.numeric(sub("rp","",rp.names[j])),sep=""))
                         wrt("RFUN")
@@ -1285,7 +1304,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         wrt(paste("JOIN   c",997, tempvec2," c",997,sep=""))
                         wrt(paste("JOIN   c",996," c", tempcol[len.rpx+1]," c",996,sep=""))
                         wrt(paste("ERAS   ",tempvec,sep=""))
-                }
+#                 }
             }
         }
     }
@@ -1988,6 +2007,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             }
 
             wrt("RTYP   0")
+
             if (mcmc){
                 wrt("MCRE")
             }else{
@@ -2046,6 +2066,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         }
 
         wrt("RTYP   1")# Compute comparative variances
+
         if (mcmc){
             wrt("MCRE")
         }else{
@@ -2206,7 +2227,11 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             # For cross-classified models the residuals and their SE are calculated; Otherwise,
             # the residuals and full var-cov matrix are returned.
             if (is.null(xclass)) wrt("RCOV 2") else wrt("RCOV 1")
-            wrt("RESI")
+            if (mcmc){
+              wrt("MCRE")
+            }else{
+              wrt("RESI")
+            }
             wrt("")
 
             #NOTE: This is square rooted, as the residual covariances are sometimes negative

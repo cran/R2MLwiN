@@ -21,7 +21,14 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     if (is.null(resi.store)) resi.store=F
 
     resioptions=estoptions$resioptions
-    if (is.null(resioptions)) resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")
+    if (is.null(resioptions)){
+        if (EstM==0){
+          resioptions = c("variance","sampling") #c("standardised","deletion","leverage","influnce","sampling")          
+        }
+        else{
+          resioptions = c("variance") #c("standardised","deletion","leverage","influnce","sampling")
+        }
+    }
     if ("variance"%in%resioptions&&("standardised"%in%resioptions||"deletion"%in%resioptions||"leverage"%in%resioptions)){
         stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
     }
@@ -112,6 +119,11 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     mem.init=estoptions$mem.init
     if(is.null(mem.init)) mem.init="default"
 
+
+    optimat=estoptions$optimat
+    if(is.null(optimat)) optimat=F
+
+    
     nonlinear=estoptions$nonlinear
 
     if (is.null(nonlinear)) nonlinear=c(0,1)
@@ -140,7 +152,8 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
     }
     if (EstM==0){
         MacroScript1(indata, dtafile,resp, levID, expl, rp, D, nonlinear, categ,notation, nonfp, clre,smat,Meth,
-        BUGO,mem.init, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
+        BUGO,mem.init, optimat, weighting,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,
+        IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,debugmode=debugmode)
         iterations=estoptions$mcmcMeth$iterations
         if(is.null(iterations)) iterations=5000
         burnin=estoptions$mcmcMeth$burnin
@@ -212,9 +225,6 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
           }
         }
         colnames(RP.cov)=rownames(RP.cov)=RP.names
-        
-        if (is.null(BUGO)){
-    }
     }
 
     # MCMC algorithm (using the starting values obtain from IGLS algorithm)
@@ -306,9 +316,12 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 
 
 
-        MacroScript2(indata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,
+        MacroScript2(indata, dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp,clre,smat,Meth,merr,
+        seed,iterations,burnin,scale,thinning,priorParam,refresh,fixM,residM,Lev1VarM, 
+        OtherVarM,adaption,priorcode,rate, tol,lclo,mcmcOptions,fact,xclass,BUGO,mem.init,optimat,
         nopause,modelfile=modelfile,initfile=initfile,datafile=datafile,macrofile=macrofile,IGLSfile=IGLSfile,MCMCfile=MCMCfile,
-        chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
+        chainfile=chainfile,MIfile=MIfile,resifile=resifile,resi.store=resi.store,resioptions=resioptions,
+        resichains=resichains,FACTchainfile=FACTchainfile,resi.store.levs=resi.store.levs,debugmode=debugmode,startval=startval, dami=dami)
         WD <- getwd()
         if (x64){
             MLwiNPath1=paste(MLwiNPath,'/x64/',sep='')

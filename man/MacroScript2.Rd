@@ -20,7 +20,7 @@ OtherVarM, adaption, priorcode,
 rate, tol, lclo,
 mcmcOptions, fact,
 xclass = NULL, BUGO = NULL,
-mem.init, nopause,
+mem.init, optimat,nopause,
 modelfile = modelfile,
 initfile = initfile,
 datafile = datafile,
@@ -150,6 +150,9 @@ If the first entry of the vector is \code{TRUE}, the current model is outputted 
 }
   \item{mem.init}{
 A vector which sets and displays worksheet capacities for the current MLwiN session according to the value(s) specified. By default, the number of levels is \code{nlev}+1; worksheet size in thousands of cells is 6000; the number of columns is 2500; the number of explanatory variables is \code{num_vars}+10; the number of group labels is 20. \code{nlev} is the number of levels specified by \code{levID}, and \code{num_vars} is approximately the number of explanatory variables calculated initially.
+}
+  \item{optimat}{
+This option instructs MLwiN to limit the maximum matrix size that can be allocated by the (R)IGLS algorithm. Specify \code{optimat=TRUE} if MLwiN gives the following error message "Overflow allocating smatrix".  This error message arises if one more higher-level units is extremely large (contains more than 800 lower-level units).  In this situation runmlwin's default behaviour is to instruct MLwiN to allocate a larger matrix size to the (R)IGLS algorithm than is currently possible. Specifying \code{optimat=TRUE} caps the maximum matrix size at 800 lower-level units, circumventing the MLwiN error message, and allowing most MLwiN functionality.  
 }
   \item{nopause}{
 A logical value specifying whether the estimates are to be updated on screen or not, in MLwiN. Default \code{nopause=FALSE}, i.e. the screen is updated.
