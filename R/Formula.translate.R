@@ -1,5 +1,5 @@
 Formula.translate <-
-function(Formula,levID, D='Normal',indata){
+function(Formula,levID, D='Normal', mcmc=0, indata){
 
     nlev=length(levID)
     cc=c(0:nlev)
@@ -463,8 +463,40 @@ function(Formula,levID, D='Normal',indata){
 
             rp=list()
             rp.names=NULL
+
+              if (D[1] == 'Mixed'){
+                
+                for (j in 2:length(D)){
+                  if (D[[j]][1] == 'Binomial' | D[[j]][1] == 'Poisson'){
+                    rp[["rp1"]] = c(rp[["rp1"]], paste0("bcons.", j-1))
+                    
+                  }
+                }
+              }
+#            if (D[1] == 'Ordered Multinomial'){
+#              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+#              
+#            }
+            if (D[1] == 'Unordered Multinomial'){
+              if (mcmc == 0){
+
+#                rp[["rp2"]] = c(rp[["rp2"]], "bcons.2")
+              }
+              else{
+#                rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+              }
+            }
+#             if (D[1] == 'Unordered Multinomial'){
+#               if (mcmc == 0){
+#               rp[["rp1"]] = c(rp[["rp1"]], "bcons.1", "bcons.2")
+#               }
+#               else{
+#                 rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+#               }
+#             }
+
             for (i in 1:length(rands)){
-                if (!is.na(rands[[i]][1])){
+              if (!is.na(rands[[i]][1])){
                     rptemp=NULL
                     for (j in 1:length(rands[[i]])){
                         rp.name=paste("rp",effect.lev[i],sep="")
@@ -503,7 +535,8 @@ function(Formula,levID, D='Normal',indata){
                                 }
                         }
                     }
-                    rp[[rp.name]]=rptemp
+                    rp[[rp.name]]=c(rp[[rp.name]], rptemp)
+                    
                 }
             }
 
@@ -563,6 +596,7 @@ function(Formula,levID, D='Normal',indata){
 
         if(D[1]=='Ordered Multinomial'||D[1]=='Unordered Multinomial') D[1]='Multinomial'
         invars <-new.env()
+        if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
         if(length(randC)==0&&length(fixc)==0){
             invars$resp=resp
             invars$expl=fixs
@@ -688,6 +722,7 @@ function(Formula,levID, D='Normal',indata){
 
             rp=list()
             rp.names=NULL
+              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
             for (i in 1:length(rands)){
                 if (!is.na(rands[[i]][1])){
                     rp.name=paste("rp",effect.lev[i],sep="")
@@ -707,6 +742,7 @@ function(Formula,levID, D='Normal',indata){
         invars <-new.env()
         invars$resp=resp
         invars$expl=fixs
+        if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
         if (length(rp)!=0) invars$rp=rp
         if (length(nonfps)!=0) invars$nonfp=nonfps
         invars$D=D
@@ -806,6 +842,12 @@ function(Formula,levID, D='Normal',indata){
 
             rp=list()
             rp.names=NULL
+            if (D[1] == 'Poisson'){
+              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1")
+            }
+            if (D[1] == 'Negbinom'){
+              rp[["rp1"]] = c(rp[["rp1"]], "bcons.1", "bcons2.1")
+            }
             for (i in 1:length(rands)){
                 if (!is.na(rands[[i]][1])){
                     rp.name=paste("rp",effect.lev[i],sep="")
@@ -825,6 +867,7 @@ function(Formula,levID, D='Normal',indata){
         invars <-new.env()
         invars$resp=resp
         invars$expl=fixs
+        if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
         if (length(rp)!=0) invars$rp=rp
         if (length(nonfps)!=0) invars$nonfp=nonfps
         invars$D=D
@@ -925,6 +968,7 @@ function(Formula,levID, D='Normal',indata){
         invars <-new.env()
         invars$resp=resp
         invars$expl=fixs
+        if (length(rp)!=0) rp <- rp[order(names(rp), decreasing=TRUE)]
         if (length(rp)!=0) invars$rp=rp
         if (length(nonfps)!=0) invars$nonfp=nonfps
         invars$D=D

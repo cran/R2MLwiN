@@ -1,3 +1,9 @@
+Fri Mar 28 2014
+1. Bug fixing
+   * Fixed display when interaction terms involve
+   * Fixed display when >1 non-Normal response
+   * Correctly handle bcons parameters
+
 Thu Mar 7 2014
 1. Bug fixing
    * Fixed residuals for multivariate response models

@@ -201,7 +201,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -287,7 +287,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -406,7 +406,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -473,7 +473,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -592,7 +592,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -669,7 +669,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -788,7 +788,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -850,7 +850,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -917,7 +917,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -986,7 +986,7 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -1260,13 +1260,13 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
             if (as.numeric(sub("rp","",rp.names[j]))!=1){
               rpx=rp[[j]]
               len.rpx = length(rpx)
-              if (as.numeric(sub("rp","",rp.names[j]))==2 & D[[1]][1]=="Mixed"){
-                for (i in 2:length(D)){
-                  if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
-                    len.rpx = len.rpx + 1
-                  }
-                }
-              }
+#               if (as.numeric(sub("rp","",rp.names[j]))==2 & D[[1]][1]=="Mixed"){
+#                 for (i in 2:length(D)){
+#                   if (D[[i]][1]=="Binomial" | D[[i]][1]=="Poisson"){
+#                     len.rpx = len.rpx + 1
+#                   }
+#                 }
+#               }
 #                 if (as.numeric(sub("rp","",rp.names[j]))==2){
 #                     rpx=rp[[j]]
 #                     len.rpx=length(rpx)
@@ -1840,14 +1840,14 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         cellnum
     }
 
-    if (D[1]=='Mixed'&& nrp>0){
-            if(sum(as.numeric(sub("rp","",rp.names))==2)>0){
-                rp[["rp2"]]=c("bcons",rp[["rp2"]])
-            }else{
-                rp.names=c(rp.names,"rp2")
-                rp=c(rp,rp2=c("bcons"))
-            }
-    }
+#     if (D[1]=='Mixed'&& nrp>0){
+#             if(sum(as.numeric(sub("rp","",rp.names))==2)>0){
+#                 rp[["rp2"]]=c("bcons",rp[["rp2"]])
+#             }else{
+#                 rp.names=c(rp.names,"rp2")
+#                 rp=c(rp,rp2=c("bcons"))
+#             }
+#     }
     if (nrp>0){
         for (ii in 1:nrp){
             if(!is.null(fact)){
@@ -1862,8 +1862,9 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
         }
     }
     # Add in extra parameters ect.
-    if (D[1]=='Binomial'||D[1]=='Poisson'||(D[1]=='Multinomial'&&as.numeric(D["mode"])==0)){
-        wrt(paste("NAME c",cellnum," 'RP1_bcons_1'",sep=""))
+    #if (D[1]=='Binomial'||D[1]=='Poisson'||(D[1]=='Multinomial'&&as.numeric(D["mode"])==0)){
+      if (D[1]=='Multinomial'&&as.numeric(D["mode"])==0){
+      wrt(paste("NAME c",cellnum," 'RP1_bcons_1'",sep=""))
         wrt(paste("DESC c",cellnum," 'RP1:bcons_1'",sep=""))
         cellnum=cellnum+1
     }

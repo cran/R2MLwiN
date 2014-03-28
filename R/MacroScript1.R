@@ -196,7 +196,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -282,7 +282,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -401,7 +401,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -468,7 +468,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -587,7 +587,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -664,7 +664,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                     }
                     wrt(paste("ADDT    ",TT,sep=""))
                 }
-
+                sep.coeff <- c(explx, exply)
             }
             interpos2=grep("\\:",common.coeff)
             if (length(interpos2)==0){
@@ -783,7 +783,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                         }
                         wrt(paste("ADDT    ",TT,sep=""))
                     }
-
+                    expl <- c(explx, exply)
                 }
          }
          wrt("")
@@ -845,7 +845,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -911,7 +911,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -980,7 +980,7 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
                 }
                 wrt(paste("ADDT    ",TT,sep=""))
             }
-
+            expl <- c(explx, exply)
         }
         wrt("")
     }
@@ -1716,14 +1716,6 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
     }
 
 
-    if (D[1]=='Mixed'){
-            if(sum(as.numeric(sub("rp","",rp.names))==2)>0){
-                rp[["rp2"]]=c("bcons",rp[["rp2"]])
-            }else{
-                rp.names=c(rp.names,"rp2")
-                rp=c(rp,rp2=c("bcons"))
-            }
-    }
 
     RP =NULL
     if (nrp>0){
@@ -1740,21 +1732,20 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
 
 
     # Add in extra parameters ect.
-    if (D[1]=='Binomial'||D[1]=='Poisson'){
-        RP=c(RP, "RP1_bcons_1")
-    }
-    if (D[1]=='Multinomial'){
-        if (D["mode"]==0){
-            RP=c(RP, "RP2_-P/P","RP1_bcons_1")
-        }
-        if (D["mode"]==1){
-            RP=c(RP, "RP2_P*")
-        }
-    }
-
-
+#     if (D[1]=='Binomial'||D[1]=='Poisson'){
+#         RP=c(RP, "RP1_bcons_1")
+#     }
+#     if (D[1]=='Multinomial'){
+#         if (D["mode"]==0){
+#             RP=c(RP, "RP2_-P/P","RP1_bcons_1")
+#         }
+#         if (D["mode"]==1){
+#             RP=c(RP, "RP2_P*")
+#         }
+#     }
     assign("FP.names",FP,envir = parent.frame())#environment(runMLwiN))
     assign("RP.names",RP,envir = parent.frame())#environment(runMLwiN))
+
 
     if ((!is.null(BUGO))&&!(D[1]=="Mixed")&&nrp>0){
         if(D[1]=="Normal") DD=1

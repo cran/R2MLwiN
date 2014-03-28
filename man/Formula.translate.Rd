@@ -8,7 +8,7 @@ An internal function to translate an R formula from a character string into an R
 A model formula, as a formula object (or a character string) written in R-type syntax, is translated into an R list object.
 }
 \usage{
-Formula.translate(Formula, levID, D = "Normal", indata)
+Formula.translate(Formula, levID, D = "Normal", mcmc = 0, indata)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,6 +20,9 @@ A character (vector) specifying the level ID(s).
 }
   \item{D}{
 A character string/vector specifying the distribution to be modelled.
+}
+  \item{mcmc}{
+A logical specifying whether MCMC method is used for parameter estimation. By default, \code{mcmc=0}, i.e., IGLS is used.  
 }
   \item{indata}{
 A data.frame object containing the data to be modelled.
