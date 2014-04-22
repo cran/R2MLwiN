@@ -1,11 +1,11 @@
-ea6d6b38fcbdeeab739680a7dc7b39c5 *DESCRIPTION
+92fbe56495fea05a9866e7bfd89fb2e4 *DESCRIPTION
 1acce51c49c538f74b410e3f51b3c0cb *NAMESPACE
-f705773c41bebd6040fce85a82d1aa2d *NEWS
+8f9ddc9280538eec6c931423f1344376 *NEWS
 5407c2a1b133b1556bcd6d6bccbceaf0 *R/BD.R
 f2c3f1f1655d27caa8584294c87b9bc1 *R/Formula.translate.R
 2ce155eb8e96211f4e7196a3be8ac097 *R/MCSE.R
-6de0fa8d9ccb8dd9ca9e734b970b86ed *R/MacroScript1.R
-b49190c357ab09d6871f2cb99b72d1d4 *R/MacroScript2.R
+8a6741356c078e6fbd627511407c2159 *R/MacroScript1.R
+3a6a6a3248f10f941bf0d40d3ad675b7 *R/MacroScript2.R
 3d22973db4d1c40acc4f8b61e40323c8 *R/Untoggle.R
 d6975a7fb1827e730f34fe2b16fe3ce3 *R/caterpillar.R
 4d08a6bd74f859bd38c36e82634618f1 *R/caterpillarR.R
@@ -16,7 +16,7 @@ d6975a7fb1827e730f34fe2b16fe3ce3 *R/caterpillar.R
 35cd1cfcc015431c17f0f4f152c5466c *R/predCurves.r
 963b9233f7b975af051cffe473f2aad9 *R/predLines.r
 f4523a30a4279bdb48139488649ee5c7 *R/prior2macro.R
-2426687b3014fe015fa5e22ac14b05df *R/runMLwiN.R
+3e800b82648be30f72fab62f19e8af71 *R/runMLwiN.R
 ffbfa2087dc729f5ed4c650fa16822b6 *R/sixway.R
 a80d826c91d4ee88c004b9caf3c98488 *R/trajectories.R
 b1feae6f2ce656f54b2a5c2f35223ec1 *R/ws2foreign.R
@@ -54,7 +54,7 @@ aee6118f65ac4b7d012a368998e6240e *demo/Chapter25.R
 fe33f89c272e144a825fc30e86ef93dc *man/Formula.translate.Rd
 739c447479a13d862f0c3f444a5edf98 *man/MacroScript1.Rd
 8ed9773cd6a5a0043d53a3e1f8ae2db0 *man/MacroScript2.Rd
-0e2ba92d093b3abd7417cd4adb25a904 *man/R2MLwiN-package.Rd
+d51b79243247177af8c6cd01b8834f0b *man/R2MLwiN-package.Rd
 0caaabfc9bcc2ddada848ad15c26a549 *man/Untoggle.Rd
 9096a726fd1ee604197562ec6cdbe749 *man/bang1.Rd
 65294cd5e318550f03b9a149e4ccb4c5 *man/caterpillar.Rd

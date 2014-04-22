@@ -209,7 +209,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
 }
         names(RP)=RP.names
         LIKE=estIGLS[,dim(estIGLS)[2]][3]
-        if(LIKE==1) LIKE=NA
+        if(!is.na(LIKE)){ if(LIKE==1) LIKE=NA}
         Missing=estIGLS[,dim(estIGLS)[2]][9]
         estIGLS2=na.omit(estIGLS[,2])
         FP.cov=matrix(NA,length(FP),length(FP))
@@ -388,7 +388,7 @@ function(Formula, levID, D="Normal", indata, estoptions=list(EstM=0), BUGO=NULL,
               names(BDIC)=BDIC.names
           }else{
               LIKE=estMCMC[,dim(estMCMC)[2]][3]
-              if(LIKE==1) LIKE=NA
+              if(!is.na(LIKE)){ if(LIKE==1) LIKE=NA}
           }
           Missing=estMCMC[,dim(estMCMC)[2]][9]
           levID.display=""

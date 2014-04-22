@@ -1113,7 +1113,9 @@ function(indata,dtafile,resp, levID, expl, rp, D,nonlinear, categ,notation,nonfp
     wrt("NOTE       Export the model results to R")
     wrt("NOTE    *****************************************************************")
     wrt("NAME   c1300 '_Stats'")
-    wrt("LIKE   b100")
+    if (D[1]=="Normal" || D[1]=="Multivariate Normal"){
+      wrt("LIKE   b100")
+    }
     wrt("EDIT 3 c1300 b100")
     wrt("EDIT 7 c1300 b21")
     wrt("EDIT 8 c1300 b22")

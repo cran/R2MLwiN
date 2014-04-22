@@ -1137,7 +1137,9 @@ macrofile=macrofile,IGLSfile=IGLSfile,resifile=resifile,resi.store=resi.store,re
     wrt("NOTE       Export the model results to R")
     wrt("NOTE    *****************************************************************")
     wrt("NAME   c1300 '_Stats'")
+    if (D[1]=="Normal" || D[1]=="Multivariate Normal"){
     wrt("LIKE   b100")
+    }
     wrt("EDIT 3 c1300 b100")
     wrt("EDIT 7 c1300 b21")
     wrt("EDIT 8 c1300 b22")

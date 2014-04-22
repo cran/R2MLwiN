@@ -1,3 +1,7 @@
+Tue Apr 22 2014
+1. Bug fixing
+   * Missing values are erroneously marked as 'infinite' when re-fitting non-Normal models in debugmode, thus resulting in errors
+   
 Fri Mar 28 2014
 1. Bug fixing
    * Fixed display when interaction terms involve
@@ -22,7 +26,7 @@ Fri Jan 24 2014
    * Fixed bug in Untoggle which was mis-assigning names to categories
 2. Changes
    * Tested the package running on MLwiN v2.29; now changed default MLwiNPath
-   
+
 Thu Nov 21 2013
 1. Bug fixing
    * sixway now allows user to specify some graphic parameters (see par()); This fixes errors, e.g., "figure margins too large".
