@@ -1,25 +1,40 @@
-Chapter01    Introduction to MCMC Estimation and Bayesian Modelling
-Chapter02    Single Level Normal Response Modelling
-Chapter03    Variance Components Models
-Chapter04    Other Features of Variance Components Models
-Chapter05    Prior Distributions, Starting Values and Random Number Seeds
-Chapter06    Random Slopes Regression Models
-Chapter07    Using the WinBUGS Interface in MLwiN
-Chapter08    Running a Simulation Study in MLwiN
-Chapter09    Modelling Complex Variance at Level 1 / Heteroscedasticity
-Chapter10   Modelling Binary Responses
-Chapter11   Poisson Response Modelling
-Chapter12   Unordered Categorical Responses
-Chapter13   Ordered Categorical Responses
-Chapter14   Adjusting for Measurement Errors in Predictor Variables
-Chapter15   Cross Classified Models
-Chapter16   Multiple Membership Models
-Chapter17   Modelling Spatial Data
-Chapter18   Multivariate Normal Response Models and Missing Data
-Chapter19   Mixed Response Models and Correlated Residuals
-Chapter20   Multilevel Factor Analysis Modelling
-Chapter21   Using Structured MCMC
-Chapter22   Using the Structured MVN framework for models
-Chapter23   Using Orthogonal fixed effect vectors
-Chapter24   Parameter expansion
-Chapter25   Hierarchical Centring
+UserGuide02   Introduction to Multilevel Modelling
+UserGuide03   Residuals
+UserGuide04   Random Intercept and Random Slope Models
+UserGuide05   Graphical Procedures for Exploring the Model
+UserGuide06   Contextual Effects
+UserGuide07   Modelling the Variance as a Function of Explanatory Variables
+UserGuide09   Logistic Models for Binary and Binomial Responses
+UserGuide10   Multinomial Logistic Models for Unordered Categorical responses
+UserGuide11   Fitting an Ordered Category Response Model
+UserGuide12   Modelling Count Data
+UserGuide13   Fitting Models to Repeated Measures Data
+UserGuide14   Multivariate Response Models
+UserGuide15   Diagnostics for Multilevel Models
+UserGuide16   An Introduction to Simulation Methods of Estimation
+UserGuide18   Modelling Cross-classi?ed Data
+MCMCGuide01     Introduction to MCMC Estimation and Bayesian Modelling
+MCMCGuide02     Single Level Normal Response Modelling
+MCMCGuide03     Variance Components Models
+MCMCGuide04     Other Features of Variance Components Models
+MCMCGuide05     Prior Distributions, Starting Values and Random Number Seeds
+MCMCGuide06     Random Slopes Regression Models
+MCMCGuide07     Using the WinBUGS Interface in MLwiN
+MCMCGuide08     Running a Simulation Study in MLwiN
+MCMCGuide09     Modelling Complex Variance at Level 1 / Heteroscedasticity
+MCMCGuide10     Modelling Binary Responses
+MCMCGuide11     Poisson Response Modelling
+MCMCGuide12     Unordered Categorical Responses
+MCMCGuide13     Ordered Categorical Responses
+MCMCGuide14     Adjusting for Measurement Errors in Predictor Variables
+MCMCGuide15     Cross Classified Models
+MCMCGuide16     Multiple Membership Models
+MCMCGuide17     Modelling Spatial Data
+MCMCGuide18     Multivariate Normal Response Models and Missing Data
+MCMCGuide19     Mixed Response Models and Correlated Residuals
+MCMCGuide20     Multilevel Factor Analysis Modelling
+MCMCGuide21     Using Structured MCMC
+MCMCGuide22     Using the Structured MVN framework for models
+MCMCGuide23     Using Orthogonal fixed effect vectors
+MCMCGuide24     Parameter expansion
+MCMCGuide25     Hierarchical Centring
