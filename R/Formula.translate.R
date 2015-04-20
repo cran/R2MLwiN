@@ -377,7 +377,18 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         if (lev_found && cvar_found) {
           leftjj <- sub(paste0("^", ii, "\\|"), "", left[jj])
           leftjj <- get.terms(leftjj)
-          is_cvar <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}$", leftjj)
+          is_cvar_last <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}$", leftjj)
+          is_cvar <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}", leftjj)
+          for (uu in 1:length(leftjj)){
+            if (!is_cvar_last[uu] && is_cvar[uu]){
+              #move brackets to the end of each term
+              tempjju1 <- sapply(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}", 
+                                                               leftjj[uu]), invert = TRUE), function(x) paste(x, collapse = ""))
+              tempjju2 <- unlist(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}", 
+                                                               leftjj[uu])))[1]
+              leftjj[uu] <- paste0(tempjju1, tempjju2, collapse="")
+            }
+          }
           svar <- leftjj[!is_cvar]
           if (length(svar) > 0) {
             newsvarjj <- paste0(ii, "s|", paste(svar, collapse = "+"))

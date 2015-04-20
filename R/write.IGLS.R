@@ -1411,7 +1411,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   wrt("NOTE    *****************************************************************")
   wrt("LINK 1 G21")
   wrt("NAME   G21[1] '_Stats'")
-  if (D[1] == "Multivariate Normal" || D[1] == "Multinomial") {
+  if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
     wrt("NOBS 2 b31 b32")
   } else {
     wrt("NOBS 1 b31 b32")

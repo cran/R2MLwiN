@@ -13,7 +13,7 @@ runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model
 formula. See \code{\link{Formula.translate}} (\code{\link{Formula.translate.compat}}
 details back-compatible functionality for deprecated syntax used in
-versions of \pkg{R2MLwiN} prior to 0.8-0).}
+versions of \pkg{R2MLwiN} prior to 0.8-0) and also `Details' below.}
 
 \item{levID}{A character vector specifying the level ID(s). Deprecated
 syntax: by default this is \code{NULL} and level ID(s) are specified
@@ -131,15 +131,15 @@ are listed in \code{D}.
 
 \tabular{lll}{
 \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
-\code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-\code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-\code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
-\code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-\code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit}\cr
-\code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-\code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-\code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
-\code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
+\code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+\code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (1|<L2>) + ...} \tab \code{log}\cr
+\code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
+\code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+\code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit}\cr
+\code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+\code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+\code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
+\code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{log}\cr
 }
 
 The argument \code{estoptions} is a list which can contain the
@@ -375,10 +375,24 @@ covariances; if \code{2} no resetting takes place. E.g. \code{reset = c(0, 1)}
 to assign value \code{0} to level 1 and value \code{1} to level 2 of
 two-level model.
 
-\item \code{constraints}: \code{fixed.ui} and \code{fixed.ci} specify constraint
-on the fixed coefficients, \code{random.ui} and \code{random.ci} specify
-constraints on the random parameters. Applies to \code{EstM = 0} (i.e. estimation
-via (R)IGLS) only.
+\item \code{constraints}: \code{fixed.ui} and \code{fixed.ci} are used
+to specify constraints on the fixed coefficients, and \code{random.ui}
+and \code{random.ci} to specify constraints on the random parameters. The
+syntax for specifying just fixed parameter constraints is
+\code{constraints = list(fixed.ui = <fixed matrix>, fixed.ci = <fixed values>)},
+where \code{<fixed matrix>} is a matrix where each row represents one fixed part
+parameter, in the same order that they appear in the results table, each
+column represents one constraint, and the values in the matrix are multipliers
+for the parameters; and \code{<fixed values>} is a vector of values, one per
+constraint, to which the parameters multiplied by the multipliers in the
+corresponding column of \code{<fixed matrix>} should be equal. For example,
+if we have a model with formula \code{y ~ 1 + x1 + x2 + x3 + x4 + (1|lev1ID)},
+then \code{constraints = list(fixed.ui = matrix(c(0, 1, -1, 0, 0, 0, 0, 0, 1, 2), nrow = 5),
+fixed.ci = c(0, 2))} specifies the constraints that the coefficient of \code{x1}
+equals the coefficient of \code{x2} and that the coefficient of \code{x3} plus
+twice the coefficient of \code{x4} equals \code{2}. Random constraints are
+specified similarly, and fixed and random constraints may be applied
+simultaneously. Applies to \code{EstM = 0} (i.e. estimation via (R)IGLS) only.
 
 \item \code{xc}: indicates whether model is cross-classified (\code{TRUE}) or
 nested (\code{FALSE}). Ignored if \code{EstM = 0}, i.e. only applicable to

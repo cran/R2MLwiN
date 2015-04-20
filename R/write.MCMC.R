@@ -1466,7 +1466,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt(paste("JOIN ", paste(startval$FP.b, collapse = " "), " '_FP_b'", sep = ""))
     }
     if (!is.null(startval$FP.v)) {
-      wrt(paste("JOIN ", paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse = " "), " '_FP_v'", sep = ""))
+      wrt(paste("JOIN ", paste(startval$FP.v[!upper.tri(startval$FP.v)], collapse = " "), " '_FP_v'", sep = ""))
     }
     if (!is.null(startval$RP.b)) {
       wrt(paste("JOIN ", paste(startval$RP.b, collapse = " "), " '_RP_b'", sep = ""))
@@ -1495,7 +1495,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   
   wrt("LINK 1 G30")
   wrt("NAME   G30[1] '_Stats'")
-  if (D[1] == "Multivariate Normal" || D[1] == "Multinomial") {
+  if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
     wrt("NOBS 2 b31 b32")
   } else {
     wrt("NOBS 1 b31 b32")
@@ -1522,7 +1522,11 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if (!is.null(resi.store.levs)) {
     wrt(paste0("LINK ", length(resi.store.levs), " G22"))
     for (i in 1:length(resi.store.levs)) {
-      wrt(paste("SMRE ", resi.store.levs[i], " G22[", i, "]", sep = ""))
+      resilev <- resi.store.levs[i]
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        resilev <- resilev + 1
+      }
+      wrt(paste("SMRE ", resilev, " G22[", i, "]", sep = ""))
       wrt(paste("NAME ", " G22[", i, "] 'resi_lev", resi.store.levs[i], "'", sep = ""))
     }
     
@@ -1608,7 +1612,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("POST   0")
   }
   
-  if (is.null(xc)) {
+  if (nlev > 1 && !isTRUE(xc)) {
     wrt("MISR   0")
     wrt("LINK 2 G30")
     if (D[1] == "Multinomial" && as.numeric(D[4]) == 0) {
@@ -1688,7 +1692,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   if ((!is.null(BUGO)) && !(D[1] == "Mixed") && nrp > 0) {
     if (D[1] == "Normal" || D[1] == "Multivariate Normal")
       DD2 <- 0
-    if (is.null(xc)) {
+    if (nlev > 1 && !isTRUE(xc)) {
       wrt(paste("BUGO 6 ", DD, " ", DD2, " G30[1] ", priorcol, " '", modelfile, "' ", "'", initfile, "' ", "'",
                 datafile, "'", sep = ""))
       wrt("ERAS   G30")
@@ -1703,13 +1707,13 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("ECHO 1")
     
     residcols <- ""
-    if (is.null(xc)) {
+    if (nlev > 1 && !isTRUE(xc)) {
       residcols <- "G30[1] G30[2]"
     }
     wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM,
               priorcode, DD))
     
-    if (is.null(xc)) {
+    if (nlev > 1 && !isTRUE(xc)) {
       wrt("ERAS G30")
       wrt("LINK 0 G30")
     }
@@ -1776,7 +1780,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NOTE    *****************************************************************")
     wrt("NOTE       Export the model results to R")
     wrt("NOTE    *****************************************************************")
-    if (D[1] == "Multivariate Normal" || D[1] == "Multinomial") {
+    if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
       wrt("NOBS 2 b31 b32")
     } else {
       wrt("NOBS 1 b31 b32")

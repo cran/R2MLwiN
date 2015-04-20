@@ -66,11 +66,18 @@ trajectories <- function(object, Range = c(1, 5000), selected = NULL) {
     opar <- par(mfrow = c(3, 3))
   
   nwindows <- 0
-  
-  for (param in coda::varnames(chains)) {
+ 
+  for (param in coda::varnames(chains, allow.null=FALSE)) {
     if (coda::is.mcmc(chains)) {
-      plot(rownames(chains), chains[, param], xlab = "iteration", ylab = param, type = "l")
-    } else {
+      if (is.null(rownames(chains))) {
+        xvals <- 1:length(chains)
+        yvals <- chains
+      } else {
+        xvals <- rownames(chains)
+        yvals <- chains[, param]
+      }
+      plot(xvals, yvals, xlab = "iteration", ylab = param, type = "l")
+    } else { # mcmc.list
       ymin <- min(unlist(chains[1:coda::niter(chains), param]))
       ymax <- max(unlist(chains[1:coda::niter(chains), param]))
       plot(rownames(chains[[1]]), chains[[1]][, param], xlab = "iteration", ylab = param, type = "l", ylim = c(ymin,

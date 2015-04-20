@@ -1,19 +1,19 @@
 #' Calls MLwiN from R.
-#' 
+#'
 #' This function executes MLwiN and then brings results back to R.
-#' 
+#'
 #' @param Formula A \code{\link[stats]{formula}} object specifying the model
 #' formula. See \code{\link{Formula.translate}} (\code{\link{Formula.translate.compat}}
 #' details back-compatible functionality for deprecated syntax used in
-#' versions of \pkg{R2MLwiN} prior to 0.8-0).
+#' versions of \pkg{R2MLwiN} prior to 0.8-0) and also `Details' below.
 #' @param levID A character vector specifying the level ID(s). Deprecated
 #' syntax: by default this is \code{NULL} and level ID(s) are specified
 #' in the \code{Formula} object.
 #' @param D A character string/vector specifying the type of distribution to be modelled, which
 #' can include \code{'Normal'} (the default), \code{'Binomial'}, \code{'Poisson'},
 #' \code{'Negbinom'}, \code{'Unordered Multinomial'}, \code{'Ordered Multinomial'},
-#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter, 
-#' \code{'Mixed'} precedes the response types which also need to be listed in 
+#' \code{'Multivariate Normal'}, or \code{'Mixed'}. In the case of the latter,
+#' \code{'Mixed'} precedes the response types which also need to be listed in
 #' \code{D}, e.g. \code{c('Mixed', 'Normal', 'Binomial')}; these need to be
 #' be listed in the same order to which they are referred to in the
 #' \code{Formula} object (see \code{\link{Formula.translate}},
@@ -22,7 +22,7 @@
 #' \code{'Normal'} and \code{'Binomial'} or \code{'Normal'} and \code{'Poisson'};
 #' for MCMC estimation (i.e. \code{EstM = 0}), on the other hand, only a combination
 #' of \code{'Normal'} and \code{'Binomial'} is available.
-#' 
+#'
 #' @param data A data.frame object containing the data to be modelled.
 #' Optional (but recommended): if empty, data taken from environment of
 #' \code{formula}.
@@ -56,29 +56,29 @@
 #' @details
 #' With regard to \code{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
 #' for notes on general usage, noting the following differences:
-#' 
+#'
 #' \itemize{
 #' \item{The intercept is not included by default (this is keeping with the manner
 #' in which models are specified in MLwiN). To include an intercept, then, one
 #' can specify e.g. \code{normexam ~ 1 + standlrt + (1 | student)} or, assuming \code{cons}
 #' is a constant of ones, \code{normexam ~ cons + standlrt + (cons | student)}. (Note also,
 #' as further detailed below, for normal response models the level 1 ID (\code{student} in this example)
-#' needs to be explicitly included in the random part of the model formula; this is not the 
+#' needs to be explicitly included in the random part of the model formula; this is not the
 #' case for discrete response models.}
 #' \item{The link function and denominator are included in the \code{Formula} object, e.g.
 #' fitting a logistic model in which the variable \code{denom} is specified as the denominator:
 #' \code{logit(resp, denom) ~ 1 + age + (1 | region)}.}
 #' }
-#' 
+#'
 #' Further details are as follows.
-#' 
+#'
 #' The random part of the model is specified in sets of parentheses arranged in
 #' descending order with respect to their hierarchy. E.g. in the case of a 3-level
 #' model, the variable containing the level 3 ID is specified first, then
 #' the variable containing the level 2 ID, etc. Note that the variable containing
 #' the level 1 ID also needs to be explicitly specified unless
 #' it is a discrete response model (in which case you should not specify it).
-#' 
+#'
 #' The table below summarises the options for the \code{Formula} argument in
 #' \pkg{R2MLwiN}. They assume an intercept is added (via \code{~ 1}; for alternative
 #' specifications see \code{\link[stats]{formula}}). \code{<link>} denotes the link function,
@@ -98,35 +98,35 @@
 #' (i.e. one for each category) is added. For \code{'Mixed'} response models, the
 #' \code{Formula} arguments need to be grouped in the order the distributions
 #' are listed in \code{D}.
-#' 
+#'
 #' * denotes IGLS only in the table below.
-#' 
+#'
 #' \tabular{lll}{
 #' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
-#' \code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (<L2>|1) + ...} \tab \code{log}\cr
-#' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (<L2>|1) + ...} \tab \code{logit}\cr
-#' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
-#' \code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab (identity link assumed)\cr
-#' \code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
-#' \code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (<L3>|1[<common>]) + (<L2>|1) + (<L1>|1) + ...} \tab \code{log}\cr
+#' \code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+#' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (1|<L2>) + ...} \tab \code{log}\cr
+#' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
+#' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+#' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit}\cr
+#' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
+#' \code{'Multivariate Normal'} \tab \code{c(<y1>, <y2>, ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
+#' \code{c('Mixed', 'Normal', 'Binomial')} \tab \code{c(<y1>, ..., <link> (<y2>, <denom>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{logit}*,\code{probit},\code{cloglog}*\cr
+#' \code{c('Mixed', 'Normal', 'Poisson')}* \tab \code{c(<y1>, ..., <link>(<y2>, <offset>), ...) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + (1|<L1>) + ...} \tab \code{log}\cr
 #' }
-#' 
+#'
 #' The argument \code{estoptions} is a list which can contain the
 #' following options used for estimating the model:
 #'
 #' \itemize{
 #' \item \code{EstM}: specifies estimation method. When \code{EstM = 0} (default), estimation
 #' method is (R)IGLS, otherwise \code{EstM = 1} specifies MCMC estimation.
-#' 
+#'
 #' \item \code{resi.store}: a logical value indicating whether residuals are to be
 #' stored or not. Defaults to \code{FALSE}.
-#' 
+#'
 #' \item \code{resioptions}: a string vector to specify the various residual options.
 #' The \code{'variance'} option calculates the posterior variances instead of
-#' the posterior standard errors; the \code{'standardised'}, \code{'leverage'}, \code{'influence'} 
+#' the posterior standard errors; the \code{'standardised'}, \code{'leverage'}, \code{'influence'}
 #' and \code{'deletion'} options calculate standardised,
 #' leverage, influence and deletion residuals respectively; the
 #' \code{'sampling'} option calculates the sampling variance covariance matrix
@@ -139,13 +139,13 @@
 #' cannot be specified together with \code{'standardised'}, \code{'leverage'} or
 #' \code{'deletion'} (function call stopped with appropriate error message).
 #' Default is \code{resioptions = c('variance')}.
-#' 
+#'
 #' \item \code{resi.store.levs}: an integer vector indicating the levels at which the
 #' residual chains are to be stored (\code{NULL} by default). Non-\code{NULL} values
 #' not valid when \code{EstM = 0} (i.e. (R)IGLS estimation), else if \code{EstM = 0}
 #' and \code{resi.store.levs} non-\code{NULL}, residual chains at specified levels
 #' are returned.
-#' 
+#'
 #' \item \code{debugmode}: a logical value determining whether MLwiN is run in the
 #' background or not. The default value is \code{FALSE}: i.e. MLwiN is run in
 #' the background. If \code{TRUE} the MLwiN GUI is opened, and then pauses after the model
@@ -157,32 +157,32 @@
 #' works for 32 bit version of MLwiN only (automatically switches unless
 #' \code{MLwiNPath} or \code{options(MLwiNPath)}
 #' has been set directly to the executable).
-#' 
+#'
 #' \item \code{x64}: a logical value indicating
 #' whether the 64 bit version of MLwiN is used (unless \code{MLwiNPath} or \code{options(MLwiNPath)}
 #' has been set directly to the executable). The default is determined by the characteristics
 #' of the operating system on which the script is executed. If \code{FALSE},
-#' the 32 bit version is called, if \code{TRUE} 64 bit version is called. 
-#' 
-#' \item \code{clean.files}: specifies whether the generated files are removed from 
+#' the 32 bit version is called, if \code{TRUE} 64 bit version is called.
+#'
+#' \item \code{clean.files}: specifies whether the generated files are removed from
 #' the \code{workdir} (\code{TRUE}, the default) or not (\code{FALSE}).
-#' 
+#'
 #' \item \code{show.file}: a logical value indicating whether the output files (e.g.
 #' MLwiN macro file) are shown on the screen. Defaults to \code{FALSE}.
-#' 
+#'
 #' \item \code{clre}: a matrix used to define which elements of the random effects matrix
 #' to remove (i.e. hold constant at zero). Removes
 #' from the random part at level <first row> the covariance matrix element(s)
 #' defined by the pair(s) of rows <second row> <third row>. Each column
 #' corresponds to a removed entry of the covariance matrix. See e.g. \code{demo(UserGuide07)}
 #' for an example.
-#' 
+#'
 #' \item \code{notation}: specifies the model subscript notation
 #' to be used in the MLwiN equations window. \code{'class'} means no multiple
 #' subscripts, whereas \code{'level'} has multiple subscripts. If
 #' \code{notation = NULL}, defaults to \code{'level'} if \code{'xc = NULL'} else
 #' defaults to \code{'class'}.
-#' 
+#'
 #' \item \code{mem.init}: sets and displays worksheet capacities for
 #' the current MLwiN session. A vector of length 5 corresponding to
 #' the following order: number of levels (defaults to 1 + the number of
@@ -190,7 +190,7 @@
 #' (default is 6000); the number of columns (default is 2500); the number of
 #' explanatory variables (default it 10 + number of explanatory variables
 #' calculated initially); the number of group labels (default is 20).
-#' 
+#'
 #' \item \code{optimat}: instructs MLwiN to limit the maximum matrix size
 #' that can be allocated by the (R)IGLS algorithm. Specify \code{optimat = TRUE}
 #' if MLwiN gives the following error message 'Overflow allocating smatrix'.
@@ -201,7 +201,7 @@
 #' \code{optimat = TRUE} caps the maximum matrix size at 800 lower-level units,
 #' circumventing the MLwiN error message, and allowing most MLwiN
 #' functionality.
-#' 
+#'
 #' \item \code{nonlinear}: a character vector specifying linearisation method for discrete
 #' response models estimated via IGLS (see Chapter 9 of Rasbash et al 2012,
 #' and Goldstein 2011). \code{N = 0} specifies marginal quasi-likelihood
@@ -213,13 +213,13 @@
 #' models. Pertains to discrete response models estimated via IGLS: i.e. when
 #' \code{EstM = 0} in \code{estoptions}, and for starting values when estimated via IGLS
 #' for MCMC (\code{EstM = 1}).
-#' 
+#'
 #' \item \code{Meth}: specifies which maximum likelihood estimation method is to be
 #' used. If \code{Meth = 0} estimation method is set to RIGLS. If \code{Meth = 1}
 #' estimation method is set to IGLS (the default setting).  Pertains to models
 #' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
 #' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
-#' 
+#'
 #' \item \code{merr}: a vector which sets-up measurement errors on predictor
 #' variables. The first element \code{N} defines the number of variables that
 #' have measurement errors. Then, for each variable with measurement error, a
@@ -227,7 +227,7 @@
 #' name as a character string, and the second is the variance of
 #' the measurement error for this variable. See \code{demo(MCMCGuide14)} for an
 #' example.
-#' 
+#'
 #' \item \code{fact}: a list of objects specified for factor analysis,
 #' including:
 #' \itemize{
@@ -250,12 +250,12 @@
 #' specifying indicators of whether the factor loadings and the factor variance
 #' are constrained (\code{1}) or not (\code{0}).
 #' }
-#' 
+#'
 #' \item \code{weighting}: a deprecated option for specifying weights in IGLS estimation:
 #' see \code{fpsandwich} and \code{rpsandwich} for new method of doing so.
 #' \code{weighting} is a list of objects including \code{levels}, \code{weights},
 #' \code{mode}, \code{FSDE} and \code{RSDE}; see \code{\link{write.IGLS}} for details.
-#' 
+#'
 #' \item \code{centring}: deprecated method (only applicable when using old syntax
 #' pre-\pkg{R2MLwiN} v.0.8-0) specifying function by
 #' which explanatory variables are to be centred (users can instead transform
@@ -269,7 +269,7 @@
 #' centred around its group mean, where group defined by the variable \code{district};
 #' and \code{list(age = c(3, 18), ...)} specifies that \code{age} is to
 #' be centred around the value \code{18}.
-#' 
+#'
 #' \item \code{xclass}: a deprecated option for specifying cross-classified and/or
 #' multiple membership models; see \code{xc} and \code{mm} for new method of
 #' doing so. \code{xclass} is a list of objects including \code{class},
@@ -299,30 +299,30 @@
 #' correlation parameter and independent variance parameters;\cr \code{4} \tab fits AR1 errors with independent variance
 #' parameters.\cr }
 #' }
-#' 
+#'
 #' \item \code{drop.data}: If \code{TRUE} (default) only the data involved in the model
 #' is passed to MLwiN, otherwise the entire dataset in \code{data} is passed.
-#' 
+#'
 #' \item \code{fpsandwich}: specifies standard error type for fixed parameters. If
 #' \code{fpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
 #' residuals are used, if \code{fpsandwich = FALSE} (default) then standard,
 #' uncorrected, IGLS or RIGLS computation used.
-#' 
+#'
 #' \item \code{rpsandwich}: specifies standard error type for random parameters. If
 #' \code{rpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
 #' residuals are used, if \code{rpsandwich = FALSE} (default) then standard,
 #' uncorrected, IGLS or RIGLS `plug in' estimates used.
 #'
 #' \item \code{smat}: a matrix with two columns the levels at which a diagonal
-#' matrix is to be specified. The first column specifies the level. 
+#' matrix is to be specified. The first column specifies the level.
 #' If the value of the second column is \code{1} then the random covariance matrix is
 #' set to be diagonal.
-#' 
+#'
 #' \item \code{maxiter}: a numeric value specifying the maximum number of iterations, from
 #' the start, before (R)IGLS estimation halts. Pertains to models
 #' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
 #' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
-#' 
+#'
 #' \item \code{tol}: a numeric value specifying the convergence criterion.
 #' If value is m, estimation will be
 #' deemed to have converged when the relative change in the estimate for all
@@ -330,13 +330,13 @@
 #' value of \code{2} for m if not otherwise specified.  Pertains to models
 #' estimated via (R)IGLS: i.e. when \code{EstM = 0} in \code{estoptions}, and for starting
 #' values when estimated via (R)IGLS for MCMC (\code{EstM = 1}).
-#' 
+#'
 #' \item \code{extra}: if \code{TRUE}, extra binomial, extra negative binomial,
 #' extra Poisson or extra multinomial distributions assumed, else \code{FALSE}.
 #' can only be specified for discrete response models (i.e. \code{'Binomial'},
 #' \code{'Negbinom'}, \code{'Poisson'}, \code{'Multinomial'})
 #' estimated via (R)IGLS (i.e. \code{EstM = 0}).
-#' 
+#'
 #' \item \code{reset}: a vector specifying the action to be
 #' taken, at each level, if a variance parameter is estimated at a particular
 #' iteration to be negative during estimation. Values specified in
@@ -346,18 +346,32 @@
 #' covariances; if \code{2} no resetting takes place. E.g. \code{reset = c(0, 1)}
 #' to assign value \code{0} to level 1 and value \code{1} to level 2 of
 #' two-level model.
-#' 
-#' \item \code{constraints}: \code{fixed.ui} and \code{fixed.ci} specify constraint
-#' on the fixed coefficients, \code{random.ui} and \code{random.ci} specify
-#' constraints on the random parameters. Applies to \code{EstM = 0} (i.e. estimation
-#' via (R)IGLS) only.
-#' 
+#'
+#' \item \code{constraints}: \code{fixed.ui} and \code{fixed.ci} are used
+#' to specify constraints on the fixed coefficients, and \code{random.ui}
+#' and \code{random.ci} to specify constraints on the random parameters. The
+#' syntax for specifying just fixed parameter constraints is
+#' \code{constraints = list(fixed.ui = <fixed matrix>, fixed.ci = <fixed values>)},
+#' where \code{<fixed matrix>} is a matrix where each row represents one fixed part
+#' parameter, in the same order that they appear in the results table, each
+#' column represents one constraint, and the values in the matrix are multipliers
+#' for the parameters; and \code{<fixed values>} is a vector of values, one per
+#' constraint, to which the parameters multiplied by the multipliers in the
+#' corresponding column of \code{<fixed matrix>} should be equal. For example,
+#' if we have a model with formula \code{y ~ 1 + x1 + x2 + x3 + x4 + (1|lev1ID)},
+#' then \code{constraints = list(fixed.ui = matrix(c(0, 1, -1, 0, 0, 0, 0, 0, 1, 2), nrow = 5),
+#' fixed.ci = c(0, 2))} specifies the constraints that the coefficient of \code{x1}
+#' equals the coefficient of \code{x2} and that the coefficient of \code{x3} plus
+#' twice the coefficient of \code{x4} equals \code{2}. Random constraints are
+#' specified similarly, and fixed and random constraints may be applied
+#' simultaneously. Applies to \code{EstM = 0} (i.e. estimation via (R)IGLS) only.
+#'
 #' \item \code{xc}: indicates whether model is cross-classified (\code{TRUE}) or
 #' nested (\code{FALSE}). Ignored if \code{EstM = 0}, i.e. only applicable to
 #' models estimated via MCMC. Defaults to \code{xc = FALSE}, unless either
 #' \code{mm} or \code{car} are non-\code{NULL}, in which case \code{xc = TRUE}. Supersedes
 #' deprecated \code{xclass}.
-#' 
+#'
 #' \item \code{mm}: specifies the structure of a multiple membership model.
 #' Can be a list of variable names, a list of vectors, or a matrix (e.g. see
 #' \code{\link{df2matrix}}). In the case of the former, each
@@ -367,17 +381,17 @@
 #' \code{mmvar} and \code{weights}, with the former containing columns
 #' specifying the classification units, and the latter containing columns
 #' specifying the weights. Ignored if \code{EstM = 0}, i.e. only applicable to models estimated via
-#' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}. 
+#' MCMC. \code{mm = NULL} by default. Supersedes deprecated \code{xclass}.
 #' E.g. (from \code{demo(MCMCGuide16)}) for
 #' \code{logearn ~ 1 + age_40 + sex + parttime + (1 | company) + (1 | id)}, if
 #' \code{company} is a multiple membership classification with the variables
 #' indicating the classifications in \code{company}, \code{company2},
 #' \code{company3}, \code{company4} and their weights in \code{weight1}, \code{weight2},
-#' \code{weight3} and \code{weight4} then 
+#' \code{weight3} and \code{weight4} then
 #' \code{mm = list(list(mmvar = list('company', 'company2', 'company3', 'company4'),}
 #' \code{weights = list('weight1', 'weight2', 'weight3', 'weight4')), NA)}
 #' with the \code{NA}, listed last, corresponding to the level 1 identifier (\code{id}).
-#' 
+#'
 #' \item \code{car}: specifies the structure of a conditional autoregressive (CAR)
 #' model. Can be a list of variable names, a list of vectors, or a matrix (e.g. see
 #' \code{\link{df2matrix}}). In the case of the former, each element of the list
@@ -390,7 +404,7 @@
 #' Ignored if \code{EstM = 0}, i.e. only applicable
 #' to models estimated via MCMC. \code{car = NULL} by default. Supersedes
 #' deprecated \code{xclass}. See \code{demo(MCMCGuide17)} for examples.
-#' 
+#'
 #' \item \code{carcentre}: if CAR model (i.e. if \code{car} is non-\code{NULL}),
 #' \code{carcentre = TRUE} mean-centres all random effects at that level.
 #' \item \code{startval}: a list of numeric vectors specifying the starting values.
@@ -401,14 +415,14 @@
 #' estimates for the random part. \code{startval = NULL} by default: i.e. when
 #' \code{EstM = 0} the OLS estimates are used, else if \code{EstM = 1} the
 #' estimates obtained from IGLS are used as the starting values for MCMC.
-#' 
+#'
 #' \item \code{sort.force}: If \code{TRUE} will sort data based on hierarchy as
 #' determined by model formula; defaults to \code{FALSE}.
-#' 
+#'
 #' \item \code{sort.ignore}: If \code{FALSE} will check data is sorted in a manner in
 #' keeping with the hierarchy implied by the model formula, and will return a warning
 #' if that is not the case.
-#' 
+#'
 #' \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
 #' options, including the following (see \code{\link{write.MCMC}} for further details):
 #' \itemize{
@@ -431,7 +445,7 @@
 #' covariance matrix; (2) \code{size} -- the number of rows in the covariance
 #' matrix. Note that this is a weakly-informative prior and the default prior
 #' is used if missing); \code{rp2} -- a list object specifying the Wishart or
-#' gamma prior for the covariance matrix or scalar variance at level 2 (this 
+#' gamma prior for the covariance matrix or scalar variance at level 2 (this
 #' consists of: (1) \code{estimate} -- an estimate for the true value of the
 #' inverse of the covariance matrix; (2) \code{size} -- the number of rows in
 #' the covariance matrix. Note that this is a weakly-informative prior and the
@@ -505,31 +519,31 @@
 #' @return
 #' If \code{BUGO} is non-NULL then the output is an \code{\link{mcmc.list}}
 #' object.
-#' 
+#'
 #' If the IGLS algorithm is used (i.e., \code{EstM = 0}), then returns \code{\link{mlwinfitIGLS-class}} object;
 #' if MCMC estimation used (i.e., \code{EstM = 1}), then returns \code{\link{mlwinfitMCMC-class}} object.
-#' 
+#'
 #' @references
 #' Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
-#' 
+#'
 #' Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)
 #' A User's Guide to MLwiN Version 2.26. Centre for Multilevel Modelling,
 #' University of Bristol.
-#'  
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
-#' 
+#'
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
-#' 
+#'
 #' @examples
-#'  
+#'
 #' ## The R2MLwiN package includes scripts to replicate all the analyses in
 #' ## Rasbash et al (2012) A User's Guide to MLwiN Version 2.26 and
 #' ## Browne, W.J. (2012) MCMC estimation in MLwiN Version 2.26.
 #' ## The MLwiN manuals are available online, see:
 #' ## http://www.bristol.ac.uk/cmm/software/mlwin/download/manuals.html
-#' 
+#'
 #' \dontrun{
 #' library(R2MLwiN)
 #' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
@@ -539,17 +553,17 @@
 #'
 #' ## For a list of demo titles
 #' demo(package = 'R2MLwiN')
-#' 
+#'
 #' ## Take MCMCGuide03 as an example
 #' ## To view file
 #' file.show(system.file('demo', 'MCMCGuide03.R', package='R2MLwiN'))
-#' 
+#'
 #' ## To run the demo
 #' demo(MCMCGuide03)
 #' }
-#' 
+#'
 #' @export
-runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL, 
+runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
                      stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL) {
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
@@ -557,14 +571,14 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
   if (!is.null(data)) {
     indata <- data
   }
-  
+
   if (is.null(levID)) {
     oldsyntax <- FALSE
   } else {
     oldsyntax <- TRUE
     warning("This syntax has been superseded, see help for guidance on converting it.")
   }
-  
+
   drop.data <- estoptions$drop.data
   if (is.null(drop.data)) {
     if (oldsyntax) {
@@ -573,7 +587,7 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       drop.data <- TRUE
     }
   }
-  
+
   if (oldsyntax) {
     if (is.character(Formula)) {
       Formula <- gsub("\\{", "\\(", Formula)
@@ -607,16 +621,16 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       }
     }
   }
-  
+
   EstM <- estoptions$EstM
-  if (is.null(EstM)) 
+  if (is.null(EstM))
     EstM <- 0
   if (EstM != 0 && EstM != 1) {
     stop("Invalid EstM option (can be zero or one)")
   }
-  
+
   if (length(D) == 1) {
-    if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial", 
+    if (!(D %in% c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Ordered Multinomial",
                    "Unordered Multinomial"))) {
       stop("Invalid distribution specified")
     }
@@ -637,12 +651,12 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       }
     }
   }
-  
+
   # Check MLwiNPath is usable and set command/args
   debugmode <- estoptions$debugmode
-  if (is.null(debugmode)) 
+  if (is.null(debugmode))
     debugmode <- FALSE
-  
+
   x64 <- estoptions$x64
   if (is.null(x64)) {
     if (.Machine$sizeof.pointer == 8) {
@@ -651,16 +665,16 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       x64 <- FALSE
     }
   }
-  
+
   if (is.null(MLwiNPath)) {
     MLwiNPath <- getOption("MLwiN_path")
   }
-  
+
   pathinfo <- file.info(MLwiNPath)
   if (is.na(pathinfo$isdir)) {
     stop(paste0(MLwiNPath, " does not exist"))
   }
-  
+
   if (!isTRUE(pathinfo$isdir)) {
     if (file.access(MLwiNPath, mode = 1) == 0) {
       cmd <- MLwiNPath
@@ -668,7 +682,7 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       stop(paste0(MLwiNPath, " is not executable"))
     }
   }
-  
+
   if (isTRUE(pathinfo$isdir)) {
     if (debugmode) {
       cmd <- paste0(MLwiNPath, "/i386/mlwin.exe")
@@ -705,8 +719,8 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       }
     }
   }
-  
-  
+
+
   versioninfostr <- '
 version:date:md5:filename:x64:trial:platform
 1.10:Jun 2001:44e840796f3c43113c45ac8fe7e0633a:mlwin.exe:FALSE:FALSE:win
@@ -792,12 +806,12 @@ version:date:md5:filename:x64:trial:platform
   } else {
     versiontext <- "MLwiN (version: unchecked)"
   }
-  
+
   # the current function call
   cl <- match.call()
-  
+
   centring <- estoptions$centring
-  
+
   if (oldsyntax) {
     if (!is.null(centring)) {
       for (p in names(centring)) {
@@ -829,21 +843,21 @@ version:date:md5:filename:x64:trial:platform
     }
     rm(newdata)
   }
-  
+
   resp <- invars$resp
-  
+
   if (D[1] == "Normal") {
     if (is.factor(indata[[resp]])) {
       warning("You have specified a factor variable as a continuous response, you may wish to check its numeric values")
     }
   }
-  
+
   if (D[1] == "Ordered Multinomial" || D[1] == "Unordered Multinomial") {
     if (!is.factor(indata[[resp]])) {
       indata[[resp]] <- as.factor(indata[[resp]])
     }
   }
-  
+
   if (D[1] == "Binomial") {
     if (is.logical(indata[[resp]])) {
       indata[[resp]] <- as.integer(indata[[resp]])
@@ -877,9 +891,9 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   expl <- invars$expl
-  
+
   D <- invars$D
   if (EstM == 0) {
     if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
@@ -924,7 +938,7 @@ version:date:md5:filename:x64:trial:platform
         if (D[2] == "log") {
           warning("You specified as log link, but a logit link has been fitted")
           D[2] <- "logit"  # Backward compatibilty fix
-        } 
+        }
         if (D[2] != "logit") {
           stop("Invalid link function specified:", D[2])
         }
@@ -971,7 +985,7 @@ version:date:md5:filename:x64:trial:platform
     if (D[1] == "Multinomial") {
       if (D[4] == 0) {
         # Unordered
-        if (D[2] == "log") 
+        if (D[2] == "log")
           D[2] <- "logit"  # Backward compatibilty fix
         if (D[2] != "logit") {
           stop("Invalid link function specified", D[2], "\n")
@@ -985,7 +999,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   if (is.null(levID)) {
     levID <- invars$levID
     isdiscrete <- D[1] %in% c("Binomial", "Poisson", "Negbinom", "Multinomial")
@@ -1000,31 +1014,31 @@ version:date:md5:filename:x64:trial:platform
       indata[["l1id"]] <- 1:nrow(indata)
     }
   }
-  
+
   rp <- invars$rp
   if (D[1] != "Normal" || D[1] != "Mixed") {
     if (D[1] == "Binomial") {
-      if (any(rp$rp1 != "bcons.1")) 
+      if (any(rp$rp1 != "bcons.1"))
         stop("Variables cannot be made random at level one in Binomial models")
     }
     if (D[1] == "Poisson") {
-      if (any(rp$rp1 != "bcons.1")) 
+      if (any(rp$rp1 != "bcons.1"))
         stop("Variables cannot be made random at level one in Poisson models")
     }
     if (D[1] == "Negbinom") {
-      if (suppressWarnings(any(rp$rp1 != c("bcons.1", "bcons2.1")))) 
+      if (suppressWarnings(any(rp$rp1 != c("bcons.1", "bcons2.1"))))
         stop("Variables cannot be made random at level one in Negative-binomial models")
     }
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
         if (D[[i]][[1]] == "Binomial") {
           rp1 <- rp$rp1[names(rp$rp1) == resp[i - 1]]
-          if (length(rp1) > 0) 
+          if (length(rp1) > 0)
             stop("Variables cannot be made random at level one for Binomial responses")
         }
         if (D[[i]][[1]] == "Poisson") {
           rp1 <- rp$rp1[names(rp$rp1) == resp[i - 1]]
-          if (length(rp1) > 0) 
+          if (length(rp1) > 0)
             stop("Variables cannot be made random at level one for Poisson responses")
         }
       }
@@ -1054,11 +1068,11 @@ version:date:md5:filename:x64:trial:platform
       rownames(categ) <- c("var", "ref", "ncateg")
     }
   }
-  
+
   if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
     levID <- c(levID, NA)
   }
-  
+
   needsint <- FALSE
   if (is.list(expl)) {
     if ("1" %in% expl$sep.coeff || "1" %in% expl$common.coeff) {
@@ -1073,7 +1087,7 @@ version:date:md5:filename:x64:trial:platform
       expl[expl == "1"] <- "Intercept"
     }
   }
-  
+
   if (is.list(nonfp)) {
     if ("1" %in% nonfp$nonfp.sep) {
       needsint <- TRUE
@@ -1090,7 +1104,7 @@ version:date:md5:filename:x64:trial:platform
       nonfp[nonfp == "1"] <- "Intercept"
     }
   }
-  
+
   for (ii in 1:length(rp)) {
     pos.cvar.one <- grepl("^1\\.{1}", rp[[ii]])
     if (any(pos.cvar.one)) {
@@ -1102,41 +1116,41 @@ version:date:md5:filename:x64:trial:platform
       rp[[ii]][rp[[ii]] == "1"] <- "Intercept"
     }
   }
-  
+
   if (isTRUE(needsint)) {
     indata[["Intercept"]] <- rep(1, nrow(indata))
   }
-  
+
   show.file <- estoptions$show.file
-  if (is.null(show.file)) 
+  if (is.null(show.file))
     show.file <- FALSE
-  
+
   resi.store <- estoptions$resi.store
-  if (is.null(resi.store)) 
+  if (is.null(resi.store))
     resi.store <- FALSE
-  
+
   resioptions <- estoptions$resioptions
   if (is.null(resioptions)) {
     resioptions <- c("variance")
   }
-  if ("variance" %in% resioptions && ("standardised" %in% resioptions || "deletion" %in% resioptions || "leverage" %in% 
+  if ("variance" %in% resioptions && ("standardised" %in% resioptions || "deletion" %in% resioptions || "leverage" %in%
                                         resioptions)) {
     stop("variance will not be calculated together with standardised or deletion or leverage. Please remove variance in resioptions, and then standard error will be calculated instead.")
   }
-  
-  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "influence" %in% resioptions || 
+
+  if (EstM == 1 && ("sampling" %in% resioptions || "leverage" %in% resioptions || "influence" %in% resioptions ||
                       "deletion" %in% resioptions || "norecode" %in% resioptions)) {
     stop("Invalid residual option specified for MCMC estimation")
   }
-  
+
   resi.store.levs <- estoptions$resi.store.levs
   if (EstM == 0 && !is.null(resi.store.levs)) {
     stop("resi.store.levs option is not valid for (R)IGLS estimation")
   }
-  
+
   fpsandwich <- estoptions$fpsandwich
   rpsandwich <- estoptions$rpsandwich
-  
+
   weighting <- estoptions$weighting
   if (EstM == 1 && !is.null(weighting)) {
     stop("weighting option is not valid for MCMC estimation")
@@ -1145,14 +1159,14 @@ version:date:md5:filename:x64:trial:platform
     stop("weighting can only be used in univariate models")
   }
   # Convert old weight syntax
-  if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) || 
+  if (!is.null(weighting) && (!is.null(weighting$levels) || !is.null(weighting$weights) || !is.null(weighting$mode) ||
                                 !is.null(weighting$FSDE) || !is.null(weighting$RSDE))) {
     warning("Old IGLS weighting options specified, see the help file for new syntax")
-    if (weighting$FSDE == 2) 
+    if (weighting$FSDE == 2)
       fpsandwich <- TRUE
-    if (weighting$RSDE == 2) 
+    if (weighting$RSDE == 2)
       rpsandwich <- TRUE
-    if (weighting$mode == 2) 
+    if (weighting$mode == 2)
       weighting$standardised <- TRUE
     if (!is.null(weighting$levels) && !is.null(weighting$weights)) {
       if (length(weighting$levels) != length(weighting$weights)) {
@@ -1186,29 +1200,29 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
-    if (is.null(fpsandwich)) 
+    if (is.null(fpsandwich))
       fpsandwich <- TRUE
-    if (is.null(rpsandwich)) 
+    if (is.null(rpsandwich))
       rpsandwich <- TRUE
-    if (is.null(weighting$standardised)) 
+    if (is.null(weighting$standardised))
       weighting$standardised <- TRUE
   }
-  
-  if (is.null(fpsandwich)) 
+
+  if (is.null(fpsandwich))
     fpsandwich <- FALSE
-  if (is.null(rpsandwich)) 
+  if (is.null(rpsandwich))
     rpsandwich <- FALSE
-  
+
   clean.files <- estoptions$clean.files
-  if (is.null(clean.files)) 
+  if (is.null(clean.files))
     clean.files <- TRUE
-  
+
   clre <- estoptions$clre
   clre[2, ] <- gsub("^1$", "Intercept", clre[2, ])
   clre[3, ] <- gsub("^1$", "Intercept", clre[3, ])
-  
+
   smat <- estoptions$smat
-  
+
   if (!is.null(smat)) {
     if (!is.matrix(smat)) {
       smat <- as.matrix(smat)
@@ -1218,7 +1232,7 @@ version:date:md5:filename:x64:trial:platform
         lev <- smat[1, i]
         for (j in 1:length(rp[[paste0("rp", lev)]])) {
           for (k in 1:j) {
-            if (j != k) 
+            if (j != k)
               clre <- cbind(clre, c(lev, rp[[paste0("rp", lev)]][j], rp[[paste0("rp", lev)]][k]))
           }
         }
@@ -1226,26 +1240,26 @@ version:date:md5:filename:x64:trial:platform
     }
     smat <- NULL
   }
-  
-  
+
+
   mem.init <- estoptions$mem.init
-  if (is.null(mem.init)) 
+  if (is.null(mem.init))
     mem.init <- "default"
-  
+
   optimat <- estoptions$optimat
-  if (is.null(optimat)) 
+  if (is.null(optimat))
     optimat <- FALSE
-  
+
   maxiter <- estoptions$maxiter
-  if (is.null(maxiter)) 
+  if (is.null(maxiter))
     maxiter <- 20
-  
+
   convtol <- estoptions$tol
-  if (is.null(convtol)) 
+  if (is.null(convtol))
     convtol <- 2
-  
+
   extra <- estoptions$extra
-  if (is.null(extra)) 
+  if (is.null(extra))
     extra <- FALSE
   if (extra == TRUE) {
     if (EstM != 0) {
@@ -1255,35 +1269,35 @@ version:date:md5:filename:x64:trial:platform
       stop("extra can only be specified for discrete outcome models")
     }
   }
-  
+
   nonlinear <- estoptions$nonlinear
   if (!is.null(nonlinear)) {
     if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
       stop("Nonlinear options are not valid for normal models")
     }
   }
-  if (is.null(nonlinear)) 
+  if (is.null(nonlinear))
     nonlinear <- c(0, 1)
   if (length(na.omit(levID)) == 1 && any(nonlinear != c(0, 1))) {
     stop("Only MQL1 is valid for one-level discrete models")
   }
-  
+
   if (nonlinear[1] < 0 || nonlinear[1] > 1) {
     stop("Invalid nonlinear option")
   }
-  
+
   if (nonlinear[2] < 1 || nonlinear[2] > 2) {
     stop("Invalid nonlinear option")
   }
-  
+
   Meth <- estoptions$Meth
-  if (is.null(Meth)) 
+  if (is.null(Meth))
     Meth <- 1
-  
+
   reset <- estoptions$reset
   if (is.null(reset)) {
     if (EstM == 0) {
-      reset <- rep(0, length(levID))
+      reset <- rep(0, length(na.omit(levID)))
       reset[1] <- 2
     }
   }
@@ -1291,6 +1305,9 @@ version:date:md5:filename:x64:trial:platform
     if (EstM == 1) {
       stop("reset is only available for (R)IGLS models")
     } else {
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        reset = c(0, reset)
+      }
       if (length(reset) != length(levID)) {
         stop("reset vector is wrong length")
       }
@@ -1299,7 +1316,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   fcon <- NULL
   rcon <- NULL
   if (!is.null(estoptions$constraints)) {
@@ -1313,22 +1330,22 @@ version:date:md5:filename:x64:trial:platform
         if (ncol(estoptions$constraints$fixed.ui) != length(estoptions$constraints$fixed.ci)) {
           stop("number of columns in fixed.ui and fixed.ci must be equal for fixed constaints")
         }
-        
+
         if (!is.list(expl)) {
           numfp <- length(setdiff(expl, nonfp))
         } else {
-          numfp <- length(setdiff(expl$sep.coeff, nonfp$sep)) * length(resp) + setdiff(expl$common.coeff, 
+          numfp <- length(setdiff(expl$sep.coeff, nonfp$sep)) * length(resp) + setdiff(expl$common.coeff,
                                                                                        nonfp.common)
         }
-        
+
         if (!is.vector(estoptions$constraints$fixed.ci)) {
           stop("fixed.ci should be a vector")
         }
-        
+
         if (nrow(estoptions$constraints$fixed.ui) != numfp) {
           stop(paste("number of rows for fixed.ci must equal the number of fixed parameters:", numfp))
         }
-        
+
         fcon <- rbind(estoptions$constraints$fixed.ui, estoptions$constraints$fixed.ci)
       }
       if (!is.null(estoptions$constraints$random.ui) || !is.null(estoptions$constraints$random.ci)) {
@@ -1338,29 +1355,29 @@ version:date:md5:filename:x64:trial:platform
         if (ncol(estoptions$constraints$random.ui) != length(estoptions$constraints$random.ci)) {
           stop("number of columns in random.ui and random.ci must be equal for random constaints")
         }
-        
+
         numrp <- 0
         for (ii in 1:length(rp)) {
           numrp <- numrp + (length(rp[[ii]]) * (length(rp[[ii]]) + 1)/2)
         }
-        
+
         if (!is.null(clre)) {
           numrp <- numrp - ncol(clre)
         }
-        
+
         if (!is.vector(estoptions$constraints$random.ci)) {
           stop("random.ci should be a vector")
         }
-        
+
         if (nrow(estoptions$constraints$random.ui) != numrp) {
           stop(paste("number of rows for random.ui must equal the number of random parameters", numrp))
         }
-        
+
         rcon <- rbind(estoptions$constraints$random.ui, estoptions$constraints$random.ci)
       }
     }
   }
-  
+
   fact <- estoptions$fact
   if (EstM == 0 && !is.null(fact)) {
     stop("Factor models not available with (R)IGLS estimation")
@@ -1368,34 +1385,34 @@ version:date:md5:filename:x64:trial:platform
   if (!is.null(fact) && D[1] != "Multivariate Normal") {
     stop("Factor models can only be defined for multivariate models")
   }
-  
+
   if (!is.null(fact)) {
     for (i in 1:fact$nfact) {
       for (j in 1:length(rp[[paste0("rp", fact$lev.fact[i])]])) {
         for (k in 1:j) {
-          if (j != k) 
-            clre <- cbind(clre, c(fact$lev.fact[i], rp[[paste0("rp", fact$lev.fact[i])]][j], rp[[paste0("rp", 
+          if (j != k)
+            clre <- cbind(clre, c(fact$lev.fact[i], rp[[paste0("rp", fact$lev.fact[i])]][j], rp[[paste0("rp",
                                                                                                         fact$lev.fact[i])]][k]))
         }
       }
     }
   }
-  
+
   xclass <- estoptions$xclass
-  
+
   if (!is.null(xclass)) {
     warning("Old cross-classification option specified, see the help file for new syntax")
   }
-  
+
   if (EstM == 0 && !is.null(xclass)) {
     stop("Cross-classification is not available with (R)IGLS estimation")
   }
-  
+
   xc <- estoptions$xc
   if (is.null(xc)) {
     xc <- FALSE
   }
-  
+
   mm <- estoptions$mm
   if (!is.null(mm)) {
     xc <- TRUE
@@ -1417,7 +1434,7 @@ version:date:md5:filename:x64:trial:platform
           for (j in 1:length(mm[[i]]$mmvar)) {
             var <- mm[[i]]$mmvar[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) 
+              if (var %in% colnames(indata))
                 indata[[var]] <- NULL
               mmvar <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, mmvar)
@@ -1437,7 +1454,7 @@ version:date:md5:filename:x64:trial:platform
           for (j in 1:length(mm[[i]]$weights)) {
             var <- mm[[i]]$weights[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) 
+              if (var %in% colnames(indata))
                 indata[[var]] <- NULL
               mmweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, mmweight)
@@ -1458,7 +1475,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   car <- estoptions$car
   if (!is.null(car)) {
     xc <- TRUE
@@ -1501,7 +1518,7 @@ version:date:md5:filename:x64:trial:platform
           for (j in 1:length(car[[i]]$weights)) {
             var <- car[[i]]$weights[[j]]
             if (is.character(var)) {
-              if (var %in% colnames(indata)) 
+              if (var %in% colnames(indata))
                 indata[[var]] <- NULL
               carweight <- model.frame(as.formula(paste0("~", var)), data = data, na.action = NULL)
               indata <- cbind(indata, carweight)
@@ -1522,12 +1539,12 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   carcentre <- estoptions$carcentre
   if (is.null(carcentre)) {
     carcentre <- FALSE
   }
-  
+
   # Convert old version of syntax
   if (!is.null(xclass)) {
     xc <- TRUE
@@ -1535,7 +1552,7 @@ version:date:md5:filename:x64:trial:platform
       num <- as.numeric(xclass$N1[i])
       if (num > 1) {
         lev <- as.numeric(xclass$class[i])
-        
+
         weightcol <- xclass$weight[i]
         idcol <- xclass$id[i]
         if (is.null(idcol) || is.na(idcol)) {
@@ -1544,18 +1561,18 @@ version:date:md5:filename:x64:trial:platform
         idstart <- which(colnames(indata) == idcol)
         idend <- idstart + (num - 1)
         idcols <- colnames(indata)[idstart:idend]
-        
+
         weightstart <- which(colnames(indata) == weightcol)
         weightend <- weightstart + (num - 1)
         weightcols <- colnames(indata)[weightstart:weightend]
-        
+
         if (!isTRUE(xclass$car)) {
-          if (is.null(car)) 
+          if (is.null(car))
             car <- list(carvar = list(), weights = list())
           car[[lev]]$carvar <- as.list(idcols)
           car[[lev]]$weights <- as.list(weightcols)
         } else {
-          if (is.null(mm)) 
+          if (is.null(mm))
             mm <- list(mmvar = list(), weights = list())
           mm[[lev]]$mmvar <- as.list(idcols)
           mm[[lev]]$weights <- as.list(weightcols)
@@ -1563,8 +1580,8 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
-  
+
+
   if (!is.null(car) && !is.null(mm)) {
     mmlev <- max(length(car), length(mm))
     for (i in 1:mmlev) {
@@ -1573,7 +1590,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   if (!is.null(car)) {
     carcount <- 0
     for (i in 1:length(car)) {
@@ -1585,8 +1602,8 @@ version:date:md5:filename:x64:trial:platform
       stop("CAR can only apply to one level unless CAR centring is turned on")
     }
   }
-  
-  
+
+
   if (!is.null(mm)) {
     for (k in 1:length(mm)) {
       if (!any(is.na(mm[[k]]))) {
@@ -1598,7 +1615,7 @@ version:date:md5:filename:x64:trial:platform
           stop("The first multiple membership column should match the ID column")
         }
         levID[k] <- mm[[k]]$mmvar[[1]]
-        
+
         # NOTE: These checks could probably be vectorised
         for (i in 1:nrow(idmat)) {
           for (j in 1:ncol(idmat)) {
@@ -1620,7 +1637,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   if (!is.null(car)) {
     for (i in 1:length(car)) {
       if (!any(is.na(car[[i]]))) {
@@ -1649,7 +1666,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   notation <- estoptions$notation
   if (is.null(notation)) {
     if (!isTRUE(xc)) {
@@ -1658,7 +1675,7 @@ version:date:md5:filename:x64:trial:platform
       notation <- "class"
     }
   }
-  
+
   merr <- estoptions$merr
   if (EstM == 0 && !is.null(merr)) {
     stop("Measurement error is not available with (R)IGLS estimation")
@@ -1670,13 +1687,13 @@ version:date:md5:filename:x64:trial:platform
   if (EstM == 0 && !is.null(merr)) {
     stop("MCMC method options cannot be specified with (R)IGLS estimation")
   }
-  
+
   FP.names <- NULL
-  
+
   if (D[1] == "Multinomial") {
     nresp <- length(levels(indata[, resp])) - 1
     resp.names <- levels(indata[, resp])[-as.numeric(D[5])]
-    
+
     if (is.list(expl)) {
       nonfp.sep <- nonfp$nonfp.sep
       nonfp.s <- nonfp.sep
@@ -1778,7 +1795,7 @@ version:date:md5:filename:x64:trial:platform
               categ.names <- categ.names[-which(refx == categ.names)]
               for (j in 1:nresp) {
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
                                                 sep = ""))
                 }
               }
@@ -1790,7 +1807,7 @@ version:date:md5:filename:x64:trial:platform
   } else {
     if (D[1] == "Multivariate Normal" || D[1] == "Mixed") {
       nresp <- length(resp)
-      
+
       if (is.list(expl)) {
         nonfp.sep <- nonfp$nonfp.sep
         nonfp.s <- nonfp.sep
@@ -1810,18 +1827,18 @@ version:date:md5:filename:x64:trial:platform
                   categ.names <- levels(indata[[p]])
                   for (j in 1:nresp) {
                     for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
                                                     sep = ""))
                     }
                   }
-                  
+
                 } else {
                   categ.names <- levels(indata[[p]])
                   refx <- categ["ref", which(p == categ["var", ])]
                   categ.names <- categ.names[-which(refx == categ.names)]
                   for (j in 1:nresp) {
                     for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
                                                     sep = ""))
                     }
                   }
@@ -1863,7 +1880,7 @@ version:date:md5:filename:x64:trial:platform
           nonfp.s <- gsub(paste(".", resp[i], sep = ""), "", nonfp.s)
         }
         nonfp.s <- unique(nonfp.s)
-        
+
         expla <- expl
         for (p in expla) {
           if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
@@ -1871,13 +1888,13 @@ version:date:md5:filename:x64:trial:platform
               for (j in 1:nresp) {
                 FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
               }
-              
+
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
                                                   sep = ""))
                   }
                 }
@@ -1887,7 +1904,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], 
+                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
                                                   sep = ""))
                   }
                 }
@@ -1921,7 +1938,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   resid.names <- function(rpx, resid.lev, RP) {
     nrpx <- length(rpx)
     for (j in 1:nrpx) {
@@ -1935,7 +1952,7 @@ version:date:md5:filename:x64:trial:platform
     }
     RP
   }
-  
+
   resid2.names <- function(rpx, resid.lev, clre, RP) {
     nrpx <- length(rpx)
     nclre <- ncol(clre)
@@ -1946,7 +1963,7 @@ version:date:md5:filename:x64:trial:platform
           if (i == j) {
             RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
           } else {
-            RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]), 
+            RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]),
                               sep = ""))
           }
         }
@@ -1954,7 +1971,7 @@ version:date:md5:filename:x64:trial:platform
     }
     RP
   }
-  
+
   RP.names <- NULL
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
@@ -1965,35 +1982,29 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
-  
+
+
   if (D[1] == "Multinomial") {
     RP.names <- c(RP.names, "RP1_bcons_1")
     if (EstM == 0 && as.numeric(D[4]) == 0) {
       RP.names <- c(RP.names, "RP1_bcons_2")
     }
   }
-  
-  
-  levID0 <- levID
-  # if (is.na(levID0[length(levID0)])){ tmp.RP.names=gsub('RP','',RP.names) for (i in 1:length(RP.names)){
-  # tmpstrlist=unlist(strsplit(tmp.RP.names[i],'\\_')) tmpno=as.integer(tmpstrlist[1])-1
-  # RP.names[i]=paste0('RP',tmpno,'_',paste(tmpstrlist[-1],collapse='_')) } }
-  
+
   FP <- rep(0, length(FP.names))
   names(FP) <- FP.names
-  
+
   FP.cov <- matrix(0, length(FP.names), length(FP.names))
   colnames(FP.cov) <- FP.names
   rownames(FP.cov) <- FP.names
-  
+
   RP <- rep(0, length(RP.names))
   names(RP) <- RP.names
-  
+
   RP.cov <- matrix(0, length(RP.names), length(RP.names))
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
-  
+
   sval <- estoptions$startval
   if (EstM == 1) {
     if (!is.null(mcmcMeth$startval)) {
@@ -2001,26 +2012,26 @@ version:date:md5:filename:x64:trial:platform
       sval <- mcmcMeth$startval
     }
   }
-  
+
   if (!is.null(sval)) {
     if (!is.null(sval$FP.b) && is.null(names(sval$FP.b))) {
       names(sval$FP.b) <- FP.names
     }
-    
+
     if (!is.null(sval$FP.v) && (is.null(rownames(sval$FP.v)) || is.null(colnames(sval$FP.v)))) {
       rownames(sval$FP.v) <- FP.names
       colnames(sval$FP.v) <- FP.names
     }
-    
+
     if (!is.null(sval$RP.b) && is.null(names(sval$RP.b))) {
       names(sval$RP.b) <- RP.names
     }
-    
+
     if (!is.null(sval$RP.v) && (is.null(rownames(sval$RP.v)) || is.null(colnames(sval$RP.v)))) {
       rownames(sval$RP.v) <- RP.names
       colnames(sval$RP.v) <- RP.names
     }
-    
+
     sharedFP <- intersect(FP.names, names(sval$FP.b))
     if (!is.null(sval$FP.b) && !is.null(sharedFP)) {
       FP[sharedFP] <- sval$FP.b[sharedFP]
@@ -2039,30 +2050,30 @@ version:date:md5:filename:x64:trial:platform
   } else {
     startval <- NULL
   }
-  
+
   if (EstM == 1) {
     seed <- mcmcMeth$seed
-    if (is.null(seed)) 
+    if (is.null(seed))
       seed <- 1
     iterations <- mcmcMeth$iterations
-    if (is.null(iterations)) 
+    if (is.null(iterations))
       iterations <- 5000
     burnin <- mcmcMeth$burnin
-    if (is.null(burnin)) 
+    if (is.null(burnin))
       burnin <- 500
     thinning <- mcmcMeth$thinning
-    if (is.null(thinning)) 
+    if (is.null(thinning))
       thinning <- 1
     priorParam <- mcmcMeth$priorParam
-    if (is.list(priorParam)) 
+    if (is.list(priorParam))
       priorParam <- prior2macro(priorParam, Formula, levID, D, indata)
-    if (is.null(priorParam)) 
+    if (is.null(priorParam))
       priorParam <- "default"
     scale <- mcmcMeth$scale
-    if (is.null(scale)) 
+    if (is.null(scale))
       scale <- 5.8
     refresh <- mcmcMeth$refresh
-    if (is.null(refresh)) 
+    if (is.null(refresh))
       refresh <- 50
     fixM <- mcmcMeth$fixM
     if (is.null(fixM)) {
@@ -2089,31 +2100,31 @@ version:date:md5:filename:x64:trial:platform
       }
     }
     OtherVarM <- mcmcMeth$OtherVarM
-    if (is.null(OtherVarM)) 
+    if (is.null(OtherVarM))
       OtherVarM <- 1
     adaption <- mcmcMeth$adaption
-    if (is.null(adaption)) 
+    if (is.null(adaption))
       adaption <- 1
     priorcode <- mcmcMeth$priorcode
-    if (is.null(priorcode)) 
+    if (is.null(priorcode))
       priorcode <- 1
     rate <- mcmcMeth$rate
-    if (is.null(rate)) 
+    if (is.null(rate))
       rate <- 50
     tol <- mcmcMeth$tol
-    if (is.null(tol)) 
+    if (is.null(tol))
       tol <- 10
     lclo <- mcmcMeth$lclo
-    if (is.null(lclo)) 
+    if (is.null(lclo))
       lclo <- 0
     dami <- mcmcMeth$dami
   }
-  
+
   mcmcOptions <- estoptions$mcmcOptions
   if (EstM == 0 && !is.null(merr)) {
     stop("MCMC options cannot be specified with (R)IGLS estimation")
   }
-  
+
   if (EstM == 1) {
     if (!is.null(mcmcOptions)) {
       if (D[1] == "Multivariate Normal") {
@@ -2136,6 +2147,9 @@ version:date:md5:filename:x64:trial:platform
       if (mcmcOptions$hcen < 2 || mcmcOptions$hcen > length(na.omit(levID))) {
         stop("Invalid level for hierarchical centring")
       }
+      if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
+        mcmcOptions$hcen = mcmcOptions$hcen + 1
+      }
     }
     if (is.matrix(mcmcOptions$paex)) {
       for (i in 1:nrow(mcmcOptions$paex)) {
@@ -2143,6 +2157,9 @@ version:date:md5:filename:x64:trial:platform
           pelev <- mcmcOptions$paex[i, 1]
           if (pelev < 2 || pelev > length(na.omit(levID))) {
             stop("Invalid level for parameter expansion")
+          }
+          if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
+            mcmcOptions$paex[i, 1] = mcmcOptions$paex[i, 1] + 1
           }
         }
       }
@@ -2152,34 +2169,37 @@ version:date:md5:filename:x64:trial:platform
         if (pelev < 2 || pelev > length(na.omit(levID))) {
           stop("Invalid level for parameter expansion")
         }
+        if (D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") {
+          mcmcOptions$paex[1] = mcmcOptions$paex[1] + 1
+        }
       }
     }
   }
-  
+
   if (EstM == 0 && !is.null(BUGO)) {
     stop("BUGO requires MCMC estimation to be selected")
   }
-  
+
   sort.force <- estoptions$sort.force
-  if (is.null(sort.force)) 
+  if (is.null(sort.force))
     sort.force <- FALSE
-  
+
   sort.ignore <- estoptions$sort.ignore
-  if (is.null(sort.ignore)) 
+  if (is.null(sort.ignore))
     sort.ignore <- FALSE
-  
+
   if (D[1] == "Binomial") {
     if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
       stop("All values for a binomial response must lie between zero and one")
     }
   }
-  
+
   if (D[1] == "Poisson") {
     if (!all(indata[[resp]] >= 0) && all(as.integer(indata[[resp]]) == indata[[resp]])) {
       stop("All values for a Poisson response must be positive integers")
     }
   }
-  
+
   if (D[1] == "Mixed") {
     mixlink <- NULL
     discreteresp <- NULL
@@ -2191,7 +2211,7 @@ version:date:md5:filename:x64:trial:platform
         discreteresp <- union(discreteresp, D[[i]][1])
         mixlink <- union(mixlink, D[[i]][2])
       }
-      
+
       if (D[[i]][1] == "Poisson") {
         if (!all(indata[[resp[i - 1]]] >= 0) && all(as.integer(indata[[resp[i - 1]]]) == indata[[resp]])) {
           stop("All values for a Poisson response must be positive integers")
@@ -2207,7 +2227,7 @@ version:date:md5:filename:x64:trial:platform
       stop("Only one link type can be specified for mixed models")
     }
   }
-  
+
   if (D[1] == "Multinomial") {
     if (length(unique(indata[[resp]])) < 2) {
       stop("Responses must have at least two categories for multinomial models")
@@ -2217,16 +2237,18 @@ version:date:md5:filename:x64:trial:platform
     }
     if (D[4] == 1) {
       # Ordered multinomial
-      if (as.integer(D[5]) != which(min(levels(indata[[resp]])) == levels(indata[[resp]])) && as.integer(D[5]) != 
-            which(max(levels(indata[[resp]])) == levels(indata[[resp]]))) {
+      if (is.na(as.integer(D[5]))) {
+        D[5] = which(indata[[resp]] == D[5])[1] # Find corresponding numeric factor code
+      }
+      if (as.integer(D[5]) != min(as.integer(indata[[resp]])) && as.integer(D[5]) != max(as.integer(indata[[resp]]))) {
         stop(paste("Invalid reference category:", D[5]))
       }
     }
   }
-  
+
   if (drop.data) {
     outvars <- c(resp)
-    
+
     # Multiple membership IDs if applicable
     if (!is.null(mm)) {
       for (i in 1:length(mm)) {
@@ -2238,7 +2260,7 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
-    
+
     # CAR membership IDs if applicable
     if (!is.null(car)) {
       for (i in 1:length(car)) {
@@ -2250,7 +2272,7 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
-    
+
     outvars <- union(outvars, na.omit(levID))
     if (is.list(expl)) {
       if (!is.na(expl$sep.coeff[1])) {
@@ -2268,10 +2290,10 @@ version:date:md5:filename:x64:trial:platform
       explx <- xvars[-interpos]
       outvars <- c(outvars, explx)
       # This intersect is a bit of a hack, but avoids variables generated by MLwiN being referenced
-      interx <- intersect(unlist(mapply(strsplit, expl[interpos], "\\:"), use.names = FALSE), colnames(indata))
+      interx <- intersect(unlist(mapply(strsplit, as.character(expl[interpos]), "\\:"), use.names = FALSE), colnames(indata))
       outvars <- union(outvars, interx)
     }
-    
+
     # Denominators/Offsets if applicable
     if (D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Negbinom") {
       if (!is.na(D[[3]])) {
@@ -2280,13 +2302,13 @@ version:date:md5:filename:x64:trial:platform
     }
     if (D[1] == "Mixed") {
       for (i in 2:length(D)) {
-        if (D[[i]][1] == "Binomial" || D[[i]][1] == "Poisson") 
+        if (D[[i]][1] == "Binomial" || D[[i]][1] == "Poisson")
           if (!is.na(D[[i]][[3]])) {
             outvars <- union(outvars, D[[i]][[3]])
           }
       }
     }
-    
+
     # (R)IGLS Weights if applicable
     if (!is.null(weighting)) {
       for (w in weighting$weightvar) {
@@ -2295,12 +2317,12 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
-    
+
     outdata <- indata[, outvars]
   } else {
     outdata <- indata
   }
-  
+
   if (!isTRUE(sort.ignore)) {
     # Don't enforce sorting on level-1 in cases where it isn't used
     if (D[1] == "Normal" || D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Negbinom") {
@@ -2308,7 +2330,7 @@ version:date:md5:filename:x64:trial:platform
       l1id <- levID[length(levID)]
       levID[length(levID)] <- "_sortindex"
     }
-    
+
     # Check/sort data as approriate
     if (isTRUE(sort.force)) {
       outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
@@ -2317,14 +2339,14 @@ version:date:md5:filename:x64:trial:platform
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
-    
+
     # Restore original level ID and drop temporary variable
     if (D[1] == "Normal" || D[1] == "Binomial" || D[1] == "Poisson" || D[1] == "Negbinom") {
       levID[length(levID)] <- l1id
       outdata[["_sortindex"]] <- NULL
     }
   }
-  
+
   hierarchy <- NULL
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
@@ -2338,7 +2360,7 @@ version:date:md5:filename:x64:trial:platform
           # argument of type 'list' to logical' from within cbind2 in the reshape package.  This is due to the call:
           # 'all(lapply(list(...), is.numeric))' as the lapply returns a list which all doesn't like.  As the result is
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
-          groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]], 
+          groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
@@ -2350,34 +2372,34 @@ version:date:md5:filename:x64:trial:platform
       hierarchy <- rbind(hierarchy, groupinfo)
     }
   }
-  
-  if (!file.access(workdir) == 0) 
+
+  if (!file.access(workdir) == 0)
     dir.create(workdir)
-  
-  dtafile <- gsub("\\", "/", tempfile("dtafile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
-  macrofile <- gsub("\\", "/", tempfile("macrofile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
-  
-  IGLSfile <- gsub("\\", "/", tempfile("IGLSfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+
+  dtafile <- normalizePath(tempfile("dtafile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+  macrofile <- normalizePath(tempfile("macrofile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+
+  IGLSfile <- normalizePath(tempfile("IGLSfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
   if (EstM == 1) {
-    MCMCfile <- gsub("\\", "/", tempfile("MCMCfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
-    chainfile <- gsub("\\", "/", tempfile("chainfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+    MCMCfile <- normalizePath(tempfile("MCMCfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+    chainfile <- normalizePath(tempfile("chainfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
     if (!is.null(dami)) {
-      MIfile <- gsub("\\", "/", tempfile("MIfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+      MIfile <- normalizePath(tempfile("MIfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
     } else {
       dami <- MIfile <- NULL
     }
     if (!is.null(fact)) {
-      FACTchainfile <- gsub("\\", "/", tempfile("factchainfile_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
+      FACTchainfile <- normalizePath(tempfile("factchainfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
     } else {
       FACTchainfile <- NULL
     }
   }
   if (!is.null(BUGO)) {
-    modelfile <- gsub("\\", "/", tempfile("modelfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
-    initfile <- gsub("\\", "/", tempfile("initfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
-    datafile <- gsub("\\", "/", tempfile("datafile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
-    scriptfile <- gsub("\\", "/", tempfile("scriptfile_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
-    bugEst <- gsub("\\", "/", tempfile("bugEst_", tmpdir = workdir, fileext = ".txt"), fixed = TRUE)
+    modelfile <- normalizePath(tempfile("modelfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    initfile <- normalizePath(tempfile("initfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    datafile <- normalizePath(tempfile("datafile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    scriptfile <- normalizePath(tempfile("scriptfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    bugEst <- normalizePath(tempfile("bugEst_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
   } else {
     modelfile <- NULL
     initfile <- NULL
@@ -2386,43 +2408,43 @@ version:date:md5:filename:x64:trial:platform
   if (resi.store) {
     resifile <- NULL
     for (i in 1:length(rp)) {
-      resifile <- c(resifile, gsub("\\", "/", tempfile(paste0("resifile_", i), tmpdir = workdir, fileext = ".dta"), 
-                                   fixed = TRUE))
+      resifile <- c(resifile, normalizePath(tempfile(paste0("resifile_", i), tmpdir = workdir, fileext = ".dta"),
+                                   winslash = "/", mustWork = FALSE))
     }
   }
-  if (!is.null(resi.store.levs)) 
-    resichains <- gsub("\\", "/", tempfile("resichains_", tmpdir = workdir, fileext = ".dta"), fixed = TRUE)
-  
+  if (!is.null(resi.store.levs))
+    resichains <- normalizePath(tempfile("resichains_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+
   if ((D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") && !is.null(clre)) {
     clre[1, ] <- as.numeric(clre[1, ]) + 1
   }
-  
+
   args <- paste0("/run ", "\"", macrofile, "\"")
   if (!debugmode) {
     args <- paste0("/nogui ", args)
   }
-  
+
   dups <- duplicated(tolower(colnames(outdata)))
   if (any(dups)) {
     stop(paste("variables name(s)", paste(colnames(outdata)[dups], collapse=","), "are duplicates when ignoring case"))
   }
-  
+
   long2shortname <- sapply(colnames(outdata), digest, algo="xxhash64", serialize = FALSE)
   long2shortname[] <- paste0("v", long2shortname)
   colnames(outdata) <- long2shortname
   write.dta(outdata, dtafile, version = 10)
   colnames(outdata) <- names(long2shortname)
-  
+
   finalClean <- function(clean.files) {
     if (clean.files) {
       file.remove(dtafile)
       file.remove(macrofile)
       file.remove(IGLSfile)
-      if (EstM == 1 && is.null(BUGO)) 
+      if (EstM == 1 && is.null(BUGO))
         file.remove(MCMCfile)
-      if (EstM == 1 && is.null(BUGO)) 
+      if (EstM == 1 && is.null(BUGO))
         file.remove(chainfile)
-      if (!is.null(BUGO)) 
+      if (!is.null(BUGO))
         file.remove(modelfile)
       if (resi.store && is.null(BUGO)) {
         for (i in 1:length(rp)) {
@@ -2430,39 +2452,39 @@ version:date:md5:filename:x64:trial:platform
         }
       }
       if (EstM == 1 && is.null(BUGO)) {
-        if (!is.null(resi.store.levs)) 
+        if (!is.null(resi.store.levs))
           file.remove(resichains)
-        if (!is.null(fact)) 
+        if (!is.null(fact))
           file.remove(FACTchainfile)
-        if (!is.null(dami)) 
+        if (!is.null(dami))
           file.remove(MIfile)
       }
     }
   }
   if (EstM == 0) {
-    long2shortname <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
-                 Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich, 
-                 macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions, 
+    long2shortname <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+                 Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
+                 macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
                  debugmode = debugmode, startval = startval, namemap = long2shortname)
     iterations <- estoptions$mcmcMeth$iterations
-    if (is.null(iterations)) 
+    if (is.null(iterations))
       iterations <- 5000
     burnin <- estoptions$mcmcMeth$burnin
-    if (is.null(burnin)) 
+    if (is.null(burnin))
       burnin <- 500
     thinning <- estoptions$mcmcMeth$thinning
-    if (is.null(thinning)) 
+    if (is.null(thinning))
       thinning <- 1
-    
+
     time1 <- proc.time()
     system2(cmd, args = args, stdout = stdout, stderr = stderr)
     cat("\n")
     time2 <- proc.time() - time1
-    
+
     estIGLS <- read.dta(IGLSfile)
-    
+
     FP[] <- na.omit(estIGLS[, 1])
-    
+
     estIGLS2 <- na.omit(estIGLS[, 2])
     k <- 1
     for (i in 1:length(FP)) {
@@ -2472,9 +2494,9 @@ version:date:md5:filename:x64:trial:platform
         k <- k + 1
       }
     }
-    
+
     RP[] <- na.omit(estIGLS[, 3])
-    
+
     estIGLS4 <- na.omit(estIGLS[, 4])
     k <- 1
     for (i in 1:length(RP)) {
@@ -2484,48 +2506,48 @@ version:date:md5:filename:x64:trial:platform
         k <- k + 1
       }
     }
-    
+
     LIKE <- estIGLS[, dim(estIGLS)[2]][3]
     if (!is.na(LIKE)) {
-      if (LIKE == 1) 
+      if (LIKE == 1)
         LIKE <- NA
     }
-    
+
     NTotal <- estIGLS[, dim(estIGLS)[2]][1]
     NUsed <- estIGLS[, dim(estIGLS)[2]][2]
-    
+
     if (estIGLS[, dim(estIGLS)[2]][8] == 1) {
       Converged <- TRUE
     } else {
       Converged <- FALSE
     }
-    
+
     Iterations <- estIGLS[, dim(estIGLS)[2]][7]
   }
-  
+
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
   if (EstM == 1) {
-    long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre, 
-                 Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh, 
-                 fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car, 
-                 BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile, 
-                 IGLSfile = IGLSfile, MCMCfile = MCMCfile, chainfile = chainfile, MIfile = MIfile, resifile = resifile, 
-                 resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile, 
+    long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+                 Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh,
+                 fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
+                 BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile,
+                 IGLSfile = IGLSfile, MCMCfile = MCMCfile, chainfile = chainfile, MIfile = MIfile, resifile = resifile,
+                 resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile,
                  resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami,
                  namemap = long2shortname)
-    
+
     cat("MLwiN is running, please wait......\n")
     time1 <- proc.time()
     system2(cmd, args = args, stdout = stdout, stderr = stderr)
     cat("\n")
     time2 <- proc.time() - time1
-    
+
     nlev <- length(levID)
     if (is.null(BUGO)) {
       estMCMC <- read.dta(MCMCfile)
-      
+
       FP[] <- na.omit(estMCMC[, 1])
-      
+
       estMCMC2 <- na.omit(estMCMC[, 2])
       k <- 1
       for (i in 1:length(FP)) {
@@ -2535,9 +2557,9 @@ version:date:md5:filename:x64:trial:platform
           k <- k + 1
         }
       }
-      
+
       RP[] <- na.omit(estMCMC[, 3])
-      
+
       estMCMC4 <- na.omit(estMCMC[, 4])
       k <- 1
       for (i in 1:length(RP)) {
@@ -2547,20 +2569,20 @@ version:date:md5:filename:x64:trial:platform
           k <- k + 1
         }
       }
-      
-      
+
+
       chains <- read.dta(chainfile)
       for (name in names(long2shortname)) {
         colnames(chains) <- gsub(long2shortname[[name]], name, colnames(chains))
       }
-      
+
       chains <- coda::mcmc(data = chains[, -1], thin = thinning)
       chain.names <- colnames(chains)
       chain.names[grep("RP", chain.names)] <- RP.names
       colnames(chains) <- chain.names
-      
+
       ESS <- effectiveSize(chains)
-      
+
       if (!(D[1] == "Mixed") && is.null(merr) && is.null(fact)) {
         BDIC <- estMCMC[, dim(estMCMC)[2]][c(5, 6, 4, 3)]
         BDIC.names <- c("Dbar", "D(thetabar)", "pD", "DIC")
@@ -2568,21 +2590,13 @@ version:date:md5:filename:x64:trial:platform
       } else {
         LIKE <- estMCMC[, dim(estMCMC)[2]][3]
         if (!is.na(LIKE)) {
-          if (LIKE == 1) 
+          if (LIKE == 1)
             LIKE <- NA
         }
       }
-      
+
       NTotal <- estMCMC[, dim(estMCMC)[2]][1]
       NUsed <- estMCMC[, dim(estMCMC)[2]][2]
-      levID.display <- ""
-      if (is.na(levID0[length(levID0)])) {
-        levID0 <- levID0[-length(levID0)]
-      }
-      for (i in 1:length(levID0)) {
-        levID.display <- paste(levID.display, "Level ", length(levID0) + 1 - i, ": ", levID0[i], "     ", 
-                               sep = "")
-      }
       if (!is.null(fact)) {
         loadings <- na.omit(estMCMC[, 5])
         load.names <- rep(NA, length(loadings))
@@ -2596,7 +2610,7 @@ version:date:md5:filename:x64:trial:platform
         loadings.sd <- na.omit(estMCMC[, 6])
         names(loadings) <- load.names
         names(loadings.sd) <- load.names
-        
+
         fact.cov <- fact.cov.names <- na.omit(estMCMC[, 7])
         fact.cov.sd <- na.omit(estMCMC[, 8])
         k <- 1
@@ -2612,7 +2626,7 @@ version:date:md5:filename:x64:trial:platform
         }
         names(fact.cov) <- fact.cov.names
         names(fact.cov.sd) <- fact.cov.names
-        
+
         factchains <- read.dta(FACTchainfile)
         factscores <- matrix(na.omit(factchains[, "_FACT_value_b"]), ncol = fact$nfact, byrow = FALSE)
         factscores_v <- matrix(na.omit(factchains[, "_FACT_value_v"]), ncol = fact$nfact, byrow = FALSE)
@@ -2636,29 +2650,21 @@ version:date:md5:filename:x64:trial:platform
         colnames(factscores_v) <- namefacts_v
         colnames(factloads) <- load.names
         colnames(factcovs) <- fact.cov.names
-        factChains <- list(scores = factscores, scores_v = factscores_v, loadings = coda::mcmc(data = factloads, 
+        factChains <- list(scores = factscores, scores_v = factscores_v, loadings = coda::mcmc(data = factloads,
                                                                                          thin = thinning), cov = coda::mcmc(data = factcovs, thin = thinning))
       }
-      
+
       if (sum(grepl("bcons", colnames(chains))) > 0) {
         bcons.pos <- grep("bcons", colnames(chains))
         chains[1, bcons.pos] <- chains[1, bcons.pos] - 0.001
       }
-      
-      if (is.na(levID[length(levID)])) {
-        mlwinlev <- (nlev - 1):1
-        levID2 <- levID0
-      } else {
-        mlwinlev <- nlev:1
-        levID2 <- levID
-      }
     }
   }
-  
-  if (show.file) 
+
+  if (show.file)
     file.show(macrofile)
   if ((!is.null(BUGO)) && !(D[1] == "Mixed")) {
-    if (show.file) 
+    if (show.file)
       file.show(modelfile)
     n.iter <- iterations + burnin
     addmore <- NULL
@@ -2682,7 +2688,7 @@ version:date:md5:filename:x64:trial:platform
         }
       }
     }
-    
+
     debug <- as.logical(BUGO["debug"])
     if (is.na(debug)) {
       debug <- FALSE
@@ -2703,15 +2709,15 @@ version:date:md5:filename:x64:trial:platform
     if (is.na(bugs)) {
       stop("Need to specify path to the BUGS executable.")
     }
-    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains, 
-                                   n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir, 
+    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains,
+                                   n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir,
                                    OpenBugs = OpenBugs, cleanBugsWorkingDir = clean.files, seed = bugs.seed)
     time2 <- proc.time() - time1
   } else {
-    if (D[1] == "Mixed" && (!is.null(BUGO))) 
+    if (D[1] == "Mixed" && (!is.null(BUGO)))
       warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
   }
-  
+
   if (resi.store && is.null(BUGO)) {
     resiraw <- list()
     for (i in 1:length(rp)) {
@@ -2724,7 +2730,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
-  
+
   if (EstM == 1 && is.null(BUGO) && !is.null(resi.store.levs)) {
     residata <- read.dta(resichains)
     for (name in names(long2shortname)) {
@@ -2733,18 +2739,17 @@ version:date:md5:filename:x64:trial:platform
     resiChains <- list()
     for (name in colnames(residata)) {
       lev <- as.integer(gsub("resi_lev", "", name))
-      nunit <- nrow(unique(indata[rev(levID)[lev]]))
-      pnames <- NULL
-      ucount <- 0
-      for (varname in rp[[paste0("rp", lev)]]) {
-        pnames <- c(pnames, paste("u", ucount, seq(1:nunit), sep = "_"))
-        ucount <- ucount + 1
+      ucount <- length(rp[[paste0("rp", lev)]])
+      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+        lev = lev + 1
       }
-      resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE, 
+      nunit <- nrow(unique(indata[rev(levID)[lev]]))
+      pnames <- paste("u", (1:ucount)-1, rep(1:nunit, each=ucount), sep="_")
+      resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
                                                dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
     }
   }
-  
+
   if (EstM == 0) {
     if (is.null(BUGO)) {
       outIGLS <- new("mlwinfitIGLS")
@@ -2767,11 +2772,11 @@ version:date:md5:filename:x64:trial:platform
       outIGLS["elapsed.time"] <- time2[3]
       outIGLS["call"] <- cl
       outIGLS["data"] <- as.data.frame(outdata)
-      
+
       if (resi.store) {
         outIGLS["residual"] <- resiraw
       }
-      
+
       finalClean(clean.files)
       return(outIGLS)
     } else {
@@ -2821,7 +2826,7 @@ version:date:md5:filename:x64:trial:platform
       if (!is.null(dami)) {
         outMCMC["MIdata"] <- read.dta(MIfile)
       }
-      
+
       if (resi.store) {
         outMCMC["residual"] <- resiraw
       }
@@ -2832,4 +2837,4 @@ version:date:md5:filename:x64:trial:platform
       return(chains.bugs.mcmc)
     }
   }
-} 
+}

@@ -1,3 +1,29 @@
+Fri Apr 17 2015
+1. Bug fixing
+   * Reinstate starting residuals for non-cross-classifed models
+
+Thu Apr 16 2015
+1. Bug fixing
+   * Correct naming of residual parameter chains
+
+Fri Apr 1 2015
+1. Bug fixing
+   * Allow trajectories function to work with a simple unlabelled vector
+
+Tue Mar 10 2015
+1. Bug fixing
+   * Display the correct number of observations in the output for mixed response models
+   * Fixed a bug when specifying an interaction term as a common variable
+   * Correct cases with multivariate/multinomial models where the MLwiN level numbering was being used in options, instead of matching the command
+
+Thu Mar 5 2015
+1. Bug fixing
+   * Fixed the transfer to MLwiN of starting values for the fixed part covariance matrix when using MCMC estmation
+   * Fixed reference category check for ordered multinomial models when the response variable has string labels
+
+2. Changes
+   * Update default OpenBUGS location in demos
+
 Fri Feb 27 2015
 1. Bug fixing
    * Give error message is logLik or deviance are requested for non-normal models

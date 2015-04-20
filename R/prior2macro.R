@@ -26,18 +26,13 @@
 #' \code{fixe.common} rather than \code{fixe}.
 #' \item \code{fixe.sep}: If the common
 #' coefficients are added, use \code{fixe.sep} for the separate coefficients.
-#' \item \code{rp1}: A list object specifying the Wishart or gamma prior for the
-#' covariance matrix or scalar variance at level 1. Consists of: (1)
+#' \item \code{rp<level number>}: A list object specifying the Wishart or gamma prior for the
+#' covariance matrix or scalar variance at the levels specified, e.g. \code{rp1} for
+#' level 1, \code{rp2} for level 2, etc. Consists of: (1)
 #' \code{estimate} -- an estimate for the true value of the inverse of the
 #' covariance matrix; (2) \code{size} -- the number of rows in the covariance
 #' matrix. Note that this is a weakly-informative prior and the default prior
 #' is used if missing.
-#' \item \code{rp2}: A list object specifying the Wishart or
-#' gamma prior for the covariance matrix or scalar variance at level 2.
-#' Consists of: (1) \code{estimate} -- an estimate for the true value of the
-#' inverse of the covariance matrix; (2) \code{size} -- the number of rows in
-#' the covariance matrix. Note that this is a weakly-informative prior and the
-#' default prior is used if missing.
 #' }
 #'
 #' @return A long vector is returned in the format of MLwiN macro language. This
@@ -286,7 +281,18 @@ prior2macro <- function(prior, formula, levID, D, indata) {
         if (lev_found && cvar_found) {
           leftjj <- sub(paste0("^", ii, "\\|"), "", left[jj])
           leftjj <- get.terms(leftjj)
-          is_cvar <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}$", leftjj)
+          is_cvar_last <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}$", leftjj)
+          is_cvar <- grepl("^[[:alnum:]]{1}[[:graph:]]*\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}", leftjj)
+          for (uu in 1:length(leftjj)){
+            if (!is_cvar_last[uu] && is_cvar[uu]){
+              #move brackets to the end of each term
+              tempjju1 <- sapply(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}",
+                                                               leftjj[uu]), invert = TRUE), function(x) paste(x, collapse = ""))
+              tempjju2 <- unlist(regmatches(leftjj[uu], gregexpr("\\[{1}(c\\(|\\)|\\,|\\:|[[:digit:]])*\\]{1}",
+                                                               leftjj[uu])))[1]
+              leftjj[uu] <- paste0(tempjju1, tempjju2, collapse="")
+            }
+          }
           svar <- leftjj[!is_cvar]
           if (length(svar) > 0) {
             newsvarjj <- paste0(ii, "s|", paste(svar, collapse = "+"))

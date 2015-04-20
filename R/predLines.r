@@ -163,7 +163,6 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
     rpx.names <- sub(paste("RP", lev, "_var_", sep = ""), "", colnames(chains)[grep(paste("RP", lev, "_var_", 
                                                                                           sep = ""), colnames(chains))])
     lenrpx <- length(rpx.names)
-    lencateg <- length(unique(categrv))
     if (length(rpx.names) == 0) {
       stop("Residual chains were not stored at the requested level")
     }
@@ -172,27 +171,29 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
     FP.pos <- grep("FP_", colnames(chains))
     fp.names <- sub("FP_", "", colnames(chains)[FP.pos])
     tval <- matrix(0, nrow(indata), nrow(chains))
-    for (i in 1:length(fp.names)) {
-      fpxdata <- indata[[fp.names[i]]]
-      if (is.factor(fpxdata)) {
-        fpxdata <- as.integer(fpxdata) - 1
-      }
-      tval <- tval + fpxdata %o% chains[, FP.pos[i]]
-    }
     
-    for (i in 1:length(rpx.names)) {
-      for (j in 1:lencateg) {
-        rpxdata <- indata[[rpx.names[i]]][categrv == j]
+    for (j in selected) {
+      for (i in 1:length(fp.names)) {
+        fpxdata <- indata[categrv == j, fp.names[i]]
+        if (is.factor(fpxdata)) {
+          fpxdata <- as.integer(fpxdata) - 1
+        }
+        tval[categrv == j, ] <- tval[categrv == j, ] + fpxdata %o% chains[, FP.pos[i]]
+      }
+      for (i in 1:length(rpx.names)) {
+        rpxdata <- indata[categrv == j, rpx.names[i]]
         if (is.factor(rpxdata)) {
           rpxdata <- as.integer(rpxdata) - 1
         }
-        tval[categrv == j, ] <- tval[categrv == j, ] + (rpxdata %o% resi.chains[, ((i - 1) * lencateg) + j])
+        tval[categrv == j, ] <- tval[categrv == j, ] + rpxdata %o% resi.chains[, paste0("u_", i-1, "_", j)]
       }
     }
     
-    tval.med <- apply(tval, 1, median)
-    tval.low <- apply(tval, 1, function(x) quantile(x, probs[1]))
-    tval.up <- apply(tval, 1, function(x) quantile(x, probs[2]))
+    quants <- apply(tval, 1, function(x) quantile(x, c(probs[1], 0.5, probs[2])))
+    tval.med <- quants[2,]
+    tval.low <- quants[1,]
+    tval.up <- quants[3,]
+
     pred.min <- min(tval.low)
     pred.max <- max(tval.up)
     pred.diff <- pred.max - pred.min
@@ -207,21 +208,19 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
       key <- NULL
     }
     
-    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+    trellis.obj <- xyplot(tval.med ~ x, prepanel = function(x, y, ...) {
       list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
     }, groups = categrv, panel = function(x, y, groups, ...) {
       col <- Rows(trellis.par.get("superpose.line"), 1:length(selected))$col
       j <- 1
       for (i in selected) {
+        xg <- x[which(groups == i)]
         ypred <- y[which(groups == i)]
-        ypred.low <- tval.low[which(categrv == i)]
-        ypred.up <- tval.up[which(categrv == i)]
-        panel.xyplot(x = sort(x[which(groups == i)]), y = ypred[order(x[which(groups == i)])], col = col[j], 
-                     type = "l", ...)
-        panel.xyplot(x = sort(x[which(groups == i)]), y = ypred.low[order(x[which(groups == i)])], col = col[j], 
-                     type = "l", lty = 3, ...)
-        panel.xyplot(x = sort(x[which(groups == i)]), y = ypred.up[order(x[which(groups == i)])], col = col[j], 
-                     type = "l", lty = 3, ...)
+        ypred.low <- tval.low[which(groups == i)]
+        ypred.up <- tval.up[which(groups == i)]
+        panel.xyplot(x = sort(xg), y = ypred[order(xg)], col = col[j], type = "l", ...)
+        panel.xyplot(x = sort(xg), y = ypred.low[order(xg)], col = col[j], type = "l", lty = 3, ...)
+        panel.xyplot(x = sort(xg), y = ypred.up[order(xg)], col = col[j], type = "l", lty = 3, ...)
         j <- j + 1
       }
     }, key = key, ylab = "ypred", xlab = xname, ...)

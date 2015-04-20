@@ -1,34 +1,34 @@
 #' Converts data from one format to another within MLwiN
-#' 
+#'
 #' This function converts data from one format to another within MLwiN, via
 #' MLwiN macro language. The \code{foreign} package allows R to read data files
 #' for most of these formats.
-#' 
+#'
 #' MLwiN supports conversion between MLwiN (*.wsz, *.ws), Minitab (*.mtw), SAS
 #' (*.xpt), SPSS (*.sav), and Stata (*.dta) files.
-#' 
+#'
 #' @param wsfile A file name specifying the data file (with a specific
-#' extension) to be converted. 
+#' extension) to be converted.
 #' @param foreignfile A file name specifying the data file (with a specific
 #' extension) after conversion.
 #' @param MLwiNPath A path to the MLwiN folder. By default, \code{MLwiNPath = NULL}
 #' and path set by \code{options('MLwiN_path')}, the default for which can be
 #' changed via \code{options(MLwiN_path = 'path/to/MLwiN vX.XX/')}).
 #' @param x64 A logical value indicating whether the 64 bit version of MLwiN is
-#' used, the default for this is determined by the version of R used. If 
+#' used, the default for this is determined by the version of R used. If
 #' \code{FALSE}, the 32 bit version is called.
 #'
 #' @details
 #' The converted data file (with a specific extension) will be saved to the file
 #' specified by \code{foreignfile}.
-#' 
+#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso \code{\link[foreign]{read.dta}}
 #'
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' library(R2MLwiN)
 #' # NOTE: if MLwiN not saved in location R2MLwiN defaults to, specify path via:
@@ -45,17 +45,17 @@
 #' indata = read.dta(inputfile)
 #' str(indata)
 #' }
-#' 
+#'
 #' @export
 ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64 = NULL) {
   ## Convert MLwiN worksheet file to other data file which is used in Minitab, SAS, SPSS, or Stata
-  temptfile <- gsub("\\", "/", tempfile("coversion_", fileext = ".txt"), fixed = TRUE)
+  temptfile <- normalizePath(tempfile("coversion_", fileext = ".txt"), winslash = "/", mustWork = FALSE)
   cat(file = temptfile)
   write("ECHO     0", temptfile, append = TRUE)
   write(paste("LOAD   '", wsfile, "'", sep = ""), temptfile, append = TRUE)
   write(paste("STOR   '", foreignfile, "'", sep = ""), temptfile, append = TRUE)
   write("EXIT", temptfile, append = TRUE)
-  
+
   if (is.null(x64)) {
     if (.Machine$sizeof.pointer == 8) {
       x64 <- TRUE
@@ -63,16 +63,16 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64 = NULL) {
       x64 <- FALSE
     }
   }
-  
+
   if (is.null(MLwiNPath)) {
     MLwiNPath <- getOption("MLwiN_path")
   }
-  
+
   pathinfo <- file.info(MLwiNPath)
   if (is.na(pathinfo$isdir)) {
     stop(paste0(MLwiNPath, " does not exist"))
   }
-  
+
   if (!isTRUE(pathinfo$isdir)) {
     if (file.access(MLwiNPath, mode = 1) == 0) {
       cmd <- MLwiNPath
@@ -80,7 +80,7 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64 = NULL) {
       stop(paste0(MLwiNPath, " is not executable"))
     }
   }
-  
+
   if (isTRUE(pathinfo$isdir)) {
     if (x64) {
       cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
@@ -103,9 +103,9 @@ ws2foreign <- function(wsfile, foreignfile, MLwiNPath = NULL, x64 = NULL) {
       }
     }
   }
-  
+
   args <- paste0("/nogui /run ", "\"", temptfile, "\"")
   system2(cmd, args = args, stdout = stdout, stderr = stderr)
   file.remove(temptfile)
   cat("\n")
-} 
+}

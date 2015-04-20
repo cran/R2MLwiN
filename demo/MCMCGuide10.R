@@ -29,7 +29,7 @@ options(MLwiN_path = mlwin)
 data(bang1, package = "R2MLwiN")
 
 ## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS321/OpenBUGS.exe"
+if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
 while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) == 
   0) {
   cat("Please specify the path for the OpenBUGS executable:\n")
