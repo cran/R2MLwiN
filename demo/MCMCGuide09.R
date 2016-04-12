@@ -28,8 +28,8 @@ options(MLwiN_path = mlwin)
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
-boy.normexam <- tutorial$normexam[which(tutorial$girl == 0)]
-girl.normexam <- tutorial$normexam[which(tutorial$girl == 1)]
+boy.normexam <- tutorial$normexam[which(tutorial$sex == "boy")]
+girl.normexam <- tutorial$normexam[which(tutorial$sex == "girl")]
 tab1 <- cbind(c(length(boy.normexam), mean(boy.normexam), sd(boy.normexam)), c(length(girl.normexam), mean(girl.normexam), 
   sd(girl.normexam)), c(length(tutorial$normexam), mean(tutorial$normexam), sd(tutorial$normexam)))
 colnames(tab1) <- c("0", "1", "TOTAL")

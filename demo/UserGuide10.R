@@ -40,7 +40,7 @@ addmargins(with(bang, table(lc, use4)))
 
 bang$use4 <- relevel(bang$use4, 4)
 
-(mymodel1 <- (runMLwiN(logit(use4, cons) ~ 1 + lc, D = "Unordered Multinomial", data = bang)))
+(mymodel1 <- (runMLwiN(logit(use4) ~ 1 + lc, D = "Unordered Multinomial", data = bang)))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_Intercept_Sterilization"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
   exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
@@ -55,9 +55,9 @@ cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_Sterilizatio
 
 # 10.5 Fitting a two-level random intercept model . . . . . . . . . . . .155
 
-(mymodel2 <- (runMLwiN(logit(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", data = bang)))
+(mymodel2 <- (runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", data = bang)))
 
-(mymodel3 <- (runMLwiN(logit(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(nonlinear = c(1, 
+(mymodel3 <- (runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(nonlinear = c(1, 
   2), startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov), resi.store = TRUE), 
   data = bang)))
 

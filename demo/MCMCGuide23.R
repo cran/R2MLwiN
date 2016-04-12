@@ -42,18 +42,17 @@ while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1)
 #winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
 
 data(bang1, package="R2MLwiN")
-bang1$denomb <- bang1$cons
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1),
+(mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1),
   data = bang1))
 
 trajectories(mymodel)
 
 ## Orthogonal update
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
+(mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
   mcmcOptions = list(orth = 1)), data = bang1))
 
 trajectories(mymodel)
@@ -106,11 +105,9 @@ trajectories(mymodel)
 ## Read bang1 data
 data(bang1, package = "R2MLwiN")
 
-bang1$denomb <- bang1$cons
-
 ## Orthogonal update (WinBUGS)
 
-mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
+mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
   mcmcOptions = list(orth = 1), show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1,
   bugs = openbugs, OpenBugs = TRUE), data = bang1)
 

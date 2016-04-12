@@ -9,8 +9,8 @@
 #' @param levID A character (vector) specifying the level ID(s).
 #' @param datafile A file name where the BUGS data file will be saved in
 #' .txt format.
-#' @param initfile A file name where the BUGS initial values will be saved
-#' in .txt format.
+#' @param initfiles A list of file names where the BUGS initial values will
+#' be saved in .txt format.
 #' @param modelfile A file name where the BUGS model will be saved in .txt
 #' format.
 #' @param bugEst A file name where the estimates from BUGS will be stored in
@@ -69,7 +69,7 @@
 #'
 #' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
 #' @export
-mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
+mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
   
   rbugs2 <- function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
@@ -188,7 +188,7 @@ mlwin2bugs <- function(D,levID, datafile, initfile, modelfile, bugEst, fact, add
     }
   }
   if (!is.null(addmore)) parameters=c(parameters,addmore)
-  chains.bugs=rbugs2(data.file = datafile, inits.files=rep(initfile,n.chains),
+  chains.bugs=rbugs2(data.file = datafile, inits.files = initfiles,
                      paramSet=parameters, model=modelfile, bugEst=bugEst, n.chains = n.chains, n.iter = n.iter, n.burnin=n.burnin, n.thin=n.thin, debug=debug, bugs=bugs,
                      bugsWorkingDir=bugsWorkingDir, OpenBugs=OpenBugs, cleanBugsWorkingDir=cleanBugsWorkingDir, seed = seed)
   chains.bugs.mcmc=rbugs::rbugs2coda(chains.bugs,burnin=1,n.thin)

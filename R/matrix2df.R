@@ -25,7 +25,8 @@ matrix2df <- function(mat, standardise = FALSE, idstub = "id", weightstub = "wei
     colnames(mat) <- 1:ncol(mat)
   }
   if (isTRUE(standardise)) {
-    mat <- mat/Matrix::rowSums(mat)
+    denom <- Matrix::rowSums(mat)
+    mat[denom != 0, ] <- mat[denom != 0, ]/denom[denom != 0]
   }
   numvars <- max(Matrix::rowSums(mat != 0))
   idcols <- data.frame(matrix(0, nrow(mat), numvars))
@@ -37,8 +38,10 @@ matrix2df <- function(mat, standardise = FALSE, idstub = "id", weightstub = "wei
   
   for (i in 1:nrow(mat)) {
     row <- mat[i, mat[i, ] != 0, drop = FALSE]
-    idcols[i, 1:length(row)] <- colnames(row)
-    weightcols[i, 1:length(row)] <- as.numeric(row)
+    if (length(row) > 0) {
+      idcols[i, 1:length(row)] <- colnames(row)
+      weightcols[i, 1:length(row)] <- as.numeric(row)
+    }
   }
   
   cbind(idcols, weightcols)

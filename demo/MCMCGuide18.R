@@ -122,7 +122,12 @@ summary(hungary1)
  D = "Multivariate Normal", estoptions = list(EstM = 1, mcmcMeth = list(dami = c(0, 1000, 2000, 3000, 4000, 
   5000))), data = hungary1))
 
-head(mymodel["MIdata"])
+
+if (!require(mitools)) install.packages("mitools")
+library(mitools)
+mi <- imputationList(mymodel@imputations)
+head(mymodel@data)
+with(mi, fun=head)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 

@@ -1,3 +1,100 @@
+Mon Apr 11 2016
+1. Changes
+   * Use "get" function for clearing "foreach" package globals and updating the formula to satisfy CRAN checks
+
+Wed Feb 03 2016
+1. Changes
+   * If a denominator is not specified generate a column of ones and use that instead
+
+Tue Jan 05 2015
+1. Changes
+   * Run multiple MCMC seed example as parallel chains
+
+Thu Dec 17 2015
+1. Changes
+   * Add group size summary information for non-missing data to the hierarchy slot
+
+Wed Dec 16 2015
+1. Changes
+   * Return imputed datasets as a list of dataframes (in the imputations slot). This matches the input required by the mitools package.
+
+Tue Dec 15 2015
+1. Bug fixing
+   * Ignore missing values when checking that responses have valid values
+
+Fri Dec 04 2015
+1. Changes
+   * Add option to turn on simple notation when in debug mode
+
+Thu Dec 03 2015
+1. Changes
+   * Turn off reserved column overwrite warning in generated macro
+
+Fri Nov 27 2015
+1. Changes
+   * Allow specification of default gamma prior parameters
+
+Thu Nov 12 2015
+1. Bug fixing
+   * Corrected the prior covariance matrix in the MCMCGuide06 demo
+
+Fri Oct 16 2015
+1. Bug fixing
+   * Prevent MCMC refresh being higher than the total number of iterations
+
+Fri Oct 09 2015
+1. Bug fixing
+   * Add missing data type check
+   * Only run droplevels() where empty levels exist, also provide a warning when this happens
+
+Tue Oct 05 2015
+1. Changes
+   * Check data for Binomial, Poisson and Negative-binomial responses to ensure it is appropriate
+
+Thu Oct 01 2015
+1. Bug fixing
+   * Provide option to drop unused factor levels when processing the data (TRUE by default)
+   * Hard code one residual variable at level-1 for MCMC models
+
+Mon Sep 28 2015
+1. Bug fixing
+   * Fixed specifying an interaction as a common variable in ordered multinomial models
+
+Thu Sep 10 2015
+1. Bug fixing
+   * Fixed running ordered multinomial models in MCMC where starting values are provided
+
+Tue Sep 08 2015
+1. Changes
+   * Add S3 wrappers to allow functions such as linearHypothesis to work again
+
+Thu Aug 20 2015
+1. Bug fixing
+   * Fixed a bug preventing the behaviour of ignoring the intercept term when modifying the output object from the runMLwiN call using updateMLwiN
+   
+Thu Aug 6 2015
+1. Bug fixing
+   * In matrix2df, handle rows where all values are zero
+
+Thu Jul 23 2015
+1. Changes
+   * Add an option to allow saving the MLwiN worksheet to a file after the model is run
+
+Tue May 19 2015
+1. Bug fixing
+   * Correct table creation at beginning of MCMCGuide09 that was wrong due to a change in variable name
+   * Fixed a bug preventing Negative-binomial models from running
+2. Changes
+   * Add support for Negative-binomial in MCMC (requires MLwiN version 2.33 or higher)
+
+Fri May 15 2015
+1. Changes
+   * Add support for multiple MCMC chains with MLwiN
+
+Tue Apr 21 2015
+1. Bug fixing
+   * Mixed Poisson/normal models no longer need to have the Poisson response first when using offsets
+
 Fri Apr 17 2015
 1. Bug fixing
    * Reinstate starting residuals for non-cross-classifed models
@@ -50,7 +147,7 @@ Wed Jan 31 2015
    * Correct handling of common coefficients for categorical variables
    * Correct handling categorical predictors that contain missing values
    * No longer automatically print out chain summaries when using BUGS options
-   * Prevent categ and centring options being used when using new formula syntax 
+   * Prevent categ and centring options being used when using new formula syntax
    * Check variable names are not duplicated if case is ignored
    * Allow handling of much longer variable names that was previously possible
 

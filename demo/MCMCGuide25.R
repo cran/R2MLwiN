@@ -60,21 +60,19 @@ sixway(mymodel[, "beta[1]", drop = FALSE])
 ## Read bang1 data
 data(bang1, package = "R2MLwiN")
 
-bang1$denomb <- bang1$cons
-
 ## Define the model
 
 
 ## Hierarchical centring at level 2
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcOptions = list(hcen = 2)), data = bang1))
 
 trajectories(mymodel)
 
 ## Hierarchical centring at level 2 + Orthogonal updates
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcOptions = list(hcen = 2, orth = 1)), data = bang1))
 
 trajectories(mymodel)

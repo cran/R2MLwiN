@@ -107,11 +107,18 @@
 #' multivariate MH Sampling.
 #' @param adaption \code{adaption = 1} indicates adaptation is to be used;
 #' \code{0} otherwise.
-#' @param priorcode An integer indicating which default priors are to be used
-#' for the variance parameters. This parameter takes the value \code{1} for
-#' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
-#' section on 'Priors' in the MLwiN help system for more details on the meaning
-#' of these default priors.
+#' @param priorcode A vector indicating which default priors are to be used
+#' for the variance parameters. It defaults to \code{c(gamma = 1)} in which case
+#' Gamma priors are used with MLwiN's defaults of Gamma a value (shape) = 0.001
+#' and Gamma b value (scale) = 0.001, although alternative values for shape and
+#' scale can be specified in subsequent elements of the vector,
+#' e.g. \code{c(gamma = 1, shape = 0.5, scale = 0.2)}). Alternatively
+#' \code{c(uniform = 1)} specifies Uniform priors on the variance scale. To allow
+#' for back-compatibility with deprecated syntax used in versions of
+#' \pkg{R2MLwiN} prior to 0.8-2, if \code{priorcode} is instead specified as
+#' an integer, then \code{1} indicates that Gamma priors are used, whereas
+#' \code{0} indicates that Uniform priors are used. See the section on 'Priors' in the
+#' MLwiN help system for more details on the meaning of these priors.
 #' @param rate An integer specifying the acceptance rate (as a percentage);
 #' this command is ignored if \code{adaption = 0}.
 #' @param tol An integer specifying tolerance (as a percentage) for the acceptance rate.
@@ -219,6 +226,8 @@
 #' estimate from the iterations produced. \code{dami = 2} is as for \code{dami = 1}
 #' but with the standard errors of the estimate additionally being stored.
 #' @param namemap A mapping of column names to DTA friendly shorter names
+#' @param saveworksheet A list of file names (one for each chain) used to store the
+#' MLwiN worksheet after the model has been estimated.
 #'
 #' @details A list of other MCMC options as used in the argument
 #' \code{mcmcOptions}:
@@ -315,11 +324,11 @@
 write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp, D = "Normal", nonlinear = c(0, 1), categ = NULL,
                          notation = NULL, nonfp = NULL, clre = NULL, Meth = 1, merr = NULL, carcentre = FALSE, maxiter = 20,
                          convtol = 2, seed = 1, iterations = 5000, burnin = 500, scale = 5.8, thinning = 1, priorParam = "default", refresh = 50,
-                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = 1, rate = 50, tol = 10, lclo = 0,
+                         fixM = 1, residM = 1, Lev1VarM = 1, OtherVarM = 1, adaption = 1, priorcode = c(gamma=1), rate = 50, tol = 10, lclo = 0,
                          mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE,
                          modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE,
                          resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL,
-                         namemap = sapply(colnames(indata), as.character)) {
+                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL) {
   
   shortname <- function(...) {
     name <- paste0(...)
@@ -444,6 +453,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   }
   
   wrt("MONI    0")
+  wrt("MARK    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
   
@@ -454,7 +464,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste0("NAME cb50 '", name, "'"))
   }
   
-  if (notation == "class") {
+  if ("class" %in% notation) {
     wrt("INDE 1")
   }
   if (!(D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed")) {
@@ -574,7 +584,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         DD2 <- 3
         DD2 <- 3
         if (!is.na(D[[jj]][3])) {
-          wrt(paste("DOFFs 1 '", D[[jj]][3], "'", sep = ""))
+          wrt(paste("DOFFs ", jj, " '", D[[jj]][3], "'", sep = ""))
         }
       }
       jj <- jj + 1
@@ -1295,7 +1305,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("RDISt 1 2")
     wrt("LFUN 3")
     DD2 <- 3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '", D[3], "'", sep = ""))
     }
     interpos <- grep("\\:", expl)
@@ -1451,7 +1461,21 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("PREF   0")
     wrt("POST   0")
   }
-  
+
+  if ("simple" %in% notation) {
+    wrt("EXISt 'cons' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 0:")
+    wrt("EXISt 'Intercept' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 1:")
+    wrt("COLN 'Intercept' b1000")
+    wrt("NAME cb1000 'cons'")
+    wrt("ENDSWITch")
+    wrt("ENDSWITch")
+    wrt("NOTA 1")
+  }
+
   wrt("NAME   c1098 '_FP_b'")
   wrt("NAME   c1099 '_FP_v'")
   wrt("NAME   c1096 '_RP_b'")
@@ -1459,6 +1483,8 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   
   wrt("NOTE   Fit the model")
   wrt("ECHO 1")
+  wrt("BATC 1")
+  wrt("MAXI 2")
   wrt("STAR")
   
   if (!is.null(startval)) {
@@ -1470,9 +1496,15 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
     if (!is.null(startval$RP.b)) {
       wrt(paste("JOIN ", paste(startval$RP.b, collapse = " "), " '_RP_b'", sep = ""))
+      if (D[1] == "Multinomial" && D[4] == 0) {
+        wrt("JOIN '_RP_b' 1 '_RP_b'")
+      }
     }
     if (!is.null(startval$RP.v)) {
       wrt(paste("JOIN ", paste(startval$RP.v[!upper.tri(startval$RP.v)], collapse = " "), " '_RP_v'", sep = ""))
+      if (D[1] == "Multinomial" && D[4] == 0) {
+        wrt(paste("JOIN '_RP_v' ", paste(rep(0, length(startval$RP.b)+1), collapse = " "), " '_RP_v'"))
+      }
     }
   } else {
     wrt(paste("TOLE", convtol))
@@ -1673,8 +1705,18 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       DD <- 6 else DD <- 7
     wrt("CLRV 2")
   }
+  if (D[1] == "Negbinom")
+    DD <- 8
   
   wrt(paste("LCLO   ", lclo, sep = ""))
+
+  if (priorcode["gamma"] == 0) {
+    wrt("UNIP")
+  } else {
+    if (length(priorcode) > 1) {
+      wrt(paste("GAMP", priorcode["shape"], priorcode["scale"]))
+    }
+  }
   
   if (debugmode) {
     wrt("NOTE   Open the equations window")
@@ -1711,7 +1753,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       residcols <- "G30[1] G30[2]"
     }
     wrt(paste("MCMC   0", burnin, adaption, scale, rate, tol, residcols, priorcol, fixM, residM, Lev1VarM, OtherVarM,
-              priorcode, DD))
+              priorcode[1], DD))
     
     if (nlev > 1 && !isTRUE(xc)) {
       wrt("ERAS G30")
@@ -1740,11 +1782,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         wrt("AVER c1091 b99 b100")
         wrt("PAUS 1")
       }
-      wrt("LINK 1 G24")
-      wrt("NAME G24[1] '_MissingInd'")
-      wrt("CALC   '_MissingInd'=abso('_esample'-1)")
-      wrt(paste("PSTA '", MIfile, "' ", paste(mvnames, collapse = " "), " '_MissingInd'", sep = ""))
-      wrt("LINK 0 G24")
+      wrt(paste("PSTA", paste0("'", MIfile, "'"), paste(mvnames, collapse = " "), "'resp_indicator'"))
       wrt(paste("ERAS  ", paste(mvnames, collapse = " "), sep = ""))
     } else {
       if (debugmode) {
@@ -1769,6 +1807,10 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       }
     }
     wrt("ECHO 0")
+
+    if (!is.null(saveworksheet)) {
+      wrt(paste0("STOR ", saveworksheet))
+    }
     
     if (debugmode) {
       wrt("WSET 15 1")
@@ -1831,36 +1873,30 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("")
     
     if (!is.null(dami) && length(dami) == 1) {
-      wrt("LINK 3 G26")
-      wrt("NOTE generate example if there a missing values")
+      wrt("NOTE save imputed values if there are missing values")
       wrt("SWIT b1")
       wrt("CASE 0:")
       wrt("LEAVE")
       wrt("CASE:")
+      wrt("LINK 3 G26")
       wrt("NAME G26[1] '_MissingInd'")
       wrt("CALC   '_MissingInd'=abso('_esample'-1)")
-      if (dami == 0) {
-        wrt("DAMI 0 G26[2]")
-        wrt("NAME G26[2] '_est'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_esample' ", sep = ""))
-        wrt("ERAS  '_est'")
-      }
       if (dami == 1) {
         wrt("DAMI 1 G26[2]")
         wrt("NAME G26[2] '_est'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_esample' ", sep = ""))
+        wrt(paste("PSTA '", MIfile, "' '_est' '_MissingInd' ", sep = ""))
         wrt("ERAS  '_est'")
       }
       if (dami == 2) {
         wrt("DAMI 2 G26[2] G26[3]")
         wrt("NAME G26[2] '_est'")
         wrt("NAME G26[3] '_SDs'")
-        wrt(paste("PSTA '", MIfile, "' '_est' '_SDs' '_esample' ", sep = ""))
+        wrt(paste("PSTA '", MIfile, "' '_est' '_SDs' '_MissingInd' ", sep = ""))
         wrt("ERAS  '_est' '_SDs'")
       }
+      wrt("LINK 0 G26")
       wrt("ENDS")
       wrt("")
-      wrt("LINK 0 G26")
     }
     
     wrt("NOTE export parameter chain")
@@ -2312,6 +2348,10 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt("")
       
       len.rpx <- length(rpx)
+      # For MCMC there is always only one residual column at level 1
+      if (level == 1) {
+        len.rpx = 1
+      }
       
       ii <- 1
       wrt(paste("LINK", len.rpx, "G26"))

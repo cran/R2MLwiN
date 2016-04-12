@@ -31,7 +31,7 @@ bang$use4 <- relevel(bang$use4, 4)
 
 # 12.1 Fitting a first single-level multinomial model . . . . . . . . . .169
 
-(mymodel <- runMLwiN(log(use4, cons) ~ 1, D = "Unordered Multinomial", estoptions = list(EstM = 1), data = bang))
+(mymodel <- runMLwiN(log(use4) ~ 1, D = "Unordered Multinomial", estoptions = list(EstM = 1), data = bang))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel@FP["FP_Intercept_Sterilization"])/(1 + exp(mymodel@FP["FP_Intercept_Sterilization"]) + exp(mymodel@FP["FP_Intercept_Modern_reversible_method"]) + 
   exp(mymodel@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
@@ -42,7 +42,7 @@ cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_Traditional_method"]
 
 # 12.2 Adding predictor variables . . . . . . . . . . . . . . . . . . . .173
 
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc, D = "Unordered Multinomial", estoptions = list(EstM = 1), data = bang))
+(mymodel <- runMLwiN(log(use4) ~ 1 + lc, D = "Unordered Multinomial", estoptions = list(EstM = 1), data = bang))
 
 cat(paste("Pr(y = 3) =", round(exp(mymodel@FP["FP_Intercept_Traditional_method"])/(1 + exp(mymodel@FP["FP_Intercept_Sterilization"]) + exp(mymodel@FP["FP_Intercept_Modern_reversible_method"]) + 
   exp(mymodel@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
@@ -67,11 +67,11 @@ sixway(pred2, "prob1")
 # 12.4 Adding district level random effects . . . . . . . . . . . . . . .177
 
 ## Uses IGLS
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 0, 
+(mymodel <- runMLwiN(log(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 0, 
   nonlinear = c(1, 2)), data = bang))
 
 ## Uses MCMC
-(mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(log(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(EstM = 1, 
   nonlinear = c(1, 2)), data = bang))
 sixway(mymodel@chains[, "RP2_var_Intercept_Sterilization", drop = FALSE], "sigma2v0")
 

@@ -500,10 +500,18 @@ setMethod("print", "mlwinfitIGLS", printIGLS)
 setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS(object))
 
 updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order = TRUE, evaluate = TRUE) {
+  update.formula2 <- function (old, new, ...) 
+  {
+      C_updateform <- get("C_updateform", asNamespace("stats"), inherits=FALSE)
+      tmp <- .Call(C_updateform, as.formula(old), as.formula(new))
+      out <- formula(terms.formula(tmp, simplify = FALSE))
+      return(out)
+  }
+  environment(update.formula2) <- environment(update.formula)
   my.update.formula <- function(old, new, keep.order = TRUE, ...) {
     env <- environment(as.formula(old))
-    tmp <- update.formula(as.formula(old), as.formula(new))
-    out <- formula(terms.formula(tmp, simplify = TRUE, keep.order = keep.order))
+    tmp <- update.formula2(as.formula(old), as.formula(new))
+    out <- formula(terms.formula(tmp, simplify = FALSE, keep.order = keep.order))
     environment(out) <- env
     return(out)
   }

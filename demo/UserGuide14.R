@@ -76,7 +76,7 @@ data(tutorial, package = "R2MLwiN")
 tutorial$binexam <- as.integer(tutorial$normexam > 0)
 tutorial$binlrt <- as.integer(tutorial$standlrt > 0)
 
-(mymodel5 <- runMLwiN(c(logit(binexam, cons), logit(binlrt, cons)) ~ 1, D = c("Mixed", "Binomial", "Binomial"), estoptions = list(sort.ignore = TRUE), 
+(mymodel5 <- runMLwiN(c(logit(binexam), logit(binlrt)) ~ 1, D = c("Mixed", "Binomial", "Binomial"), estoptions = list(sort.ignore = TRUE), 
   data = tutorial))
 
 

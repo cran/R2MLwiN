@@ -149,6 +149,8 @@
 #' \code{RP.v} corresponds to the variance/covariance matrix of the variance
 #' estimates for the random part.
 #' @param namemap A mapping of column names to DTA friendly shorter names
+#' @param saveworksheet A file name used to store the MLwiN worksheet after the
+#' model has been estimated.
 #' 
 #' @return Outputs a modified version of namemap containing newly generated
 #' short names.
@@ -169,7 +171,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                          notation = NULL, nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset, rcon = NULL, fcon = NULL, 
                          maxiter = 20, convtol = 2, mem.init = "default", optimat = FALSE, weighting = NULL, fpsandwich = FALSE, rpsandwich = FALSE, 
                          macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-                         namemap = sapply(colnames(indata), as.character)) {
+                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL) {
   
   shortname <- function(...) {
     name <- paste0(...)
@@ -296,6 +298,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   }
   
   wrt("MONI    0")
+  wrt("MARK    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
   
@@ -306,7 +309,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste0("NAME cb50 '", name, "'"))
   }
   
-  if (notation == "class") {
+  if ("class" %in% notation) {
     wrt("INDE 1")
   }
   if (!(D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed")) {
@@ -425,7 +428,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
         DD2 <- 3
         DD2 <- 3
         if (!is.na(D[[ii]][3])) {
-          wrt(paste("DOFFs 1 '", D[[ii]][3], "'", sep = ""))
+          wrt(paste("DOFFs ", jj, " '", D[[ii]][3], "'", sep = ""))
         }
       }
       jj <- jj + 1
@@ -1141,7 +1144,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("RDISt 1 2")
     wrt("LFUN 3")
     DD2 <- 3
-    if (as.logical(D[2])) {
+    if (!is.na(D[3])) {
       wrt(paste("DOFFs 1 '", D[3], "'", sep = ""))
     }
     interpos <- grep("\\:", expl)
@@ -1350,6 +1353,20 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("PREF   0")
     wrt("POST   0")
   }
+
+  if ("simple" %in% notation) {
+    wrt("EXISt 'cons' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 0:")
+    wrt("EXISt 'Intercept' b1000")
+    wrt("SWITch b1000")
+    wrt("CASE 1:")
+    wrt("COLN 'Intercept' b1000")
+    wrt("NAME cb1000 'cons'")
+    wrt("ENDSWITch")
+    wrt("ENDSWITch")
+    wrt("NOTA 1")
+  }
   
   wrt("NAME   c1098 '_FP_b'")
   wrt("NAME   c1099 '_FP_v'")
@@ -1375,6 +1392,10 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     if (!is.null(startval$RP.v)) {
       wrt(paste("JOIN ", paste(startval$RP.v[!lower.tri(startval$RP.v)], collapse = " "), " '_RP_v'", sep = ""))
     }
+  }
+
+  if (!is.null(saveworksheet)) {
+    wrt(paste0("STOR ", saveworksheet))
   }
   
   if (debugmode) {

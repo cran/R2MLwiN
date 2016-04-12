@@ -52,6 +52,8 @@
 #' @param indata A \code{data.frame} object containing the data to be modelled.
 #' Deprecated syntax: by default this is \code{NULL} and the \code{data.frame}
 #' is instead referenced via \code{data}.
+#' @param saveworksheet A file name (or list of file names if more than one chain
+#' is specified) used to store the MLwiN worksheet after the model has been estimated.
 #'
 #' @details
 #' With regard to \code{runMLwiN}'s \code{Formula} object, see \code{\link[stats]{formula}}
@@ -303,6 +305,9 @@
 #' \item \code{drop.data}: If \code{TRUE} (default) only the data involved in the model
 #' is passed to MLwiN, otherwise the entire dataset in \code{data} is passed.
 #'
+#' \item \code{drop.levels}: If \code{TRUE} (default) any unused levels are dropped from factors, otherwise the dataset
+#' is left unchanged.
+#'
 #' \item \code{fpsandwich}: specifies standard error type for fixed parameters. If
 #' \code{fpsandwich = TRUE}, robust or `sandwich' standard errors based on raw
 #' residuals are used, if \code{fpsandwich = FALSE} (default) then standard,
@@ -428,6 +433,7 @@
 #' \itemize{
 #' \item \code{iterations}: Number of main iterations post-burnin (i.e. monitoring chain length), defaults to 5000.
 #' \item \code{burnin}: Length of burnin, defaults to 500.
+#' \item \code{nchains}: Number of MCMC chains to run, defaults to 1.
 #' \item \code{thinning}: Thinning factor, defaults to 1.
 #' \item \code{seed}: MCMC random number seed, defaults to 1.
 #' \item \code{priorParam}: A list specifying informative priors. This includes:
@@ -479,11 +485,18 @@
 #' \code{adaption = 1} (ignored if \code{adaption = 0}).
 #' \item \code{rate}: An integer specifying the acceptance rate (as a percentage; defaults
 #' to 50) when \code{adaption = 1} (ignored if \code{adaption = 0}).
-#' \item \code{priorcode}: An integer indicating which default priors are to be used
-#' for the variance parameters. This parameter takes the value \code{1} (the default) for
-#' Gamma priors or \code{0} for Uniform on the variance scale priors. See the
-#' section on 'Priors' in the MLwiN help system for more details on the meaning
-#' of these priors.
+#' \item \code{priorcode}: A vector indicating which default priors are to be used
+#' for the variance parameters. It defaults to \code{c(gamma = 1)} in which case
+#' Gamma priors are used with MLwiN's defaults of Gamma a value (shape) = 0.001
+#' and Gamma b value (scale) = 0.001, although alternative values for shape and
+#' scale can be specified in subsequent elements of the vector,
+#' e.g. \code{c(gamma = 1, shape = 0.5, scale = 0.2)}). Alternatively
+#' \code{c(uniform = 1)} specifies Uniform priors on the variance scale. To allow
+#' for back-compatibility with deprecated syntax used in versions of
+#' \pkg{R2MLwiN} prior to 0.8-2, if \code{priorcode} is instead specified as
+#' an integer, then \code{1} indicates that Gamma priors are used, whereas
+#' \code{0} indicates that Uniform priors are used. See the section on 'Priors' in the
+#' MLwiN help system for more details on the meaning of these priors.
 #' \item \code{startval}: Deprecated: starting values are now specified directly
 #' within \code{estoptions}.
 #' \item \code{lclo}: Toggles on/off the possible forms of complex level
@@ -536,6 +549,12 @@
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
 #'
+#' @import doParallel foreach parallel
+#' @importFrom stats acf as.formula cov density end getCall get_all_vars model.frame model.matrix model.offset na.omit pacf pnorm qnorm quantile sd start terms terms.formula update.formula var window complete.cases reshape
+#' @importFrom grDevices dev.new
+#' @importFrom graphics close.screen lines par plot points screen split.screen text
+#' @importFrom utils read.delim stack
+#' @importFrom methods is new validObject
 #' @examples
 #'
 #' ## The R2MLwiN package includes scripts to replicate all the analyses in
@@ -564,7 +583,7 @@
 #'
 #' @export
 runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL) {
+                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL, saveworksheet = NULL) {
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
   }
@@ -586,6 +605,11 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
     } else {
       drop.data <- TRUE
     }
+  }
+
+  drop.levels <- estoptions$drop.levels
+  if (is.null(drop.levels)) {
+    drop.levels <- TRUE
   }
 
   if (oldsyntax) {
@@ -618,6 +642,17 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       newvars <- setdiff(colnames(newdata), colnames(indata))
       for (var in newvars) {
         indata[[var]] <- newdata[[var]]
+      }
+    }
+  }
+
+  if (drop.levels) {
+    for (var in colnames(indata)) {
+      if (is.factor(indata[[var]])) {
+        if (length(setdiff(levels(indata[[var]]), levels(factor(indata[[var]])))) > 0) {
+          indata[[var]] <- droplevels(indata[[var]])
+          warning(paste0(var, " has unused factor levels defined. These were dropped from this model run, but we recommend removing them prior to calling runMLwiN."))
+        }
       }
     }
   }
@@ -789,13 +824,84 @@ version:date:md5:filename:x64:trial:platform
 2.32:Jan 2015:47e627c655c52f7dc6ff1e76a670afe3:mlnscript:FALSE:FALSE:lin
 2.32:Jan 2015:ab00a1cb783cf00ed6d95bbd5cebfb1a:mlnscript:TRUE:FALSE:mac
 2.32:Jan 2015:9dc79007c3ac07cc04d7c34d8d936be6:mlnscript:TRUE:FALSE:bsd
+2.33:May 2015:7bc55103dd0e093cedb3a61f1d297058:mlwin.exe:FALSE:FALSE:win
+2.33:May 2015:1fa938cccf35f73669e55c2f1f022ff9:mlwin.exe:FALSE:TRUE:win
+2.33:May 2015:c2c9953bbde950f11896ac1f0263c946:mlnscript.exe:FALSE:FALSE:win
+2.33:May 2015:c561e82df447f972bb9ae564e8354d14:mlnscript.exe:TRUE:FALSE:win
+2.33:May 2015:40b64d11a663b33516b1a1cb55a01c2b:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:97b235581ebc0b8af41747a3752323b1:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:8e47087a6ba730a4229b51c5bf7eacad:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:30d3a6d8e2ff0a9e21e601e72cecbf04:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:414c50ed7ccf6b68f50045092bcb5ac6:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:c3a7fbdb2ab067455443cfed4b620e87:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:bdb5089f1e25075824ba78d18006368a:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:7ceb282cf4e2c30cf071c485208800df:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:92e635a28f302f22470d552caeaa8cdc:mlnscript:TRUE:FALSE:lin
+2.33:May 2015:5d8707133bad55b228909361b1a78b77:mlnscript:FALSE:FALSE:lin
+2.33:May 2015:3f9e44e33daa6d63d8f6490382c85edc:mlnscript:TRUE:FALSE:mac
+2.33:May 2015:c9c76531c4b01de9739b266eb1fa61c0:mlnscript:TRUE:FALSE:bsd
+2.34:Jul 2015:513a13ad9ab8af09ffbc5995ff4dcffc:mlwin.exe:FALSE:FALSE:win
+2.34:Jul 2015:2a891ff5bf102670774d55fdcc6fede6:mlwin.exe:FALSE:TRUE:win
+2.34:Jul 2015:70b7ab62acbf003ae479a9235d20320b:mlnscript.exe:FALSE:FALSE:win
+2.34:Jul 2015:5c1c2c78b965ba8c9278f83dba25e84c:mlnscript.exe:TRUE:FALSE:win
+2.34:Jul 2015:a732fe7fdaed42b8c0d0f0428fb6768f:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:528298a0f57bad1d4fccd0daacf73912:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:120b475d744d8ee57186a91e87f77ccd:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:923cca1fd480143b1b3103a2c53e1b7f:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:d45cfa5489824870ffbc3bfa09140fd3:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:3c4fb8a62e24f27f8144c526382077cd:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:c197a4ec89768d9187929cc226447c05:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:fc3ad3ea9e44301a2d19f367348f803a:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:70749bcfcd9b4991a87f5b100f189e57:mlnscript:TRUE:FALSE:lin
+2.34:Jul 2015:174b02d8bd5c78f23705738d49055984:mlnscript:FALSE:FALSE:lin
+2.34:Jul 2015:30b35a64f45ebeff24bc98bdbdd5b149:mlnscript:TRUE:FALSE:mac
+2.34:Jul 2015:072c3ac63fd07dff5f7396f6f336b995:mlnscript:TRUE:FALSE:bsd
+2.35:Sep 2015:73fefcab85d5be673a6ba343dba5e49c:mlwin.exe:FALSE:FALSE:win
+2.35:Sep 2015:eddefa11f05571290e6ffa247ffa2a8e:mlwin.exe:FALSE:TRUE:win
+2.35:Sep 2015:1210ccb08f1d447109144830abb2b340:mlnscript.exe:FALSE:FALSE:win
+2.35:Sep 2015:e51eb5d08247c12d6beef3c96608f767:mlnscript.exe:TRUE:FALSE:win
+2.35:Sep 2015:6a7a4666f37fd3a707c5dea50aa8ebd0:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:b7d7c6fcc43c96d21accf8a86a86ae72:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:b095b8f9c205ab958552385f48cb2122:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:bc41e864ab1b9663bd6e0531317b0500:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:5670b2b3326d3da3d6be2cf84ba64f3c:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:2cc7e0dc180dd877706a7621fac1e755:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:83394f6ecbaf3842411fb4f29290b3a2:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:9c66d8b886b7a1f99a31e90a0eabfc98:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:f2f1ec1127cc88c583eab87d4f0b862a:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:896b3ccd73160abc2399d232dfd5a9a7:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:06aa5551c073948dff37a153c5404e24:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:a4a58452bef03243cfa873f0f2c5c6eb:mlnscript:TRUE:FALSE:lin
+2.35:Sep 2015:521cd33275927f3dae57bedabf01124f:mlnscript:FALSE:FALSE:lin
+2.35:Sep 2015:0d40e91fd5cb9bd6361d77e5316bf79f:mlnscript:FALSE:FALSE:lin
+2.35:Sep 2015:807dccfc85dccb2955c38c953646c8d3:mlnscript:TRUE:FALSE:mac
+2.35:Sep 2015:9b48a5dc3d5cb675a2c253d5009aa184:mlnscript:TRUE:FALSE:bsd
+2.35:Sep 2015:b062e8c9116a001a0b73e541465e27c7:mlnscript:TRUE:FALSE:bsd
+2.36:Mar 2016:f52da589b411a6636a6bede5914ce952:mlwin.exe:FALSE:FALSE:win
+2.36:Mar 2016:f17aa345e767edc781f23e877d2e11ad:mlwin.exe:TRUE:FALSE:win
+2.36:Mar 2016:fb25c32b4db90480789ec9208abf721a:mlwin.exe:FALSE:TRUE:win
+2.36:Mar 2016:57fce6c83539daea0219e8916b0e1e40:mlnscript.exe:FALSE:FALSE:win
+2.36:Mar 2016:ed98168c942104ad7c664315c834dd2b:mlnscript.exe:TRUE:FALSE:win
+2.36:Mar 2016:3d73d31264a51f2fa0a2399727aa015a:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:3c4626d808d6b35c1f28909e9cec2034:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:e117a03eed7a297da7c255dce912b8be:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:30ea9ee4dad9ca7c5386a443c7802489:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:1a0abf5b2705dbb6ed66928ce9e689d5:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:bdbe97803b90f107b53b15ee538221c5:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:f03d43516a22f85295090d4244cdd62a:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:f19187c8f2c921b549e3162e92dc2962:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:7983bd105f45456f99cea2b0428bc2c2:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:df7f78276f22ee722ffa371c2fdf4321:mlnscript:FALSE:FALSE:lin
+2.36:Mar 2016:8c33adfb5add5402a2df4c80c2d64183:mlnscript:TRUE:FALSE:mac
+2.36:Mar 2016:88c5113d82d7013506c949c761689b65:mlnscript:TRUE:FALSE:bsd
+2.36:Mar 2016:4b401e7a333ca3500959b72a6ed23afb:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.32)"
+      versiontext <- "MLwiN (version: unknown or >2.35)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
@@ -859,6 +965,11 @@ version:date:md5:filename:x64:trial:platform
   }
 
   if (D[1] == "Binomial") {
+    if (is.numeric(indata[[resp]])) {
+      if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
+        stop("Binomial response variable must have values from zero to one")
+      }
+    }
     if (is.logical(indata[[resp]])) {
       indata[[resp]] <- as.integer(indata[[resp]])
     }
@@ -870,6 +981,13 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   }
+
+  if (D[1] == "Poisson" || D[1] == "Negbinom") {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] %% 1 == 0))) {
+      stop("Poisson and Negative-binomial responses must be positive integers")
+    }
+  }
+
   if (D[1] == "Mixed") {
     for (i in 2:length(D)) {
       if (D[[i]][[1]] == "Normal") {
@@ -878,6 +996,11 @@ version:date:md5:filename:x64:trial:platform
         }
       }
       if (D[[i]][[1]] == "Binomial") {
+        if (is.numeric(indata[[resp[i - 1]]])) {
+          if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] <= 1))) {
+            stop("Binomial response variable must have values from zero to one")
+          }
+        }
         if (is.logical(indata[[resp[i - 1]]])) {
           indata[[resp[i - 1]]] <- as.integer(indata[[resp[i - 1]]])
         }
@@ -887,6 +1010,11 @@ version:date:md5:filename:x64:trial:platform
           } else {
             stop("Binomial responses must have two unique values")
           }
+        }
+      }
+      if (D[[i]][[1]] == "Poisson" || D[[i]][[1]] == "Negbinom") {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
+          stop("Poisson and Negative-binomial responses must be positive integers")
         }
       }
     }
@@ -951,7 +1079,7 @@ version:date:md5:filename:x64:trial:platform
       }
     }
   } else {
-    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Multivariate Normal", "Mixed", "Multinomial"))) {
+    if (!is.element(D[1], c("Normal", "Binomial", "Poisson", "Negbinom", "Multivariate Normal", "Mixed", "Multinomial"))) {
       stop(cat("Invalid distribution specified:", D[1], "\n"))
     }
     if (D[1] == "Binomial") {
@@ -1220,6 +1348,11 @@ version:date:md5:filename:x64:trial:platform
   clre <- estoptions$clre
   clre[2, ] <- gsub("^1$", "Intercept", clre[2, ])
   clre[3, ] <- gsub("^1$", "Intercept", clre[3, ])
+
+  # There is no covariance between the negative-binomial bcons terms
+  if (D[1] == "Negbinom") {
+    clre <- cbind(clre, c(1, "bcons.1", "bcons2.1"))
+  }
 
   smat <- estoptions$smat
 
@@ -1668,11 +1801,11 @@ version:date:md5:filename:x64:trial:platform
   }
 
   notation <- estoptions$notation
-  if (is.null(notation)) {
+  if (!("level" %in% notation && "class" %in% notation)) {
     if (!isTRUE(xc)) {
-      notation <- "level"
+      notation <- c(notation, "level")
     } else {
-      notation <- "class"
+      notation <- c(notation, "class")
     }
   }
 
@@ -2005,56 +2138,8 @@ version:date:md5:filename:x64:trial:platform
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
 
-  sval <- estoptions$startval
-  if (EstM == 1) {
-    if (!is.null(mcmcMeth$startval)) {
-      warning("startval is now specified directly within estoptions")
-      sval <- mcmcMeth$startval
-    }
-  }
-
-  if (!is.null(sval)) {
-    if (!is.null(sval$FP.b) && is.null(names(sval$FP.b))) {
-      names(sval$FP.b) <- FP.names
-    }
-
-    if (!is.null(sval$FP.v) && (is.null(rownames(sval$FP.v)) || is.null(colnames(sval$FP.v)))) {
-      rownames(sval$FP.v) <- FP.names
-      colnames(sval$FP.v) <- FP.names
-    }
-
-    if (!is.null(sval$RP.b) && is.null(names(sval$RP.b))) {
-      names(sval$RP.b) <- RP.names
-    }
-
-    if (!is.null(sval$RP.v) && (is.null(rownames(sval$RP.v)) || is.null(colnames(sval$RP.v)))) {
-      rownames(sval$RP.v) <- RP.names
-      colnames(sval$RP.v) <- RP.names
-    }
-
-    sharedFP <- intersect(FP.names, names(sval$FP.b))
-    if (!is.null(sval$FP.b) && !is.null(sharedFP)) {
-      FP[sharedFP] <- sval$FP.b[sharedFP]
-    }
-    if (!is.null(sval$FP.v) && !is.null(sharedFP)) {
-      FP.cov[sharedFP, sharedFP] <- sval$FP.v[sharedFP, sharedFP]
-    }
-    sharedRP <- intersect(RP.names, names(sval$RP.b))
-    if (!is.null(sval$RP.b) && !is.null(sharedRP)) {
-      RP[sharedRP] <- sval$RP.b[sharedRP]
-    }
-    if (!is.null(sval$RP.v) && !is.null(sharedRP)) {
-      RP.cov[sharedRP, sharedRP] <- sval$RP.v[sharedRP, sharedRP]
-    }
-    startval <- list(FP.b = FP, FP.v = FP.cov, RP.b = RP, RP.v = RP.cov)
-  } else {
-    startval <- NULL
-  }
 
   if (EstM == 1) {
-    seed <- mcmcMeth$seed
-    if (is.null(seed))
-      seed <- 1
     iterations <- mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2064,6 +2149,14 @@ version:date:md5:filename:x64:trial:platform
     thinning <- mcmcMeth$thinning
     if (is.null(thinning))
       thinning <- 1
+    nchains <- mcmcMeth$nchains
+    if (is.null(nchains))
+      nchains <- 1
+    seed <- mcmcMeth$seed
+    if (is.null(seed))
+      seed <- 1:nchains
+    if (length(seed) != nchains)
+      seed <- rep(seed, nchains)
     priorParam <- mcmcMeth$priorParam
     if (is.list(priorParam))
       priorParam <- prior2macro(priorParam, Formula, levID, D, indata)
@@ -2075,6 +2168,8 @@ version:date:md5:filename:x64:trial:platform
     refresh <- mcmcMeth$refresh
     if (is.null(refresh))
       refresh <- 50
+    # Ensure that refresh is not greater than total iterations
+    refresh <- min(refresh, iterations)
     fixM <- mcmcMeth$fixM
     if (is.null(fixM)) {
       if (D[1] == "Poisson" || D[1] == "Multinomial" || D[1] == "Binomial" || D[1] == "Mixed") {
@@ -2107,7 +2202,27 @@ version:date:md5:filename:x64:trial:platform
       adaption <- 1
     priorcode <- mcmcMeth$priorcode
     if (is.null(priorcode))
-      priorcode <- 1
+      priorcode <- c(gamma=1)
+    if (is.null(names(priorcode))) {
+      if (length(priorcode) == 1) {
+        names(priorcode) <- "gamma"
+      } else if (length(priorcode == 3)) { 
+          names(priorcode) <- c("gamma", "shape", "scale")
+      }
+    }
+    if (names(priorcode)[1] == "uniform") {
+      priorcode[1] <- !priorcode[1]
+      names(priorcode)[1] <- "gamma"
+    }
+    if (names(priorcode)[1] != "gamma") {
+      stop("Invalid prior option")
+    }
+    if (length(priorcode) > 1) {
+      if (length(setdiff(names(priorcode), c("gamma", "shape", "scale"))) != 0) {
+        stop("Invalid prior options")
+      }
+    }
+    priorcode[1] <- as.integer(priorcode[1])
     rate <- mcmcMeth$rate
     if (is.null(rate))
       rate <- 50
@@ -2118,6 +2233,21 @@ version:date:md5:filename:x64:trial:platform
     if (is.null(lclo))
       lclo <- 0
     dami <- mcmcMeth$dami
+    if (!is.null(dami)) {
+      if (dami[1] %in% c(0, 1, 2)) {
+        if (dami[1] == 0) {
+          if (length(dami) == 1) {
+            stop("No iterations specified for imputation")
+          }
+        } else {
+          if (length(dami) > 1) {
+            stop("Iterations cannot be specified when requesting imputation means")
+          }
+        }
+      } else {
+        stop("Invalid imputation option")
+      }
+    }
   }
 
   mcmcOptions <- estoptions$mcmcOptions
@@ -2176,6 +2306,73 @@ version:date:md5:filename:x64:trial:platform
     }
   }
 
+  sval <- estoptions$startval
+  if (EstM == 1) {
+    if (!is.null(mcmcMeth$startval)) {
+      warning("startval is now specified directly within estoptions")
+      sval <- mcmcMeth$startval
+    }
+  }
+
+  if (!is.null(sval)) {
+    # Check if we have a single set of starting values, if so expand to a list
+    if (any(c("FP.b", "FP.v", "RP.b", "RP.v") %in% names(sval))) {
+      if (EstM == 0) {
+        svals <- list(sval)
+      }
+      if (EstM == 1) {
+        svals <- list()
+        for (i in 1:nchains) {
+          svals[[i]] <- sval
+        }
+      }
+    } else {
+      if (length(sval) != nchains) {
+        stop("Start values list is wrong size")
+      }
+      svals <- sval
+    }
+
+    #startval <- rep(list(list()), length(svals))
+    startval <- replicate(length(svals), list())
+    for (i in 1:length(svals)) {
+      if (!is.null(svals[[i]]$FP.b) && is.null(names(svals[[i]]$FP.b))) {
+        names(svals[[i]]$FP.b) <- FP.names
+      }
+      if (!is.null(svals[[i]]$FP.v) && (is.null(rownames(svals[[i]]$FP.v)) || is.null(colnames(svals[[i]]$FP.v)))) {
+        rownames(svals[[i]]$FP.v) <- FP.names
+        colnames(svals[[i]]$FP.v) <- FP.names
+      }
+      if (!is.null(svals[[i]]$RP.b) && is.null(names(svals[[i]]$RP.b))) {
+        names(svals[[i]]$RP.b) <- RP.names
+      }
+      if (!is.null(svals[[i]]$RP.v) && (is.null(rownames(svals[[i]]$RP.v)) || is.null(colnames(svals[[i]]$RP.v)))) {
+        rownames(svals[[i]]$RP.v) <- RP.names
+        colnames(svals[[i]]$RP.v) <- RP.names
+      }
+      sharedFP <- intersect(FP.names, names(svals[[i]]$FP.b))
+      if (!is.null(svals[[i]]$FP.b) && !is.null(sharedFP)) {
+        startval[[i]]$FP.b <- FP
+        startval[[i]]$FP.b[sharedFP] <- svals[[i]]$FP.b[sharedFP]
+      }
+      if (!is.null(svals[[i]]$FP.v) && !is.null(sharedFP)) {
+        startval[[i]]$FP.v <- FP.cov
+        startval[[i]]$FP.v[sharedFP, sharedFP] <- svals[[i]]$FP.v[sharedFP, sharedFP]
+      }
+      sharedRP <- intersect(RP.names, names(svals[[i]]$RP.b))
+      if (!is.null(svals[[i]]$RP.b) && !is.null(sharedRP)) {
+        startval[[i]]$RP.b <- RP
+        startval[[i]]$RP.b[sharedRP] <- svals[[i]]$RP.b[sharedRP]
+      }
+      if (!is.null(svals[[i]]$RP.v) && !is.null(sharedRP)) {
+        startval[[i]]$RP.v <- RP.cov
+        startval[[i]]$RP.v[sharedRP, sharedRP] <- svals[[i]]$RP.v[sharedRP, sharedRP]
+      }
+    }
+  } else {
+    startval <- NULL
+  }
+
   if (EstM == 0 && !is.null(BUGO)) {
     stop("BUGO requires MCMC estimation to be selected")
   }
@@ -2189,13 +2386,13 @@ version:date:md5:filename:x64:trial:platform
     sort.ignore <- FALSE
 
   if (D[1] == "Binomial") {
-    if (!all(indata[[resp]] >= 0 && indata[[resp]] <= 1)) {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
       stop("All values for a binomial response must lie between zero and one")
     }
   }
 
   if (D[1] == "Poisson") {
-    if (!all(indata[[resp]] >= 0) && all(as.integer(indata[[resp]]) == indata[[resp]])) {
+    if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] %% 1 == 0))) {
       stop("All values for a Poisson response must be positive integers")
     }
   }
@@ -2205,7 +2402,7 @@ version:date:md5:filename:x64:trial:platform
     discreteresp <- NULL
     for (i in 2:length(D)) {
       if (D[[i]][1] == "Binomial") {
-        if (!all(indata[[resp[i - 1]]] >= 0 && indata[[resp[i - 1]]] <= 1)) {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] <= 1))) {
           stop("All values for a binomial response must lie between zero and one")
         }
         discreteresp <- union(discreteresp, D[[i]][1])
@@ -2213,7 +2410,7 @@ version:date:md5:filename:x64:trial:platform
       }
 
       if (D[[i]][1] == "Poisson") {
-        if (!all(indata[[resp[i - 1]]] >= 0) && all(as.integer(indata[[resp[i - 1]]]) == indata[[resp]])) {
+        if (!all(is.na(indata[[resp[i - 1]]]) | (indata[[resp[i - 1]]] >= 0 & indata[[resp[i - 1]]] %% 1 == 0))) {
           stop("All values for a Poisson response must be positive integers")
         }
         discreteresp <- union(discreteresp, D[[i]][1])
@@ -2347,12 +2544,37 @@ version:date:md5:filename:x64:trial:platform
     }
   }
 
+  xcolumns <- NULL
+  if (is.list(expl)) {
+    if (!is.na(expl$sep.coeff[1])) {
+      xcolumns <- c(expl$sep.coeff, expl$common.coeff)
+    } else {
+      xcolumns <- expl$common.coeff
+    }
+  } else {
+    xcolumns <- expl
+  }
+
+  interpos <- grep("\\:", xcolumns)
+  if (length(interpos) != 0) {
+    explx <- xcolumns[-interpos]
+    xcolumns <- union(xcolumns, explx)
+    interx <- intersect(unlist(mapply(strsplit, as.character(expl[interpos]), "\\:"), use.names = FALSE), colnames(indata))
+    xcolumns <- union(xcolumns, interx)
+  }
+
+  # Indicator that at least one response in the row is non-missing
+  ymiss <- as.logical(apply(!is.na(outdata[, resp, drop=FALSE]), 1, max))
+
+  # Exclude rows where any X or all responses are missing
+  completerows <- complete.cases(outdata[, xcolumns]) & ymiss
   hierarchy <- NULL
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
       if (!is.null(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
+        compgroupsize <- by(outdata[completerows, ], outdata[completerows, shortID[lev]], nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
         if (isTRUE(test)) {
@@ -2362,12 +2584,16 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]],
+                                                                    nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
+          compgroupsize <- na.omit(as.vector(by(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]], nrow)))
+
         }
       }
-      groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize))
-      colnames(groupinfo) <- c("N", "min", "mean", "max")
+      groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))
+      colnames(groupinfo) <- c("N", "min", "mean", "max", "N_complete", "min_complete", "mean_complete", "max_complete")
       rownames(groupinfo) <- shortID[lev]
       hierarchy <- rbind(hierarchy, groupinfo)
     }
@@ -2377,51 +2603,54 @@ version:date:md5:filename:x64:trial:platform
     dir.create(workdir)
 
   dtafile <- normalizePath(tempfile("dtafile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
-  macrofile <- normalizePath(tempfile("macrofile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
 
-  IGLSfile <- normalizePath(tempfile("IGLSfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+  if (EstM == 0) {
+    macrofile <- normalizePath(tempfile("macrofile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    IGLSfile <- normalizePath(tempfile("IGLSfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+  }
+
+  gettempfile <- function(stub, ext) normalizePath(tempfile(stub, tmpdir = workdir, fileext = ext), winslash = "/", mustWork = FALSE)
+
   if (EstM == 1) {
-    MCMCfile <- normalizePath(tempfile("MCMCfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
-    chainfile <- normalizePath(tempfile("chainfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+    macrofile <- replicate(nchains, gettempfile("macrofile_", ".txt"))
+    IGLSfile <- replicate(nchains, gettempfile("IGLSfile_", ".dta"))
+    MCMCfile <- replicate(nchains, gettempfile("MCMCfile_", ".dta"))
+    chainfile  <- replicate(nchains, gettempfile("chainfile_", ".dta"))
     if (!is.null(dami)) {
-      MIfile <- normalizePath(tempfile("MIfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+      MIfile <- replicate(nchains, gettempfile("MIfile_", ".dta"))
     } else {
       dami <- MIfile <- NULL
     }
     if (!is.null(fact)) {
-      FACTchainfile <- normalizePath(tempfile("factchainfile_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
+      FACTchainfile <- replicate(nchains, gettempfile("factchainfile_", ".dta"))
     } else {
       FACTchainfile <- NULL
     }
   }
   if (!is.null(BUGO)) {
-    modelfile <- normalizePath(tempfile("modelfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-    initfile <- normalizePath(tempfile("initfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-    datafile <- normalizePath(tempfile("datafile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
+    modelfile <- replicate(nchains, gettempfile("modelfile_", ".txt"))
+    initfile <- replicate(nchains, gettempfile("initfile_", ".txt"))
+    datafile <- replicate(nchains, gettempfile("datafile_", ".txt"))
     scriptfile <- normalizePath(tempfile("scriptfile_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
     bugEst <- normalizePath(tempfile("bugEst_", tmpdir = workdir, fileext = ".txt"), winslash = "/", mustWork = FALSE)
-  } else {
-    modelfile <- NULL
-    initfile <- NULL
-    datafile <- NULL
   }
   if (resi.store) {
     resifile <- NULL
-    for (i in 1:length(rp)) {
-      resifile <- c(resifile, normalizePath(tempfile(paste0("resifile_", i), tmpdir = workdir, fileext = ".dta"),
-                                   winslash = "/", mustWork = FALSE))
+    if (EstM == 0) {
+      for (i in 1:length(rp)) {
+        resifile <- c(resifile, normalizePath(tempfile(paste0("resifile_", i), tmpdir = workdir, fileext = ".dta"),
+                                     winslash = "/", mustWork = FALSE))
+      }
+    } else {
+      for (i in 1:length(rp)) {
+        resifile <- rbind(resifile, replicate(nchains, gettempfile(paste0("resifile_", i), ".dta")))
+      }
     }
   }
   if (!is.null(resi.store.levs))
-    resichains <- normalizePath(tempfile("resichains_", tmpdir = workdir, fileext = ".dta"), winslash = "/", mustWork = FALSE)
-
+    resichains  <- replicate(nchains, gettempfile("resichains_", ".dta"))
   if ((D[1] == "Multivariate Normal" || D[1] == "Mixed" || D[1] == "Multinomial") && !is.null(clre)) {
     clre[1, ] <- as.numeric(clre[1, ]) + 1
-  }
-
-  args <- paste0("/run ", "\"", macrofile, "\"")
-  if (!debugmode) {
-    args <- paste0("/nogui ", args)
   }
 
   dups <- duplicated(tolower(colnames(outdata)))
@@ -2447,9 +2676,7 @@ version:date:md5:filename:x64:trial:platform
       if (!is.null(BUGO))
         file.remove(modelfile)
       if (resi.store && is.null(BUGO)) {
-        for (i in 1:length(rp)) {
-          file.remove(resifile[i])
-        }
+        file.remove(resifile)
       }
       if (EstM == 1 && is.null(BUGO)) {
         if (!is.null(resi.store.levs))
@@ -2462,10 +2689,15 @@ version:date:md5:filename:x64:trial:platform
     }
   }
   if (EstM == 0) {
-    long2shortname <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+      if (length(startval[[1]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[1]]
+      }
+    long2shortnamemap <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
-                 debugmode = debugmode, startval = startval, namemap = long2shortname)
+                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2476,6 +2708,11 @@ version:date:md5:filename:x64:trial:platform
     if (is.null(thinning))
       thinning <- 1
 
+
+    args <- paste0("/run ", "\"", macrofile, "\"")
+    if (!debugmode) {
+      args <- paste0("/nogui ", args)
+    }
     time1 <- proc.time()
     system2(cmd, args = args, stdout = stdout, stderr = stderr)
     cat("\n")
@@ -2523,57 +2760,92 @@ version:date:md5:filename:x64:trial:platform
     }
 
     Iterations <- estIGLS[, dim(estIGLS)[2]][7]
+
+    if (resi.store) {
+      resiraw <- list()
+      for (i in 1:length(rp)) {
+        tmp <- as.list(read.dta(resifile[i]))
+        for (name in names(long2shortnamemap)) {
+          names(tmp) <- gsub(long2shortnamemap[[name]], name, names(tmp))
+        }
+        for (j in names(tmp)) {
+          resiraw[[j]] <- tmp[[j]]
+        }
+      }
+    }
+
   }
 
   # MCMC algorithm (using the starting values obtain from IGLS algorithm)
-  if (EstM == 1) {
-    long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
-                 Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh,
-                 fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
-                 BUGO, mem.init, optimat, modelfile = modelfile, initfile = initfile, datafile = datafile, macrofile = macrofile,
-                 IGLSfile = IGLSfile, MCMCfile = MCMCfile, chainfile = chainfile, MIfile = MIfile, resifile = resifile,
-                 resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile,
-                 resi.store.levs = resi.store.levs, debugmode = debugmode, startval = startval, dami = dami,
-                 namemap = long2shortname)
+  if (EstM == 1 && is.null(BUGO)) {
+    for (i in 1:nchains) {
+      if (length(startval[[i]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[i]]
+      }
+      long2shortnamemap <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+                   Meth, merr, carcentre, maxiter, convtol, seed[i], iterations, burnin, scale, thinning, priorParam, refresh,
+                   fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
+                   BUGO, mem.init, optimat, modelfile = NULL, initfile = NULL, datafile = NULL, macrofile = macrofile[i],
+                   IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[,i],
+                   resi.store = resi.store, resioptions = resioptions, resichains = resichains[i], FACTchainfile = FACTchainfile[i],
+                   resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
+                   namemap = long2shortname, saveworksheet = saveworksheet[i])
 
+    }
     cat("MLwiN is running, please wait......\n")
     time1 <- proc.time()
-    system2(cmd, args = args, stdout = stdout, stderr = stderr)
+    clust <- NULL
+    regpar <- FALSE
+    # Check whether the user has registered their own backend, if not use "doParallel"
+    if (!getDoParRegistered()) {
+      if (nchains > 1) {
+        clust <- makeCluster(min(nchains, detectCores(logical = FALSE)), outfile=stdout)
+        registerDoParallel(clust)
+      } else {
+        registerDoSEQ()
+      }
+      regpar <- TRUE
+    }
+    foreach(i=1:nchains) %dopar% {
+      args <- paste0("/run ", "\"", macrofile[i], "\"")
+      if (!debugmode) {
+        args <- paste0("/nogui ", args)
+      }
+      system2(cmd, args = args, stdout = stdout, stderr = stderr)
+    }
+    if (isTRUE(regpar)) {
+      if (!is.null(clust)) {
+        stopCluster(clust)
+      }
+      # unregister doParallel as detailed on http://stackoverflow.com/questions/25097729/un-register-a-doparallel-cluster
+      env <- get(".foreachGlobals", asNamespace("foreach"), inherits = FALSE)
+      rm(list=ls(name=env), pos=env)
+    }
+
     cat("\n")
     time2 <- proc.time() - time1
 
-    nlev <- length(levID)
-    if (is.null(BUGO)) {
-      estMCMC <- read.dta(MCMCfile)
+    chainslist <- list()
+    factchainslist <- list()
+    resichainslist <- list()
+    factloadchainslist <- list()
+    factcovchainslist <- list()
+    factscorelist <- list()
+    factscorevarlist <- list()
+    resilist <- list()
+    MIlist <- list()
+    BDIC <- rep(0, 4)
+    BDIC.names <- c("Dbar", "D(thetabar)", "pD", "DIC")
+    names(BDIC) <- BDIC.names
+    LIKE <- 0
 
-      FP[] <- na.omit(estMCMC[, 1])
-
-      estMCMC2 <- na.omit(estMCMC[, 2])
-      k <- 1
-      for (i in 1:length(FP)) {
-        for (j in 1:i) {
-          FP.cov[i, j] <- estMCMC2[k]
-          FP.cov[j, i] <- FP.cov[i, j]
-          k <- k + 1
-        }
-      }
-
-      RP[] <- na.omit(estMCMC[, 3])
-
-      estMCMC4 <- na.omit(estMCMC[, 4])
-      k <- 1
-      for (i in 1:length(RP)) {
-        for (j in 1:i) {
-          RP.cov[i, j] <- estMCMC4[k]
-          RP.cov[j, i] <- RP.cov[i, j]
-          k <- k + 1
-        }
-      }
-
-
-      chains <- read.dta(chainfile)
-      for (name in names(long2shortname)) {
-        colnames(chains) <- gsub(long2shortname[[name]], name, colnames(chains))
+    for (i in 1:nchains) {
+      nlev <- length(levID)
+      chains <- read.dta(chainfile[i])
+      for (name in names(long2shortnamemap)) {
+        colnames(chains) <- gsub(long2shortnamemap[[name]], name, colnames(chains))
       }
 
       chains <- coda::mcmc(data = chains[, -1], thin = thinning)
@@ -2581,53 +2853,47 @@ version:date:md5:filename:x64:trial:platform
       chain.names[grep("RP", chain.names)] <- RP.names
       colnames(chains) <- chain.names
 
-      ESS <- effectiveSize(chains)
+      if (sum(grepl("bcons", colnames(chains))) > 0) {
+        bcons.pos <- grep("bcons", colnames(chains))
+        chains[1, bcons.pos] <- chains[1, bcons.pos] - 0.001
+      }
+
+      chainslist[[i]] <- chains
+
+      estMCMC <- read.dta(MCMCfile[i])
 
       if (!(D[1] == "Mixed") && is.null(merr) && is.null(fact)) {
-        BDIC <- estMCMC[, dim(estMCMC)[2]][c(5, 6, 4, 3)]
-        BDIC.names <- c("Dbar", "D(thetabar)", "pD", "DIC")
-        names(BDIC) <- BDIC.names
+        BDIC <- BDIC + estMCMC[, dim(estMCMC)[2]][c(5, 6, 4, 3)]
       } else {
-        LIKE <- estMCMC[, dim(estMCMC)[2]][3]
-        if (!is.na(LIKE)) {
-          if (LIKE == 1)
-            LIKE <- NA
-        }
+        LIKE <- LIKE + estMCMC[, dim(estMCMC)[2]][3]
       }
 
       NTotal <- estMCMC[, dim(estMCMC)[2]][1]
       NUsed <- estMCMC[, dim(estMCMC)[2]][2]
       if (!is.null(fact)) {
-        loadings <- na.omit(estMCMC[, 5])
-        load.names <- rep(NA, length(loadings))
+        load.names <- rep("", length(loadings))
         k <- 1
-        for (i in 1:fact$nfact) {
-          for (j in resp) {
-            load.names[k] <- paste("load", i, "_", j, sep = "")
+        for (j1 in 1:fact$nfact) {
+          for (j2 in resp) {
+            load.names[k] <- paste("load", j1, "_", j2, sep = "")
             k <- k + 1
           }
         }
-        loadings.sd <- na.omit(estMCMC[, 6])
-        names(loadings) <- load.names
-        names(loadings.sd) <- load.names
 
-        fact.cov <- fact.cov.names <- na.omit(estMCMC[, 7])
-        fact.cov.sd <- na.omit(estMCMC[, 8])
+        fact.cov.names <- rep("", (fact$nfact*(fact$nfact + 1))/2)
         k <- 1
-        for (i in 1:fact$nfact) {
-          for (j in 1:i) {
-            if (i == j) {
-              fact.cov.names[k] <- paste("var_fact", i, sep = "")
+        for (j1 in 1:fact$nfact) {
+          for (j2 in 1:j1) {
+            if (j1 == j2) {
+              fact.cov.names[k] <- paste("var_fact", j1, sep = "")
             } else {
-              fact.cov.names[k] <- paste("cov_fact", i, "_fact", j, sep = "")
+              fact.cov.names[k] <- paste("cov_fact", j1, "_fact", j2, sep = "")
             }
             k <- k + 1
           }
         }
-        names(fact.cov) <- fact.cov.names
-        names(fact.cov.sd) <- fact.cov.names
 
-        factchains <- read.dta(FACTchainfile)
+        factchains <- read.dta(FACTchainfile[i])
         factscores <- matrix(na.omit(factchains[, "_FACT_value_b"]), ncol = fact$nfact, byrow = FALSE)
         factscores_v <- matrix(na.omit(factchains[, "_FACT_value_v"]), ncol = fact$nfact, byrow = FALSE)
         factloads <- matrix(na.omit(factchains[, "_FACT_load_b_chain"]), nrow = iterations/thinning, byrow = TRUE)
@@ -2636,15 +2902,15 @@ version:date:md5:filename:x64:trial:platform
         namefacts <- NULL
         namefacts_v <- NULL
         namecovs <- NULL
-        for (i in 1:fact$nfact) {
-          if (fact$lev.fact[i] > 1) {
-            nunit <- nrow(unique(indata[rev(na.omit(levID))[fact$lev.fact[i]]]))
+        for (j in 1:fact$nfact) {
+          if (fact$lev.fact[j] > 1) {
+            nunit <- nrow(unique(indata[rev(na.omit(levID))[fact$lev.fact[j]]]))
             if (length(factscores) > nunit) {
-              factscores[(nunit + 1):nrow(factscores), i] <- NA
+              factscores[(nunit + 1):nrow(factscores), j] <- NA
             }
           }
-          namefacts <- c(namefacts, paste0("factorscores", i))
-          namefacts_v <- c(namefacts_v, paste0("factorscores_var", i))
+          namefacts <- c(namefacts, paste0("factorscores", j))
+          namefacts_v <- c(namefacts_v, paste0("factorscores_var", j))
         }
         colnames(factscores) <- namefacts
         colnames(factscores_v) <- namefacts_v
@@ -2652,20 +2918,238 @@ version:date:md5:filename:x64:trial:platform
         colnames(factcovs) <- fact.cov.names
         factChains <- list(scores = factscores, scores_v = factscores_v, loadings = coda::mcmc(data = factloads,
                                                                                          thin = thinning), cov = coda::mcmc(data = factcovs, thin = thinning))
+        factloadchainslist[[i]] <- factChains$loadings
+        factcovchainslist[[i]] <- factChains$cov
+        factscorelist[[i]] <- factChains$scores
+        factscorevarlist[[i]] <- factChains$scores_v
       }
 
-      if (sum(grepl("bcons", colnames(chains))) > 0) {
-        bcons.pos <- grep("bcons", colnames(chains))
-        chains[1, bcons.pos] <- chains[1, bcons.pos] - 0.001
+      if (!is.null(dami)) {
+        MIdata <- read.dta(MIfile[i])
+        MIlist[[i]] <- MIdata
+      }
+
+      if (!is.null(resi.store.levs)) {
+        residata <- read.dta(resichains[i])
+        for (name in names(long2shortnamemap)) {
+          colnames(residata) <- gsub(long2shortnamemap[[name]], name, colnames(residata))
+        }
+        resiChains <- list()
+        for (name in colnames(residata)) {
+          lev <- as.integer(gsub("resi_lev", "", name))
+          ucount <- length(rp[[paste0("rp", lev)]])
+          if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
+            lev = lev + 1
+          }
+          nunit <- nrow(unique(indata[rev(levID)[lev]]))
+          pnames <- paste("u", (1:ucount)-1, rep(1:nunit, each=ucount), sep="_")
+          resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
+                                           dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
+        }
+        resichainslist[[i]] <- resiChains
+      }
+      if (resi.store) {
+        resiraw <- list()
+        for (j in 1:length(rp)) {
+          tmp <- as.list(read.dta(resifile[j, i]))
+          for (name in names(long2shortnamemap)) {
+            names(tmp) <- gsub(long2shortnamemap[[name]], name, names(tmp))
+          }
+          for (k in names(tmp)) {
+            resiraw[[k]] <- tmp[[k]]
+          }
+          resilist[[i]] <- resiraw
+        }
       }
     }
+
+    if (nchains != 1) {
+      chains <- mcmc.list(chainslist)
+      if (!is.null(resi.store.levs)) {
+        resiChains <- mcmc.list(resichainslist)
+      }
+      if (!is.null(fact)) {
+        factChains$loadings <- mcmc.list(factloadchainslist)
+        factChains$cov <- mcmc.list(factcovchainslist)
+      }
+    }
+
+    if (!is.null(dami)) {
+      if (dami[1] == 0) {
+        imputations <- list()
+        for (i in 1:nchains) {
+          for (j in 2:length(dami)) {
+            impdata <- MIlist[[i]][, c("resp_indicator", paste0("_est_", dami[j]))]
+            Nresp <- length(unique(impdata$resp_indicator))
+            Nrecs = nrow(impdata) / Nresp
+            impdata$id <- rep(1:Nrecs, each=Nresp)
+            impdata <- reshape(impdata, timevar="resp_indicator", idvar="id", direction="wide")
+            impdata$id <- NULL
+            colnames(impdata) <- gsub(paste0("_est_", dami[j], "."), "", colnames(impdata))
+            impout <- outdata
+            impout[, colnames(impdata)] <- impdata
+            imputations[[paste0("chain", i, "_iteration_", dami[j])]] <- impout
+          }
+        }
+      } else {
+        MIdata <- list()
+        if ("_MissingInd" %in% colnames(MIlist[[1]])) {
+          MIdata[["_MissingInd"]] <- MIlist[[1]][, "_MissingInd"]
+        }
+        for (i in 1:nchains) {
+          impcols <- c(grep("_est_", colnames(MIlist[[i]])), grep("_SDs_", colnames(MIlist[[i]])))
+          colnames(MIlist[[i]])[impcols] <- paste0("chain", i, colnames(MIlist[[i]])[impcols])
+          MIdata <- c(MIdata, MIlist[[i]][, impcols])
+        }
+        MIdata <- data.frame(MIdata)
+      }
+    }
+
+    combchains <- as.matrix(chains)
+    FP[FP.names] <- colMeans(combchains[, FP.names, drop=FALSE])
+    FP.cov[FP.names, FP.names] <- cov(combchains[, FP.names, drop=FALSE])
+    RP[RP.names] <- colMeans(combchains[, RP.names, drop=FALSE])
+    RP.cov[RP.names, RP.names] <- cov(combchains[, RP.names, drop=FALSE])
+    ESS <- effectiveSize(chains)
+    BDIC <- BDIC / nchains
+    LIKE <- LIKE / nchains
+    if (!is.na(LIKE)) {
+      if (LIKE == 1) {
+        LIKE <- NA
+      }
+    }
+
+    if (resi.store) {
+      resinames <- names(resilist[[1]])
+      resiraw <- list()
+      resi.means <- resinames[grep("_resi_est", resinames)]
+      resi.std <- resinames[grep("_resi_est", resinames)]
+      resi.var <- resinames[grep("_resi_variance", resinames)]
+      resi.se <- resinames[grep("_resi_se", resinames)]
+      for (name in resi.means) {
+        for (i in 1:nchains) {
+          if (is.null(resiraw[[name]])) {
+            resiraw[[name]] <- resilist[[i]][[name]]
+          } else {
+            resiraw[[name]] <- resiraw[[name]] + resilist[[i]][[name]]
+          }
+        }
+        resiraw[[name]] <- resiraw[[name]] / nchains
+      }
+      for (name in resi.std) {
+        for (i in 1:nchains) {
+          if (is.null(resiraw[[name]])) {
+            resiraw[[name]] <- resilist[[i]][[name]]
+          } else {
+            resiraw[[name]] <- resiraw[[name]] + resilist[[i]][[name]]
+          }
+        }
+        resiraw[[name]] <- resiraw[[name]] / nchains
+      }
+      for (name in resi.var) {
+        meanname <- sub("_resi_variance_", "_resi_est_", name)
+        for (i in 1:nchains) {
+          if (is.null(resiraw[[name]])) {
+            resiraw[[name]] <- resilist[[i]][[name]]
+          } else {
+            resiraw[[name]] <- resiraw[[name]] + resilist[[i]][[name]]
+          }
+        }
+        resiraw[[name]] <- resiraw[[name]] / nchains
+        if (nchains > 1) {
+          B <- rep(0, length(resiraw[[name]]))
+          for (i in 1:nchains) {
+            B <- B + ((resilist[[i]][[meanname]] - resiraw[[meanname]])^2 / (nchains - 1))
+          }
+          resiraw[[name]] <- resiraw[[name]] + (1.0 + (1.0 / nchains)) * B
+        }
+      }
+      for (name in resi.se) {
+        meanname <- sub("_resi_se_", "_resi_est_", name)
+        for (i in 1:nchains) {
+          if (is.null(resiraw[[name]])) {
+            resiraw[[name]] <- resilist[[i]][[name]]^2
+          } else {
+            resiraw[[name]] <- resiraw[[name]] + resilist[[i]][[name]]^2
+          }
+        }
+        resiraw[[name]] <- resiraw[[name]] / nchains
+        if (nchains > 1) {
+          B <- rep(0, length(resiraw[[name]]))
+          for (i in 1:nchains) {
+            B <- B + ((resilist[[i]][[meanname]] - resiraw[[meanname]])^2 / (nchains - 1))
+          }
+          resiraw[[name]] <- resiraw[[name]] + (1.0 + (1.0 / nchains)) * B
+        }
+        resiraw[[name]] <- sqrt(resiraw[[name]])
+      }
+    }
+
+    if (!is.null(fact)) {
+      for (j in 1:fact$nfact) {
+        factname <- paste0("factorscores", j)
+        factvarname <- paste0("factorscores_var", j)
+        factChains$scores[,factname] <- factscorelist[[1]][,factname]
+        factChains$scores_v[,factvarname] <- factscorevarlist[[1]][,factvarname]
+        if (nchains > 1) {
+          for (i in 2:nchains) {
+            factChains$scores[,factname] <- factChains$scores[,factname] + factscorelist[[i]][,factname]
+            factChains$scores_v[,factvarname] <- factChains$scores_v[,factvarname] + factscorevarlist[[i]][,factvarname]
+          }
+          factChains$scores[,factname] <- factChains$scores[,factname] / nchains
+          factChains$scores_v[,factvarname] <- factChains$scores_v[,factvarname] / nchains
+          if (nchains > 1) {
+            B <- rep(0, length(factChains$scores[,factname]))
+            for (i in 1:nchains) {
+              B <- B + ((factscorelist[[i]][,factname] - factChains$scores[,factname])^2 / (nchains - 1))
+            }
+            factChains$scores_v[,factvarname] <- factChains$scores_v[,factvarname] + (1.0 + (1.0 / nchains)) * B
+          }
+        }
+      }
+      loadings <- colMeans(as.matrix(factChains$loadings))
+      loadings.sd <- sqrt(diag(cov(as.matrix(factChains$loadings))))
+      fact.cov <- colMeans(as.matrix(factChains$cov))
+      fact.cov.sd <- sqrt(diag(cov(as.matrix(factChains$cov))))
+    }
+  }
+
+  if (EstM == 1 && !is.null(BUGO)) {
+    for (i in 1:nchains) {
+      if (length(startval[[i]]) == 0) {
+        svals <- NULL
+      } else {
+        svals <- startval[[i]]
+      }
+      long2shortname <- write.MCMC(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
+                   Meth, merr, carcentre, maxiter, convtol, seed, iterations, burnin, scale, thinning, priorParam, refresh,
+                   fixM, residM, Lev1VarM, OtherVarM, adaption, priorcode, rate, tol, lclo, mcmcOptions, fact, xc, mm, car,
+                   BUGO, mem.init, optimat, modelfile = modelfile[i], initfile = initfile[i], datafile = datafile[i], macrofile = macrofile[i],
+                   IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[i],
+                   resi.store = resi.store, resioptions = resioptions, resichains = resichains, FACTchainfile = FACTchainfile[i],
+                   resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
+                   namemap = long2shortname)
+    }
+
+    cat("MLwiN is running, please wait......\n")
+    time1 <- proc.time()
+    for (i in 1:nchains) {
+      args <- paste0("/run ", "\"", macrofile[i], "\"")
+      if (!debugmode) {
+        args <- paste0("/nogui ", args)
+      }
+      system2(cmd, args = args, stdout = stdout, stderr = stderr)
+    }
+    cat("\n")
+    time2 <- proc.time() - time1
+    nlev <- length(levID)
   }
 
   if (show.file)
     file.show(macrofile)
   if ((!is.null(BUGO)) && !(D[1] == "Mixed")) {
     if (show.file)
-      file.show(modelfile)
+      file.show(modelfile[1])
     n.iter <- iterations + burnin
     addmore <- NULL
     if (EstM == 1) {
@@ -2709,45 +3193,13 @@ version:date:md5:filename:x64:trial:platform
     if (is.na(bugs)) {
       stop("Need to specify path to the BUGS executable.")
     }
-    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile, initfile, modelfile, bugEst, fact, addmore, n.chains = n.chains,
+    chains.bugs.mcmc <- mlwin2bugs(D, levID, datafile[1], initfile, modelfile[1], bugEst, fact, addmore, n.chains = n.chains,
                                    n.iter = n.iter, n.burnin = burnin, n.thin = thinning, debug = debug, bugs = bugs, bugsWorkingDir = workdir,
                                    OpenBugs = OpenBugs, cleanBugsWorkingDir = clean.files, seed = bugs.seed)
     time2 <- proc.time() - time1
   } else {
     if (D[1] == "Mixed" && (!is.null(BUGO)))
       warning("The Mixed response model is currently not implemented in WinBUGS/OpenBUGS.")
-  }
-
-  if (resi.store && is.null(BUGO)) {
-    resiraw <- list()
-    for (i in 1:length(rp)) {
-      tmp <- as.list(read.dta(resifile[i]))
-      for (name in names(long2shortname)) {
-        names(tmp) <- gsub(long2shortname[[name]], name, names(tmp))
-      }
-      for (j in names(tmp)) {
-        resiraw[[j]] <- tmp[[j]]
-      }
-    }
-  }
-
-  if (EstM == 1 && is.null(BUGO) && !is.null(resi.store.levs)) {
-    residata <- read.dta(resichains)
-    for (name in names(long2shortname)) {
-      colnames(residata) <- gsub(long2shortname[[name]], name, colnames(residata))
-    }
-    resiChains <- list()
-    for (name in colnames(residata)) {
-      lev <- as.integer(gsub("resi_lev", "", name))
-      ucount <- length(rp[[paste0("rp", lev)]])
-      if (D[1] == "Multinomial" || D[1] == "Multivariate Normal" || D[1] == "Mixed") {
-        lev = lev + 1
-      }
-      nunit <- nrow(unique(indata[rev(levID)[lev]]))
-      pnames <- paste("u", (1:ucount)-1, rep(1:nunit, each=ucount), sep="_")
-      resiChains[[name]] <- coda::mcmc(data = matrix(na.omit(residata[, name]), nrow = iterations/thinning, byrow = TRUE,
-                                               dimnames = list(1:(iterations/thinning), pnames)), thin = thinning)
-    }
   }
 
   if (EstM == 0) {
@@ -2794,6 +3246,7 @@ version:date:md5:filename:x64:trial:platform
       outMCMC["Hierarchy"] <- hierarchy
       outMCMC["burnin"] <- burnin
       outMCMC["iterations"] <- iterations
+      outMCMC["nchains"] <- nchains
       outMCMC["D"] <- D
       outMCMC["Formula"] <- Formula
       outMCMC["levID"] <- levID
@@ -2820,11 +3273,16 @@ version:date:md5:filename:x64:trial:platform
         outMCMC["fact.cov.sd"] <- fact.cov.sd
         outMCMC["fact.chains"] <- factChains
       }
+
       if (!is.null(resi.store.levs)) {
         outMCMC["resi.chains"] <- resiChains
       }
       if (!is.null(dami)) {
-        outMCMC["MIdata"] <- read.dta(MIfile)
+        if (dami[1] == 0) {
+          outMCMC["imputations"] <- imputations
+        } else {
+          outMCMC["MIdata"] <- MIdata
+        }
       }
 
       if (resi.store) {
@@ -2837,4 +3295,172 @@ version:date:md5:filename:x64:trial:platform
       return(chains.bugs.mcmc)
     }
   }
+}
+
+##' @S3method summary mlwinfitIGLS
+summary.mlwinfitIGLS <- function(object, ...) {
+    summary(object)
+}
+
+##' @S3method print mlwinfitIGLS
+print.mlwinfitIGLS <- function(x, ...) {
+    print(x)
+}
+
+##' @S3method show mlwinfitIGLS
+show.mlwinfitIGLS <- function(object, ...) {
+    show(object)
+}
+
+##' @importFrom stats update
+##' @S3method update mlwinfitIGLS
+update.mlwinfitIGLS <- function(object, ...) {
+    update(object)
+}
+
+##' @importFrom stats coef
+##' @S3method coef mlwinfitIGLS
+coef.mlwinfitIGLS <- function(object, ...) {
+    coef(object)
+}
+
+##' @importFrom stats coefficients
+##' @S3method coefficients mlwinfitIGLS
+coefficients.mlwinfitIGLS <- function(object, ...) {
+    coefficients(object)
+}
+
+##' @importFrom stats vcov
+##' @S3method vcov mlwinfitIGLS
+vcov.mlwinfitIGLS <- function(object, ...) {
+    vcov(object)
+}
+
+##' @importFrom stats df.residual
+##' @S3method df.residual mlwinfitIGLS
+df.residual.mlwinfitIGLS <- function(object, ...) {
+    df.residual(object)
+}
+
+##' @importFrom stats fitted
+##' @S3method fitted mlwinfitIGLS
+fitted.mlwinfitIGLS <- function(object, ...) {
+    fitted(object)
+}
+
+##' @importFrom stats fitted.values
+##' @S3method fitted.values mlwinfitIGLS
+fitted.values.mlwinfitIGLS <- function(object, ...) {
+    fitted.values(object)
+}
+
+##' @importFrom stats residuals
+##' @S3method residuals mlwinfitIGLS
+residuals.mlwinfitIGLS <- function(object, ...) {
+    residuals(object)
+}
+
+##' @importFrom stats resid
+##' @S3method resid mlwinfitIGLS
+resid.mlwinfitIGLS <- function(object, ...) {
+    resid(object)
+}
+
+##' @importFrom stats predict
+##' @S3method predict mlwinfitIGLS
+predict.mlwinfitIGLS <- function(object, ...) {
+    predict(object)
+}
+
+##' @importFrom stats logLik
+##' @S3method logLik mlwinfitIGLS
+logLik.mlwinfitIGLS <- function(object, ...) {
+    logLik(object)
+}
+
+##' @importFrom stats deviance
+##' @S3method deviance mlwinfitIGLS
+deviance.mlwinfitIGLS <- function(object, ...) {
+    deviance(object)
+}
+
+##' @importFrom stats nobs
+##' @S3method nobs mlwinfitIGLS
+nobs.mlwinfitIGLS <- function(object, ...) {
+    object@Nobs
+}
+
+##' @S3method summary mlwinfitMCMC
+summary.mlwinfitMCMC <- function(object, ...) {
+    summary(object)
+}
+
+##' @S3method print mlwinfitMCMC
+print.mlwinfitMCMC <- function(x, ...) {
+    print(x)
+}
+
+##' @S3method show mlwinfitMCMC
+show.mlwinfitMCMC <- function(object, ...) {
+    show(object)
+}
+
+##' @importFrom stats update
+##' @S3method update mlwinfitMCMC
+update.mlwinfitMCMC <- function(object, ...) {
+    update(object)
+}
+
+##' @importFrom stats coef
+##' @S3method coef mlwinfitMCMC
+coef.mlwinfitMCMC <- function(object, ...) {
+    coef(object)
+}
+
+##' @importFrom stats coefficients
+##' @S3method coefficients mlwinfitMCMC
+coefficients.mlwinfitMCMC <- function(object, ...) {
+    coefficients(object)
+}
+
+##' @importFrom stats vcov
+##' @S3method vcov mlwinfitMCMC
+vcov.mlwinfitMCMC <- function(object, ...) {
+    vcov(object)
+}
+
+##' @importFrom stats fitted
+##' @S3method fitted mlwinfitMCMC
+fitted.mlwinfitMCMC <- function(object, ...) {
+    fitted(object)
+}
+
+##' @importFrom stats fitted.values
+##' @S3method fitted.values mlwinfitMCMC
+fitted.values.mlwinfitMCMC <- function(object, ...) {
+    fitted.values(object)
+}
+
+##' @importFrom stats residuals
+##' @S3method residuals mlwinfitMCMC
+residuals.mlwinfitMCMC <- function(object, ...) {
+    residuals(object)
+}
+
+##' @importFrom stats resid
+##' @S3method resid mlwinfitMCMC
+resid.mlwinfitMCMC <- function(object, ...) {
+    resid(object)
+}
+
+##' @importFrom stats predict
+##' @S3method predict mlwinfitMCMC
+predict.mlwinfitMCMC <- function(object, ...) {
+    predict(object)
+}
+
+##' @importFrom stats nobs
+##' @S3method nobs mlwinfitMCMC
+nobs.mlwinfitMCMC <- function(object, ...) {
+    object@Nobs
 }

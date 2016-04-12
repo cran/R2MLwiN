@@ -69,7 +69,7 @@ simu <- function(i) {
          IGLSarray=cbind(coef(simModelIGLS), diag(vcov(simModelIGLS))),
          quantiles=cbind(quantile25, quantile975))
 }
-  
+
 RNGkind("L'Ecuyer-CMRG")
 cl <- makeCluster(detectCores(logical = FALSE))
 registerDoParallel(cl)
@@ -79,6 +79,11 @@ r <- foreach(i=1:ns, .packages="R2MLwiN") %dopar% {
 }
 
 stopCluster(cl)
+unregister <- function() {
+  env <- foreach:::.foreachGlobals
+  rm(list=ls(name=env), pos=env)
+}
+unregister()
 
 for(i in 1:ns){
   if (Actual[1] > r[[i]]$quantiles[1,1] & Actual[1] < r[[i]]$quantiles[1,2]) {

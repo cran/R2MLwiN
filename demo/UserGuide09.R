@@ -40,7 +40,7 @@ summary(bang)
 
 addmargins(with(bang, table(lc, use)))
 
-(mymodel1 <- runMLwiN(logit(use, cons) ~ 1 + lc, D = "Binomial", data = bang))
+(mymodel1 <- runMLwiN(logit(use) ~ 1 + lc, D = "Binomial", data = bang))
 
 if (!require(car)) install.packages("car")
 library(car)
@@ -49,9 +49,9 @@ linearHypothesis(mymodel1, "FP_lcOne_child = FP_lcTwo_children")
 
 # A probit model . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
 
-(mymodel2 <- runMLwiN(probit(use, cons) ~ 1 + lc, D = "Binomial", data = bang))
+(mymodel2 <- runMLwiN(probit(use) ~ 1 + lc, D = "Binomial", data = bang))
 
-(mymodel3 <- runMLwiN(logit(use, cons) ~ 1 + lc + age, D = "Binomial", data = bang))
+(mymodel3 <- runMLwiN(logit(use) ~ 1 + lc + age, D = "Binomial", data = bang))
 
 # 9.3 A two-level random intercept model . . . . . . . . . . . . . . . . 128
 
@@ -61,9 +61,9 @@ linearHypothesis(mymodel1, "FP_lcOne_child = FP_lcTwo_children")
 
 # Fitting a two-level random intercept model in MLwiN . . . . . . . . . .129
 
-(mymodel4 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (1 | district), D = "Binomial", data = bang))
+(mymodel4 <- runMLwiN(logit(use) ~ 1 + lc + age + (1 | district), D = "Binomial", data = bang))
 
-(mymodel5 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
+(mymodel5 <- runMLwiN(logit(use) ~ 1 + lc + age + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
   M = 2), startval = list(FP.b = mymodel4@FP, FP.v = mymodel4@FP.cov, RP.b = mymodel4@RP, RP.v = mymodel4@RP.cov)),
   data = bang))
 
@@ -108,13 +108,13 @@ cat(paste0("VPC for an old woman with no children (high probability use) = ", le
 
 table(bang$educ)
 
-(mymodel6 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + urban + educ + hindu + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
+(mymodel6 <- runMLwiN(logit(use) ~ 1 + lc + age + urban + educ + hindu + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
   M = 2), startval = list(FP.b = mymodel5@FP, FP.v = mymodel5@FP.cov, RP.b = mymodel5@RP, RP.v = mymodel5@RP.cov)),
   data = bang))
 
 # 9.4 A two-level random coeficient model . . . . . . . . . . . . . . . .135
 
-(mymodel7 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + urban + educ + hindu + (1 + urban | district), D = "Binomial",
+(mymodel7 <- runMLwiN(logit(use) ~ 1 + lc + age + urban + educ + hindu + (1 + urban | district), D = "Binomial",
   estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel6@FP, FP.v = mymodel6@FP.cov, RP.b = mymodel6@RP,
     RP.v = mymodel6@RP.cov)), data = bang))
 
@@ -125,7 +125,7 @@ linearHypothesis(mymodel7, "RP2_cov_Intercept_urbanUrban = 0")
 linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
 linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanUrban = 0"))
 
-(mymodel8 <- runMLwiN(logit(use, cons) ~ 1 + lc + age + urban + educ + hindu + d_lit + d_pray + (1 + urban | district),
+(mymodel8 <- runMLwiN(logit(use) ~ 1 + lc + age + urban + educ + hindu + d_lit + d_pray + (1 + urban | district),
   D = "Binomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel7@FP, FP.v = mymodel7@FP.cov,
     RP.b = mymodel7@RP, RP.v = mymodel7@RP.cov)), data = bang))
 

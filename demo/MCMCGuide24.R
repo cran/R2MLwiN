@@ -65,14 +65,14 @@ data(bes83, package = "R2MLwiN")
 
 ## Define the model
 
-(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1), 
+(mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1), 
   data = bes83))
 
 sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], acf.maxlag = 500, "sigma2u0")
 
 ## Parameter expansion at level 2
 
-(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcOptions = list(paex = c(2, 1))), data = bes83))
 
 sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], acf.maxlag = 500, "sigma2u0")
@@ -81,14 +81,14 @@ sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], acf.maxlag = 500, "s
 
 ## Uniform on the variance scale priors+Parameter expansion at level 2
 
-(mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
+(mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcMeth = list(priorcode = 0), mcmcOptions = list(paex = c(2, 1))), data = bes83))
 
 sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], acf.maxlag = 100, "sigma2u0")
 
 # 24.5 Parameter expansion and WinBUGS . . . . . . . . . . . . . . . . . 391
 
-mymodel <- runMLwiN(logit(votecons, cons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
+mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcMeth = list(priorcode = 0), mcmcOptions = list(paex = c(2, 1)), show.file = TRUE), BUGO = c(version = 4, n.chains = 1, 
   debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = bes83)
 

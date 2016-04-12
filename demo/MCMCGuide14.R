@@ -57,17 +57,15 @@ tutorial <- cbind(tutorial, error, obslrt)
 ## Read bang1 data
 data(bang1, package = "R2MLwiN")
 
-bang1$denomb <- bang1$cons
-
 set.seed(1)
 bang1$obsage <- double2singlePrecision(bang1$age + rnorm(length(bang1$age), 0, 5))
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
+(mymodel <- runMLwiN(logit(use) ~ 1 + age, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
 
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
+(mymodel <- runMLwiN(logit(use) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
 
 ## Adjust for the measurement errors
-(mymodel <- runMLwiN(logit(use, denomb) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1, merr = c(N = 1,
+(mymodel <- runMLwiN(logit(use) ~ 1 + obsage, D = "Binomial", estoptions = list(EstM = 1, merr = c(N = 1,
   "obsage", 25)), data = bang1))
 
 # 14.4 Measurement errors in more than one variable and

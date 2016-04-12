@@ -32,8 +32,6 @@ options(MLwiN_path = mlwin)
 ## Read jspmix1 data
 data(jspmix1, package = "R2MLwiN")
 
-jspmix1$denomb <- jspmix1$cons
-
 tab1 <- matrix(, 3, 3)
 colnames(tab1) <- c("0", "1", "TOTALS")
 rownames(tab1) <- c("N", "MEANS", "SDs")
@@ -54,13 +52,13 @@ round(cor(vars), 4)
 
 # 19.3 Setting up a single level mixed response model . . . . . . . . . .291
 
-(mymodel <- runMLwiN(c(english, probit(behaviour, denomb)) ~ 1 + sex + ravens + fluent[1] + (1[1] | id), D = c("Mixed", 
+(mymodel <- runMLwiN(c(english, probit(behaviour)) ~ 1 + sex + ravens + fluent[1] + (1[1] | id), D = c("Mixed", 
   "Normal", "Binomial"), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1), sort.ignore = TRUE), 
   data = jspmix1))
 
 # 19.4 Multilevel mixed response model . . . . . . . . . . . . . . . . . 294
 
-(mymodel <- runMLwiN(c(english, probit(behaviour, denomb)) ~ 1 + sex + ravens + fluent[1] + (1 | school) + (1[1] | id), 
+(mymodel <- runMLwiN(c(english, probit(behaviour)) ~ 1 + sex + ravens + fluent[1] + (1 | school) + (1[1] | id), 
   D = c("Mixed", "Normal", "Binomial"), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 1, residM = 1, Lev1VarM = 1)), 
   data = jspmix1))
 

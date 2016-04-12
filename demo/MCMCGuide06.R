@@ -70,7 +70,7 @@ names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_sta
 
 ## Informative normal prior for Sigma_u
 (mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 + standlrt | school) + (1 | student), estoptions = list(EstM = 1, 
-  mcmcMeth = list(priorParam = list(rp2 = list(estimate = matrix(c(0.09, 0.018, 0.09, 0.015), 2, 2), size = 65)))), 
+  mcmcMeth = list(priorParam = list(rp2 = list(estimate = matrix(c(0.09, 0.018, 0.018, 0.015), 2, 2), size = 65)))), 
   data = tutorial))
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
