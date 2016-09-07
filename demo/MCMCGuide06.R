@@ -75,21 +75,10 @@ names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_sta
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 
-cat("The mean parameter estimates\n")
-aa <- cbind(mymodel0a@FP, mymodel0@FP, mymodel1@FP, mymodel2@FP, mymodel3@FP)
-bb <- cbind(mymodel0a@RP, mymodel0@RP, mymodel1@RP, mymodel2@RP, mymodel3@RP)
-ctable <- round(rbind(aa, bb), 3)
-colnames(ctable) <- c("IGLS", "default", "prior 2", "uniform", "prior 4")
-print(ctable)
-
-cat("The standard errors of parameter estimates\n")
-cc <- cbind(sqrt(diag(mymodel0a@FP.cov)), sqrt(diag(mymodel0@FP.cov)), sqrt(diag(mymodel1@FP.cov)), sqrt(diag(mymodel2@FP.cov)), 
-  sqrt(diag(mymodel3@FP.cov)))
-dd <- cbind(sqrt(diag(mymodel0a@RP.cov)), sqrt(diag(mymodel0@RP.cov)), sqrt(diag(mymodel1@RP.cov)), sqrt(diag(mymodel2@RP.cov)), 
-  sqrt(diag(mymodel3@RP.cov)))
-sdtable <- round(rbind(cc, dd), 3)
-colnames(sdtable) <- c("IGLS", "default", "prior 2", "uniform", "prior 4")
-print(sdtable)
+if (!require(texreg)) install.packages("texreg")
+library(texreg)
+screenreg(list(mymodel0a, mymodel0, mymodel1, mymodel2, mymodel3), custom.model.names=c("IGLS", "default", "prior 2", "uniform", "prior 4"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:5, "Level-1" = 6:6),
+ stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 81
 

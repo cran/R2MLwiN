@@ -1,15 +1,15 @@
 Package: R2MLwiN
-Version: 0.8-2
-Date: 2016-04-12
+Version: 0.8-3
+Date: 2016-09-06
 Title: Running 'MLwiN' from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
-Depends: R (>= 2.15.0), stats, stats4, methods, lattice, coda (>=
-        0.16-1)
+Depends: R (>= 2.15.0), stats, stats4, methods, lattice, memisc, coda
+        (>= 0.16-1)
 Imports: Matrix, foreign (>= 0.8-46), rbugs (>= 0.5-7), digest (>=
-        0.6.5), foreach, parallel, doParallel
+        0.6.5), texreg, foreach, parallel, doParallel
 Suggests: doBy, car, lmtest, mitools
 Enhances: reshape
 Description: An R command interface to the 'MLwiN' multilevel
@@ -20,7 +20,7 @@ URL:
 SystemRequirements: MLwiN, (OpenBUGS, WinBUGS optional)
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-04-12 13:42:07 UTC; Zhengzheng
+Packaged: 2016-09-07 04:00:42 UTC; Zhengzheng
 Author: Zhengzheng Zhang [aut, cre],
   Chris Charlton [aut],
   Richard Parker [aut],
@@ -28,4 +28,4 @@ Author: Zhengzheng Zhang [aut, cre],
   William Browne [aut]
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-04-12 17:01:31
+Date/Publication: 2016-09-07 08:48:59

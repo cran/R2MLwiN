@@ -20,7 +20,7 @@
 #' @param main A main title for the plot; see \code{\link[graphics]{plot.default}}.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol, U.K.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol, U.K.
 #'
 #' @seealso \code{\link{caterpillarR}}
 #'

@@ -10,9 +10,15 @@
 #' @importFrom foreign read.dta write.dta
 #' @importFrom digest digest
 #' @importFrom methods show
+#' @importFrom texreg extract
+#' @importFrom memisc getSummary
 #' @importFrom stats4 coef logLik summary vcov update
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix
+#' 
+#' @section New features in version 0.8-3:
+#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
+#' added to \pkg{R2MLwiN} version 0.8-3. For an example of using \code{\link[texreg]{texreg-package}} see e.g. \code{demo(MCMCGuide04)}.
 #' 
 #' @section Important differences between version 0.8-0 and earlier versions:
 #' A number of wide-ranging changes, including a new model-fitting syntax more
@@ -101,6 +107,13 @@
 #'
 #' @section References:
 #' 
+#' \subsection{R2MLwiN}{
+#' Zhang, Z., Parker, R.M.A., Charlton, C.M.J., Leckie, G. and Browne, W.J.
+#' (2016) R2MLwiN: A Package to Run MLwiN from within R.
+#' Journal of Statistical Software, 72(10), 1-43.
+#' doi:10.18637/jss.v072.i10
+#' }
+#' 
 #' \subsection{MLwiN software and manuals}{
 #' Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
 #' Centre for Multilevel Modelling, University of Bristol.
@@ -130,7 +143,7 @@
 #' Zhengzheng Zhang \email{zhengzheng236@@gmail.com}
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @docType package
 #' @name R2MLwiN

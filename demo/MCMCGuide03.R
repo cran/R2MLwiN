@@ -25,6 +25,9 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+## save current par settings
+mypar <- par(no.readonly = TRUE)
+
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
@@ -55,8 +58,8 @@ sixway(mymodel1@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 43
 
-
-
+## reinstate par settings
+par(mypar)
 
 
 ############################################################################

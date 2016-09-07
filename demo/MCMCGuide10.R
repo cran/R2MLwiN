@@ -83,23 +83,17 @@ sixway(mymodel4@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 (mymodel8 <- runMLwiN(probit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
-cat("The mean parameter estimates\n")
-aa <- cbind(mymodel7@FP, mymodel8@FP)
+if (!require(texreg)) install.packages("texreg")
+library(texreg)
+screenreg(list(mymodel7, mymodel8), custom.model.names=c("Gibbs", "Metropolis"), groups = list("Fixed Part" = 1:6, "Level-2" = 7:9, "Level-1" = 10:10),
+ stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+
+cat("The effective sample sizes\n")
 ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])
-bb <- cbind(mymodel7@RP, mymodel8@RP)
 ESS.bb <- effectiveSize(mymodel8@chains[, 2:11])
-ctable <- round(rbind(aa, bb), 3)
-ctable <- cbind(ctable[, 1], round(ESS.aa), ctable[, 2], round(ESS.bb))
-colnames(ctable) <- c("Gibbs", "ESS(Gibbs)", "Metropolis", "ESS(Metropolis)")
+ctable <- cbind(round(ESS.aa), round(ESS.bb))
+colnames(ctable) <- c("ESS(Gibbs)", "ESS(Metropolis)")
 print(ctable)
-
-cat("The standard errors of parameter estimates\n")
-cc <- cbind(sqrt(diag(mymodel7@FP.cov)), sqrt(diag(mymodel8@FP.cov)))
-dd <- cbind(sqrt(diag(mymodel7@RP.cov)), sqrt(diag(mymodel8@RP.cov)))
-sdtable <- round(rbind(cc, dd), 3)
-colnames(sdtable) <- c("Gibbs", "Metropolis")
-print(sdtable)
-
 
 # 10.6 Comparison with WinBUGS . . . . . . . . . . . . . . . . . . . . . 144
 

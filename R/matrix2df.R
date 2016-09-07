@@ -13,7 +13,7 @@
 #' @param weightstub Prefix for columns containing weights; defaults to \code{weight}.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol, U.K.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol, U.K.
 #' 
 #' @seealso \code{\link{df2matrix}}
 #' @export

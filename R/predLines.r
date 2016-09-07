@@ -1,7 +1,8 @@
 #' Draws predicted lines using a fitted model object
 #'
 #' This function draws predicted lines against an explanatory variable for
-#' selected groups at a higher (>=2) level.
+#' selected groups at a higher (>=2) level. Note that it uses a lot of contiguous memory, and so
+#' we recommend running via 64-bit version R to mititage against any potential problems.
 #'
 #' @param object Either an \code{\link{mlwinfitIGLS-class}} or \code{\link{mlwinfitMCMC-class}}
 #' object.
@@ -26,7 +27,7 @@
 #' @param ...  Other arguments to be pased to \code{\link[lattice]{xyplot}}.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso \code{\link{predCurves}}
 #'

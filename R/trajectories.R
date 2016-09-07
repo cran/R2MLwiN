@@ -10,7 +10,7 @@
 #' plotted.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso \code{\link{sixway}}
 #'
@@ -51,6 +51,15 @@ trajectories <- function(object, Range = c(1, 5000), selected = NULL) {
   }
   
   chains <- window(chains, Range[1], Range[2])
+  
+  if (.Platform$GUI == "RStudio") {
+    o = tolower(Sys.info()["sysname"])
+    a = switch(o,
+               "darwin"  = "quartz",
+               "linux"   = "x11",
+               "windows" = "windows")
+    options("device" = a)
+  }  
   
   if (coda::nvar(chains) == 1)
     opar <- par(mfrow = c(1, 1))

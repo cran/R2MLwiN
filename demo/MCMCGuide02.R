@@ -23,6 +23,9 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+## save current par settings
+mypar <- par(no.readonly = TRUE)
+
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
@@ -64,7 +67,8 @@ tutorial$school <- as.factor(tutorial$school)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 
-
+## reinstate par settings
+par(mypar)
 
 
 

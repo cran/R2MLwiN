@@ -14,6 +14,8 @@
 #' @slot D A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @slot Formula A formula object (or a character string) specifying a multilevel model.
 #' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot contrasts A list of contrast matrices, one for each factor in the model.
+#' @slot xlevels A list of levels for the factors in the model.
 #' @slot merr A vector which sets-up measurement errors on predictor variables.
 #' @slot fact A list of objects specified for factor analysis, including \code{nfact}, \code{lev.fact}, \code{nfactor}, \code{factor}, \code{loading} and \code{constr}.
 #' @slot xc A list of objects specified for cross-classified and/or multiple membership models, including \code{class}, \code{N1}, \code{weight}, \code{id} and \code{car}. 
@@ -39,7 +41,7 @@
 #' @slot data The data.frame that was used to fit the model.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link{runMLwiN}}
@@ -71,10 +73,10 @@
 #' @exportClass mlwinfitMCMC
 setClass(Class = "mlwinfitMCMC", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric", Hierarchy = "ANY",
                                                                  burnin = "numeric", iterations = "numeric", nchains = "numeric", D = "ANY", Formula = "ANY", levID = "character", 
-                                                                 merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", 
-                                                                 chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric", LIKE = "ANY", fact.loadings = "numeric", 
-                                                                 fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric", fact.chains = "ANY", MIdata = "data.frame", 
-                                                                 imputations = "list", residual = "list", resi.chains = "ANY", data = "data.frame"))
+                                                                 contrasts = "list", xlevels = "list", merr = "ANY", fact = "ANY", xc = "ANY", FP = "numeric", RP = "numeric",
+                                                                 RP.cov = "matrix", FP.cov = "matrix", chains = "ANY", elapsed.time = "numeric", call = "ANY", BDIC = "numeric",
+                                                                 LIKE = "ANY", fact.loadings = "numeric", fact.loadings.sd = "numeric", fact.cov = "numeric", fact.cov.sd = "numeric",
+                                                                 fact.chains = "ANY", MIdata = "data.frame", imputations = "list", residual = "list", resi.chains = "ANY", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitMCMC" objects
 #' @param x data frame
@@ -112,6 +114,12 @@ setMethod("[", "mlwinfitMCMC", function(x, i, j, drop) {
   }
   if (i == "levID") {
     return(x@levID)
+  }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
   }
   if (i == "merr") {
     return(x@merr)
@@ -212,6 +220,12 @@ setReplaceMethod("[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "merr") {
     x@merr <- value
@@ -315,6 +329,12 @@ setMethod("[[", "mlwinfitMCMC", function(x, i, j, drop) {
   if (i == "levID") {
     return(x@levID)
   }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
+  }
   if (i == "merr") {
     return(x@merr)
   }
@@ -414,6 +434,12 @@ setReplaceMethod("[[", signature(x = "mlwinfitMCMC"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "merr") {
     x@merr <- value
@@ -843,7 +869,10 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
   if (is.null(newdata)) {
     indata <- object@data
   } else {
-    indata <- Formula.translate(object@Formula, object@D, object@data)$indata
+    indata <- Formula.translate(object@Formula, object@D, newdata)$indata
+    if (!isTRUE("Intercept" %in% indata)) {
+        indata[["Intercept"]] <- rep(1, nrow(indata))
+    }
   }
   if (is.null(params)) {
     fp.names <- names(FP <- object@FP)
@@ -930,3 +959,108 @@ setMethod("predict", signature(object = "mlwinfitMCMC"), function(object, newdat
 setMethod("nobs", signature(object = "mlwinfitMCMC"), function(object, ...) {
   object@Nobs
 }) 
+
+#' Extract coefficients and GOF measures from a statistical object.
+#' @param model An \code{\link{mlwinfitMCMC-class}} model.
+#' @param include.nobs should the number of observations be reported?
+#' @param include.dbar should the Dbar be reported?
+#' @param include.dthetabar should the D(thetabar) be reported?
+#' @param include.pd should the pD be reported?
+#' @param include.dic should the DIC be reported?
+#' @param ... Other arguments.
+#' @seealso \code{\link[texreg]{extract}}
+#' @export 
+setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(model, include.nobs = TRUE, include.dbar = TRUE, include.dthetabar = TRUE, include.pd = TRUE, include.dic = TRUE, ...) {
+  co <- coef(model)
+  coef.names <- names(co)
+  se <- sqrt(diag(vcov(model)))
+
+  chain.stats <- summary(model@chains, quantiles=c(0.025, 0.975))
+  chain.qt025 <- chain.stats$quantiles[coef.names, "2.5%"]
+  chain.qt975 <- chain.stats$quantiles[coef.names, "97.5%"]
+
+  bdic <- model@BDIC
+  gof <- numeric()
+  gof.names <- character()
+  gof.decimal <- logical()
+  if (include.nobs == TRUE) {
+    gof <- c(gof, nobs(model))
+    gof.names <- c(gof.names, "Num.\\ obs.")
+    gof.decimal <- c(gof.decimal, FALSE)
+  }
+  if (include.dbar == TRUE) {
+    gof <- c(gof, bdic["Dbar"])
+    gof.names <- c(gof.names, "Dbar")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.dthetabar == TRUE) {
+    gof <- c(gof, bdic["D(thetabar)"])
+    gof.names <- c(gof.names, "D(thetabar)")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.pd == TRUE) {
+    gof <- c(gof, bdic["pD"])
+    gof.names <- c(gof.names, "pD")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.dic == TRUE) {
+    gof <- c(gof, bdic["DIC"])
+    gof.names <- c(gof.names, "DIC")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+
+  tr <- texreg::createTexreg(
+    coef.names = coef.names,
+    coef = co,
+    se = se,
+    ci.low = chain.qt025, 
+    ci.up = chain.qt975,
+    gof.names = gof.names,
+    gof = gof,
+    gof.decimal = gof.decimal
+  )
+  return(tr)
+})
+
+getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) 
+    {
+          chainnames <- coda::varnames(obj@chains)
+          FP.names <- grep("^FP_", chainnames, value = TRUE)
+          RP.names <- grep("^RP[0-9]+_", chainnames, value = TRUE)  
+
+          ESS <- effectiveSize(obj@chains)
+          chain.stats <- summary(obj@chains, quantiles=c(alpha/2, 1-alpha/2))
+          chain.means <- chain.stats$statistics[,"Mean"]
+          chain.sds <- chain.stats$statistics[,"SD"]
+          chain.qtlow <- chain.stats$quantiles[,1]
+          chain.qtupp <- chain.stats$quantiles[,2]
+
+          z <- chain.means / chain.sds
+          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
+
+          parnames <- c(FP.names, RP.names)
+          co <- cbind(chain.means[parnames], chain.sds[parnames], z[parnames], p[parnames], chain.qtlow[parnames], chain.qtupp[parnames], ESS[parnames])
+          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr", "ess")
+
+          bdic <- obj@BDIC
+          N <- nobs(obj)
+  
+          sumstat <- c(
+              Dbar          = bdic["Dbar"],
+              Dthetabar     = bdic["D(thetabar)"],
+              pD            = bdic["pD"],
+              DIC           = bdic["DIC"],
+              N             = N
+          )
+  
+          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
+    }
+
+#' Extract coefficients and GOF measures from a statistical object (memisc package).
+#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
+#' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
+#' @param ... Other arguments.
+#' @seealso \code{\link[memisc]{getSummary}}
+#' @export 
+setMethod("getSummary", "mlwinfitMCMC", getSummary.mlwinfitMCMC)
+

@@ -1,28 +1,28 @@
-year <- sub("-.*", "", meta$Date)
-note <- sprintf("R package version %s", meta$Version)
+bibentry(bibtype = "Article",
+  title        = "{R2MLwiN}: A Package to Run {MLwiN} from within {R}",
+  author       = c(person(given = "Zhengzheng",
+                          family = "Zhang",
+                          email = "zhengzhengzhang@gmail.com"),
+                   person(given = c("Richard", "M.", "A."),
+                          family = "Parker"),
+                   person(given = c("Christopher", "M.", "J."),
+                          family = "Charlton"),
+                   person(given = "George",
+                          family = "Leckie"),
+                   person(given = c("William", "J."),
+                          family = "Browne")),
+  journal      = "Journal of Statistical Software",
+  year         = "2016",
+  volume       = "72",
+  number       = "10",
+  pages        = "1--43",
+  doi          = "10.18637/jss.v072.i10",
 
-bibentry(bibtype = "Manual",
-	 title = "{R2MLwiN}: Running MLwiN from within R",
-	 author = c(person("Zhengzheng", "Zhang"),
-	     person("Chris", "Charlton"),
-	     person("Richard", "Parker"),
-	     person("George", "Leckie"),
-         as.person("William J. Browne [aut]")),
-	 year = year,
-	 note = note,
-	 url = "http://CRAN.R-project.org/package=R2MLwiN")
+  header       = "To cite R2MLwiN in publications use:",
+  textVersion  =
+  paste("Zhengzheng Zhang, Richard M. A. Parker, Christopher M. J. Charlton, George Leckie, William J. Browne (2016).",
+        "R2MLwiN: A Package to Run MLwiN from within R.",
+        "Journal of Statistical Software, 72(10), 1-43.",
+        "doi:10.18637/jss.v072.i10")
+)
 
-bibentry(bibtype = "Book",
-	 title = "A User's Guide to MLwiN, v2.26",
-	 author = c(person("Jon", "Rasbash"),
-	     person("Fiona", "Steele"),
-	     as.person("William J. Browne [aut]"),
-	     person("Harvey", "Goldstein")),
-	 year = 2012,
-	 publisher = "Centre for Multilevel Modelling, University of Bristol")
-
-bibentry(bibtype = "Book",
-	 title = "MCMC estimation in MLwiN, v2.26",
-	 author = as.person("William J. Browne [aut]"),
-	 year = 2012,
-	 publisher = "Centre for Multilevel Modelling, University of Bristol")

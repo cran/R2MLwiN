@@ -19,7 +19,7 @@
 #' Centre for Multilevel Modelling, University of Bristol.
 #' 
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link{sixway}}

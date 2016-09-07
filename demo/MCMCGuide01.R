@@ -38,6 +38,8 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+## save current par settings
+mypar <- par(no.readonly = TRUE)
 
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
@@ -183,7 +185,8 @@ cat(paste("The acceptance rate of beta1: ", round(beta1accept/totaliterations, 3
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 19
 
-
+## reinstate par settings
+par(mypar)
 
 
 

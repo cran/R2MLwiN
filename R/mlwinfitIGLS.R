@@ -11,6 +11,8 @@
 #' @slot D A vector specifying the type of distribution to be modelled, which can include \code{'Normal'}, \code{'Binomial'} \code{'Poisson'}, \code{'Multinomial'}, \code{'Multivariate Normal'}, or \code{'Mixed'}.
 #' @slot Formula A formula object (or a character string) specifying a multilevel model.
 #' @slot levID A character string (vector) of the specified level ID(s).
+#' @slot contrasts A list of contrast matrices, one for each factor in the model.
+#' @slot xlevels A list of levels for the factors in the model.
 #' @slot FP Displays the fixed part estimates.
 #' @slot RP Displays the random part estimates.
 #' @slot FP.cov Displays a covariance matrix of the fixed part estimates.
@@ -27,7 +29,7 @@
 #' @slot version The MLwiN version used to fit the model
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link{runMLwiN}}
@@ -57,9 +59,10 @@
 #' @rdname mlwinfitIGLS-class
 #' @exportClass mlwinfitIGLS
 setClass(Class = "mlwinfitIGLS", representation = representation(version = "character", Nobs = "numeric", DataLength = "numeric",
-                                                                 Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", FP = "numeric", RP = "numeric", RP.cov = "matrix",
-                                                                 FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", call = "ANY", residual = "list", Converged = "logical",
-                                                                 Iterations = "numeric", Meth = "numeric", nonlinear = "numeric", data = "data.frame"))
+                                                                 Hierarchy = "ANY", D = "ANY", Formula = "ANY", levID = "character", contrasts = "list", xlevels = "list",
+                                                                 FP = "numeric", RP = "numeric", RP.cov = "matrix", FP.cov = "matrix", LIKE = "ANY", elapsed.time = "numeric", 
+                                                                 call = "ANY", residual = "list", Converged = "logical", Iterations = "numeric", Meth = "numeric",
+                                                                 nonlinear = "numeric", data = "data.frame"))
 
 #' Extract or Replace parts of "mlwinfitIGLS" objects
 #' @param x data frame
@@ -88,6 +91,12 @@ setMethod("[", "mlwinfitIGLS", function(x, i, j, drop) {
   }
   if (i == "levID") {
     return(x@levID)
+  }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
   }
   if (i == "FP") {
     return(x@FP)
@@ -152,6 +161,12 @@ setReplaceMethod("[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "FP") {
     x@FP <- value
@@ -219,6 +234,12 @@ setMethod("[[", "mlwinfitIGLS", function(x, i, j, drop) {
   if (i == "levID") {
     return(x@levID)
   }
+  if (i == "contrasts") {
+    return(x@contrasts)
+  }
+  if (i == "xlevels") {
+    return(x@xlevels)
+  }
   if (i == "FP") {
     return(x@FP)
   }
@@ -282,6 +303,12 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
   }
   if (i == "levID") {
     x@levID <- value
+  }
+  if (i == "contrasts") {
+    x@contrasts <- value
+  }
+  if (i == "xlevels") {
+    x@xlevels <- value
   }
   if (i == "FP") {
     x@FP <- value
@@ -672,7 +699,10 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
   if (is.null(newdata)) {
     indata <- object@data
   } else {
-    indata <- Formula.translate(object@Formula, object@D, object@data)$indata
+    indata <- Formula.translate(object@Formula, object@D, newdata)$indata
+    if (!isTRUE("Intercept" %in% indata)) {
+        indata[["Intercept"]] <- rep(1, nrow(indata))
+    }
   }
   if (is.null(params)) {
     fp.names <- names(FP <- object@FP)
@@ -794,3 +824,76 @@ setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) 
 setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object@Nobs
 })
+
+#' Extract coefficients and GOF measures from a statistical object (texreg package).
+#' @param model An \code{\link{mlwinfitIGLS-class}} model.
+#' @param include.nobs should the number of observations be reported?  
+#' @param include.loglik should the log-likelihood be reported?
+#' @param include.deviance should the deviance be reported?
+#' @param ... Other arguments.
+#' @seealso \code{\link[texreg]{extract}}
+#' @export 
+setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(model, include.nobs = TRUE, include.loglik=TRUE, include.deviance=TRUE, ...) {
+  co <- coef(model)
+  se <- sqrt(diag(vcov(model)))
+  gof <- numeric()
+  gof.names <- character()
+  gof.decimal <- logical()
+  if (include.nobs == TRUE) {
+    gof <- c(gof, nobs(model))
+    gof.names <- c(gof.names, "Num.\\ obs.")
+    gof.decimal <- c(gof.decimal, FALSE)
+  }
+  if (include.loglik == TRUE) {
+    gof <- c(gof, as.numeric(logLik(model)))
+    gof.names <- c(gof.names, "Log Likelihood")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+  if (include.deviance == TRUE) {
+    gof <- c(gof, deviance(model))
+    gof.names <- c(gof.names, "Deviance")
+    gof.decimal <- c(gof.decimal, TRUE)
+  }
+
+  tr <- texreg::createTexreg(
+    coef.names = names(co),
+    coef = co,
+    se = se,
+    gof.names = gof.names,
+    gof = gof,
+    gof.decimal = gof.decimal
+  )
+  return(tr)
+})
+
+getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) 
+    {
+          co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
+          z <- co[, 1]/co[,2]
+          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
+          lower <- qnorm(p=alpha/2,mean=co[,1],sd=co[,2])
+          upper <- qnorm(p=1-alpha/2,mean=co[,1],sd=co[,2])
+          co <- cbind(co, z, p, lower, upper)
+          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr")
+
+          N <- nobs(obj)
+          ll <- logLik(obj)
+          deviance <- deviance(obj)
+  
+          sumstat <- c(
+              logLik        = ll,
+              deviance      = deviance,
+              N             = N
+          )
+  
+          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
+    }
+
+#' Extract coefficients and GOF measures from a statistical object (memisc package).
+#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
+#' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
+#' @param ... Other arguments.
+#' @seealso \code{\link[memisc]{getSummary}}
+#' @export 
+setMethod("getSummary", "mlwinfitIGLS", getSummary.mlwinfitIGLS)
+

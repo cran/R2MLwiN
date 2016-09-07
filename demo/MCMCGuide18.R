@@ -27,6 +27,9 @@ options(MLwiN_path = mlwin)
 
 # User's input if necessary
 
+## save current par settings
+mypar <- par(no.readonly = TRUE)
+
 ## Read gcsecomp1 data
 data(gcsecomp1, package="R2MLwiN")
 #summary(gcsecomp1)
@@ -131,7 +134,8 @@ with(mi, fun=head)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .128
 
-
+## reinstate par settings
+par(mypar)
 
 
 

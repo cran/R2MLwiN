@@ -107,7 +107,7 @@
 #' \strong{Distribution} \tab \strong{Format of \code{Formula} object} \tab \strong{Where \code{<link>} can equal...}\cr
 #' \code{'Normal'} \tab \code{<y1> ~ 1 + <x1> + (1|<L2>) + (1|<L1>) + ...} \tab (identity link assumed)\cr
 #' \code{'Poisson'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + <x1> + (1|<L2>) + ...} \tab \code{log}\cr
-#' \code{'Negbinom'}* \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
+#' \code{'Negbinom'} \tab \code{<link>(<y1>) ~ 1 + offset(<offs>) + (1|<L2>) + ...} \tab \code{log}\cr
 #' \code{'Binomial'} \tab \code{<link>(<y1>, <denom>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
 #' \code{'Unordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + (1|<L2>) + ...} \tab \code{logit}\cr
 #' \code{'Ordered Multinomial'} \tab \code{<link>(<y1>, <denom>, <ref_cat>) ~ 1 + <x1> + <x2>[<common>] + (1[<common>]|<L3>) + (1|<L2>) + ...} \tab \code{logit},\code{probit},\code{cloglog}\cr
@@ -413,6 +413,7 @@
 #' \item \code{carcentre}: if CAR model (i.e. if \code{car} is non-\code{NULL}),
 #' \code{carcentre = TRUE} mean-centres all random effects at that level.
 #' \item \code{startval}: a list of numeric vectors specifying the starting values.
+#' If multiple chains requested (via \code{nchains}), then can be a list of such lists.
 #' \code{FP.b} corresponds to the estimates for the fixed
 #' part; \code{FP.v} specifies the variance/covariance estimates for the fixed
 #' part; \code{RP.b} specifies the variance estimates for the random part;
@@ -435,7 +436,8 @@
 #' \item \code{burnin}: Length of burnin, defaults to 500.
 #' \item \code{nchains}: Number of MCMC chains to run, defaults to 1.
 #' \item \code{thinning}: Thinning factor, defaults to 1.
-#' \item \code{seed}: MCMC random number seed, defaults to 1.
+#' \item \code{seed}: MCMC random number seed, defaults to \code{1} when \code{nchains = 1},
+#' and to \code{1:nchains} when multiple chains requested.
 #' \item \code{priorParam}: A list specifying informative priors. This includes:
 #' \code{fixe} -- for the fixed
 #' parameters, if proper normal priors are used for some parameters, a list of
@@ -544,7 +546,7 @@
 #' University of Bristol.
 #'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-#' W.J. (2015) Centre for Multilevel Modelling, University of Bristol.
+#' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
 #' @seealso
 #' \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
@@ -633,7 +635,7 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       Formula <- as.formula(Formula)
     }
   } else {
-    tmpvarnames <- unique(unlist(strsplit(all.vars(Formula), "\\.")))
+    tmpvarnames <- unique(all.vars(Formula))
     tForm <- as.formula(paste0("~", paste(tmpvarnames, collapse = "+")))
     if (drop.data) {
       indata <- get_all_vars(tForm, indata)
@@ -891,6 +893,8 @@ version:date:md5:filename:x64:trial:platform
 2.36:Mar 2016:f03d43516a22f85295090d4244cdd62a:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:f19187c8f2c921b549e3162e92dc2962:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:7983bd105f45456f99cea2b0428bc2c2:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:ca4e077b0db8cddb84182465673b9d1f:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:276b6594c05ecfc92a7e848e64ebe94e:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:df7f78276f22ee722ffa371c2fdf4321:mlnscript:FALSE:FALSE:lin
 2.36:Mar 2016:8c33adfb5add5402a2df4c80c2d64183:mlnscript:TRUE:FALSE:mac
 2.36:Mar 2016:88c5113d82d7013506c949c761689b65:mlnscript:TRUE:FALSE:bsd
@@ -901,7 +905,7 @@ version:date:md5:filename:x64:trial:platform
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.35)"
+      versiontext <- "MLwiN (version: unknown or >2.36)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
@@ -2568,13 +2572,14 @@ version:date:md5:filename:x64:trial:platform
 
   # Exclude rows where any X or all responses are missing
   completerows <- complete.cases(outdata[, xcolumns]) & ymiss
+  shortdata <- droplevels(outdata[completerows, ])
   hierarchy <- NULL
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
-      if (!is.null(xc)) {
+      if (!is.null(xc) || !isTRUE(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
-        compgroupsize <- by(outdata[completerows, ], outdata[completerows, shortID[lev]], nrow)
+        compgroupsize <- by(shortdata, shortdata[, shortID[lev]], nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
         if (isTRUE(test)) {
@@ -2584,12 +2589,11 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
-          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]],
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]),
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
-          compgroupsize <- na.omit(as.vector(by(outdata[completerows, ], outdata[completerows, shortID[lev:length(shortID)]], nrow)))
-
+          compgroupsize <- na.omit(as.vector(by(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]), nrow)))
         }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))
@@ -3212,6 +3216,8 @@ version:date:md5:filename:x64:trial:platform
       outIGLS["D"] <- D
       outIGLS["Formula"] <- Formula
       outIGLS["levID"] <- levID
+      outIGLS["contrasts"] <- invars$contrasts
+      outIGLS["xlevels"] <- invars$xlevels
       outIGLS["FP"] <- FP
       outIGLS["RP"] <- RP
       outIGLS["FP.cov"] <- FP.cov
@@ -3250,6 +3256,8 @@ version:date:md5:filename:x64:trial:platform
       outMCMC["D"] <- D
       outMCMC["Formula"] <- Formula
       outMCMC["levID"] <- levID
+      outMCMC["contrasts"] <- invars$contrasts
+      outMCMC["xlevels"] <- invars$xlevels
       outMCMC["merr"] <- merr
       outMCMC["fact"] <- fact
       outMCMC["xc"] <- xc

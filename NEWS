@@ -1,3 +1,47 @@
+Sat Aug 27 2016
+1. Bug fixing
+   * Fix an RStudio issue when calling dev.new()
+2. Changes
+   * Complete the citation information for the JSS paper
+   
+Thu Aug 04 2016
+1. Bug fixing
+   * Fix error when attempting to drop unused factors from level ID that isn't of factor type by using droplevels on the data frame instead of individual variables
+
+Mon Jul 25 2016
+1. Bug fixing
+   * Correctly use the new data passed into "newdata" parameter of predict function
+
+Mon Jul 18 2016
+1. Bug fixing
+   * Correctly check whether the model is cross-classified when calculating the model hierarchy
+   * Drop unused factors when calculating the complete-case group information
+
+Tue May 24 2016
+1. Bug fixing
+   * Fix incorrect common coefficients with categorical variables
+
+Mon May 23 2016
+1. Bug fixing
+   * Correct the parameter ordering to match that in the formula
+
+2. Changes
+   * Add initial support for model comparison tables via the memisc package
+   * Model fit objects now contain contrast information for factor variables in the model
+
+Wed Apr 27 2016
+1. Changes
+   * Avoid message from texreg when the R2MLwiN package is loaded
+   * Update model comparisons in demos to use the texreg package
+
+Tue Apr 26 2016
+1. Changes
+   * Add initial support for model comparison tables via the texreg package
+
+Thu Apr 21 2016
+1. Changes
+   * Allow variables that contain a "." character to work with formulae
+
 Mon Apr 11 2016
 1. Changes
    * Use "get" function for clearing "foreach" package globals and updating the formula to satisfy CRAN checks
@@ -71,7 +115,7 @@ Tue Sep 08 2015
 Thu Aug 20 2015
 1. Bug fixing
    * Fixed a bug preventing the behaviour of ignoring the intercept term when modifying the output object from the runMLwiN call using updateMLwiN
-   
+
 Thu Aug 6 2015
 1. Bug fixing
    * In matrix2df, handle rows where all values are zero
