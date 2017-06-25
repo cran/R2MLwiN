@@ -113,6 +113,7 @@ User Manual. MRC Biostatistics Unit.
 
 Zhengzheng Zhang \email{zhengzheng236@gmail.com}
 }
+
 \examples{
 \dontrun{
 library(R2MLwiN)
@@ -148,4 +149,3 @@ demo(MCMCGuide03)
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-

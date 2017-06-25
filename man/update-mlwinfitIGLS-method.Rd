@@ -30,4 +30,3 @@ either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated ex
 \description{
 Update "mlwinfitIGLS" objects
 }
-

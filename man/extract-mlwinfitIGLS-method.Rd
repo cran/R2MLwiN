@@ -25,4 +25,3 @@ Extract coefficients and GOF measures from a statistical object (texreg package)
 \seealso{
 \code{\link[texreg]{extract}}
 }
-

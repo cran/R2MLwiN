@@ -30,4 +30,3 @@ Returns the predicted data from "mlwinfitMCMC" objects.
 \seealso{
 \code{\link[stats]{predict}}
 }
-

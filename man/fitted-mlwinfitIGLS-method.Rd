@@ -21,4 +21,3 @@ Returns the fitted values from "mlwinfitIGLS" objects.
 \seealso{
 \code{\link[stats]{fitted}}
 }
-

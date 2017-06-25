@@ -24,11 +24,10 @@ into a \code{\link[base]{matrix}}. The data.frame needs to contain (a) columns w
 (e.g. first row of which might be \code{0.25, 0.25, 0.25, 0.25, 0, 0}; in this example the first row of
 resulting matrix would be \code{0, 1, 1, 0, 1, 1}).
 }
+\seealso{
+\code{\link{matrix2df}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol, U.K.
 }
-\seealso{
-\code{\link{matrix2df}}
-}
-

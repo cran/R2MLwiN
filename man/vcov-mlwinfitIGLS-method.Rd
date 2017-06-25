@@ -18,4 +18,3 @@ Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
 \seealso{
 \code{\link[stats]{vcov}}
 }
-

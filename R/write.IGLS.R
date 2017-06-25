@@ -151,6 +151,8 @@
 #' @param namemap A mapping of column names to DTA friendly shorter names
 #' @param saveworksheet A file name used to store the MLwiN worksheet after the
 #' model has been estimated.
+#' @param rng.version An integer indicating which random number generator should
+#' be used by MLwiN.
 #' 
 #' @return Outputs a modified version of namemap containing newly generated
 #' short names.
@@ -171,7 +173,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                          notation = NULL, nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset, rcon = NULL, fcon = NULL, 
                          maxiter = 20, convtol = 2, mem.init = "default", optimat = FALSE, weighting = NULL, fpsandwich = FALSE, rpsandwich = FALSE, 
                          macrofile, IGLSfile, resifile, resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL) {
+                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL, rng.version = 10) {
   
   shortname <- function(...) {
     name <- paste0(...)
@@ -301,7 +303,10 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   wrt("MARK    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
-  
+
+  wrt("NOTE     Set the random number generator version")
+  wrt(paste0("RNGV ", rng.version))
+
   wrt("NOTE    Correct column names")
   for (name in names(namemap)) {
     wrt(paste0("COLN '", namemap[[name]], "' b50"))

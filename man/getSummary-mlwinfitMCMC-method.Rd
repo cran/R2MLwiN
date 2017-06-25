@@ -20,4 +20,3 @@ Extract coefficients and GOF measures from a statistical object (memisc package)
 \seealso{
 \code{\link[memisc]{getSummary}}
 }
-

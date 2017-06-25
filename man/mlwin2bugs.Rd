@@ -94,11 +94,10 @@ are constrained (\code{1}) or not (\code{0}).
 This function is derived from \code{\link[rbugs]{rbugs}} (written by
 Jun Yan and Marcos Prates).
 }
+\seealso{
+\code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
-}
-

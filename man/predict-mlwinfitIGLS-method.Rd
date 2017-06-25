@@ -31,4 +31,3 @@ Returns the predicted data from "mlwinfitIGLS" objects.
 \seealso{
 \code{\link[stats]{predict}}
 }
-

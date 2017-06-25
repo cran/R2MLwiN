@@ -429,6 +429,10 @@
 #' keeping with the hierarchy implied by the model formula, and will return a warning
 #' if that is not the case.
 #'
+#' \item \code{rng.version}: An integer value specifing the random number generator
+#' version to be used by MLwiN. If 10 (the default) this will be the Mersenne Twister; 
+#' If 0 this will be the 3-Seed Wichmann-Hill (default in MLwiN prior to version 3).
+#'
 #' \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
 #' options, including the following (see \code{\link{write.MCMC}} for further details):
 #' \itemize{
@@ -592,6 +596,9 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
   if (!is.null(data)) {
     indata <- data
   }
+  if (is.null(indata)) {
+    indata <- parent.frame()
+  }
 
   if (is.null(levID)) {
     oldsyntax <- FALSE
@@ -725,11 +732,13 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       cmd <- paste0(MLwiNPath, "/i386/mlwin.exe")
       if (file.access(cmd, mode = 1) != 0) {
         cmd <- paste0(MLwiNPath, "/mlwin.exe")
-      } else {
         if (file.access(cmd, mode = 1) != 0) {
           cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
           if (file.access(cmd, mode = 1) != 0) {
-            stop("Cannot find valid MLwiN executable")
+            cmd <- paste0(MLwiNPath, "/mlnscript.exe")
+            if (file.access(cmd, mode = 1) != 0) {
+              stop("Cannot find valid MLwiN executable")
+            }
           }
         }
       }
@@ -737,20 +746,26 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       if (x64) {
         cmd <- paste0(MLwiNPath, "/x64/mlnscript.exe")
         if (file.access(cmd, mode = 1) != 0) {
-          cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
+          cmd <- paste0(MLwiNPath, "/mlnscript.exe")
           if (file.access(cmd, mode = 1) != 0) {
-            cmd <- paste0(MLwiNPath, "/mlwin.exe")
+            cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
             if (file.access(cmd, mode = 1) != 0) {
-              stop("Cannot find valid MLwiN executable")
+              cmd <- paste0(MLwiNPath, "/mlwin.exe")
+              if (file.access(cmd, mode = 1) != 0) {
+                stop("Cannot find valid MLwiN executable")
+              }
             }
           }
         }
       } else {
         cmd <- paste0(MLwiNPath, "/i386/mlnscript.exe")
         if (file.access(cmd, mode = 1) != 0) {
-          cmd <- paste0(MLwiNPath, "/mlwin.exe")
+          cmd <- paste0(MLwiNPath, "/mlnscript.exe")
           if (file.access(cmd, mode = 1) != 0) {
-            stop("Cannot find valid MLwiN executable")
+            cmd <- paste0(MLwiNPath, "/mlwin.exe")
+            if (file.access(cmd, mode = 1) != 0) {
+              stop("Cannot find valid MLwiN executable")
+            }
           }
         }
       }
@@ -895,17 +910,63 @@ version:date:md5:filename:x64:trial:platform
 2.36:Mar 2016:7983bd105f45456f99cea2b0428bc2c2:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:ca4e077b0db8cddb84182465673b9d1f:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:276b6594c05ecfc92a7e848e64ebe94e:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:213bb45b1c1b7f00b005b479774bfc2c:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:23353a52aa4ca25b1814f20758fe9756:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:7e47818e52518869cd3001fa474d6269:mlnscript:TRUE:FALSE:lin
+2.36:Mar 2016:8ee541bed3b7ce2614e0d1cb20cd62fd:mlnscript:TRUE:FALSE:lin
 2.36:Mar 2016:df7f78276f22ee722ffa371c2fdf4321:mlnscript:FALSE:FALSE:lin
 2.36:Mar 2016:8c33adfb5add5402a2df4c80c2d64183:mlnscript:TRUE:FALSE:mac
 2.36:Mar 2016:88c5113d82d7013506c949c761689b65:mlnscript:TRUE:FALSE:bsd
 2.36:Mar 2016:4b401e7a333ca3500959b72a6ed23afb:mlnscript:TRUE:FALSE:bsd
+2.36:Mar 2016:c9e7a880ed7efc4b886fe9fef90ba3c8:mlnscript:TRUE:FALSE:bsd
+3.00:Mar 2017:7b7bed137d90c2683eecc34b7297e489:mlwin.exe:TRUE:FALSE:win
+3.00:Mar 2017:10f2f99650ad9b297284e40a061dcc8f:mlnscript.exe:TRUE:FALSE:win
+3.00:Mar 2017:a7e9431cc6cf9f91fd35c90b94c3ef77:mlwin.exe:FALSE:FALSE:win
+3.00:Mar 2017:5b76d107f8368b0a4f159c7ff65a2e87:mlnscipt.exe:FALSE:FALSE:win
+3.00:Mar 2017:958cb66c39c8622bd3ab370a76800fb0:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:038fdb39d11b7f76de57586e63cabb64:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:e6e69e5e3570801dca87d291213147f9:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:a7d26196f17887800cc3cf7d878944e1:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:e6e69e5e3570801dca87d291213147f9:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:c7703fca6d9e677720db57ce953a866d:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:0f5e50d6057d6000aeb3fddf6a8bb149:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:fccb0c343b97878023e27af80ddea9f1:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:501befae6b5817b7901f4cabee4117a2:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:ba6468971879e551aed934235a4f9fa3:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:ba70121ca9c8a91ead89f9b4aa2e0785:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:254023dd3b76115d6c0385ab56b777a4:mlnscript:TRUE:FALSE:lin
+3.00:Mar 2017:b1d9b3e0d1f6151b40b87cd892b55d94:mlnscript:FALSE:FALSE:lin
+3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:mac
+3.00:Mar 2017:f0c089a29e9971c229e96ef943abf0f2:mlnscript:TRUE:FALSE:bsd
+3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:bsd
+3.01:May 2017:46651c378882426b6fa170ea422cef79:mlnscript:TRUE:FALSE:win
+3.01:May 2017:8276bb0844ba90017504fa4adeadf3fb:mlnscript:TRUE:FALSE:win
+3.01:May 2017:03ac1886150bd105d5564564a89b10ed:mlnscript:FALSE:FALSE:win
+3.01:May 2017:ae865c425357b0054c7f77c501ceb8c6:mlnscript:FALSE:FALSE:win
+3.01:May 2017:bd6d816fa6565c8b68ccacde8f553785:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:5c032755aab95f3e7341c04c6bbfd1e9:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:9f8474097dd168024096524eb0071ed3:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:83eead0a99c167a233f9a75004746900:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:211ea10aaf9df3b4821cbfd3b4b9b477:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:b5efed180776a0635b081a9baffc043f:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:40da6a66b8dbfe68a70e0a16489814b8:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:702fa49f6784bf6951798066afe8d1a6:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:a0345cf1a13dafe3a16afa23ee730cc7:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:ee2e35cf1c068648ae9d116512d61589:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:b9b552fb7822abbb1918fdae2efa6323:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:a0345cf1a13dafe3a16afa23ee730cc7:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:5632195a4b361d3c20a60cbf9eb12384:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:6a1e77d7e3fa89bd313a1b1318897d12:mlnscript:FALSE:FALSE:lin
+3.01:May 2017:a4b00b60d7f23e3b3e693bacac85a5a7:mlnscript:TRUE:FALSE:mac
+3.01:May 2017:b87173f7cdd4bec699a940ebd5f1cf4d:mlnscript:TRUE:FALSE:bsd
+3.01:May 2017:7eb4eee726311267c75135296a975996:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >2.36)"
+      versiontext <- "MLwiN (version: unknown or >3.01)"
     } else {
       if (currentver$version < 2.28) {
         # Block versions >year older than current release
@@ -2389,6 +2450,10 @@ version:date:md5:filename:x64:trial:platform
   if (is.null(sort.ignore))
     sort.ignore <- FALSE
 
+  rng.version <- estoptions$rng.version
+  if (is.null(rng.version))
+    rng.version <- 10
+
   if (D[1] == "Binomial") {
     if (!all(is.na(indata[[resp]]) | (indata[[resp]] >= 0 & indata[[resp]] <= 1))) {
       stop("All values for a binomial response must lie between zero and one")
@@ -2701,7 +2766,7 @@ version:date:md5:filename:x64:trial:platform
     long2shortnamemap <- write.IGLS(outdata, dtafile, oldsyntax, resp, levID, expl, rp, D, nonlinear, categ, notation, nonfp, clre,
                  Meth, extra, reset, rcon, fcon, maxiter, convtol, mem.init, optimat, weighting, fpsandwich, rpsandwich,
                  macrofile = macrofile, IGLSfile = IGLSfile, resifile = resifile, resi.store = resi.store, resioptions = resioptions,
-                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet)
+                 debugmode = debugmode, startval = svals, namemap = long2shortname, saveworksheet = saveworksheet, rng.version = rng.version)
     iterations <- estoptions$mcmcMeth$iterations
     if (is.null(iterations))
       iterations <- 5000
@@ -2795,7 +2860,7 @@ version:date:md5:filename:x64:trial:platform
                    IGLSfile = IGLSfile[i], MCMCfile = MCMCfile[i], chainfile = chainfile[i], MIfile = MIfile[i], resifile = resifile[,i],
                    resi.store = resi.store, resioptions = resioptions, resichains = resichains[i], FACTchainfile = FACTchainfile[i],
                    resi.store.levs = resi.store.levs, debugmode = debugmode, startval = svals, dami = dami,
-                   namemap = long2shortname, saveworksheet = saveworksheet[i])
+                   namemap = long2shortname, saveworksheet = saveworksheet[i], rng.version = rng.version)
 
     }
     cat("MLwiN is running, please wait......\n")

@@ -51,11 +51,10 @@ matrix. Note that this is a weakly-informative prior and the default prior
 is used if missing.
 }
 }
+\seealso{
+\code{\link{runMLwiN}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{runMLwiN}}
-}
-

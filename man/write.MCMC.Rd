@@ -18,7 +18,7 @@ write.MCMC(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   MIfile, resifile, resi.store = FALSE, resioptions, resichains,
   FACTchainfile, resi.store.levs = NULL, debugmode = FALSE,
   startval = NULL, dami = NULL, namemap = sapply(colnames(indata),
-  as.character), saveworksheet = NULL)
+  as.character), saveworksheet = NULL, rng.version = 10)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}
@@ -305,6 +305,9 @@ but with the standard errors of the estimate additionally being stored.}
 
 \item{saveworksheet}{A list of file names (one for each chain) used to store the
 MLwiN worksheet after the model has been estimated.}
+
+\item{rng.version}{An integer indicating which random number generator should
+be used by MLwiN.}
 }
 \value{
 Outputs a modified version of namemap containing newly generated
@@ -394,10 +397,6 @@ Note that for \code{FixM}, \code{residM}, \code{Lev1VarM} and
 \code{OtherVarM}, not all combinations of methods are available for all sets
 of parameters and all models.
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 
@@ -408,4 +407,7 @@ University of Bristol.
 \seealso{
 \code{\link{write.IGLS}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

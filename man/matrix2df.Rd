@@ -32,11 +32,10 @@ and (b) columns containing weights (in this example, if \code{standardise = TRUE
 row of generated weight vectors would be, say, \code{0.25, 0.25, 0.25, 0.25}, otherwise first
 row of generated weight vectors would be, say, \code{1, 1, 1, 1}).
 }
+\seealso{
+\code{\link{df2matrix}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol, U.K.
 }
-\seealso{
-\code{\link{df2matrix}}
-}
-

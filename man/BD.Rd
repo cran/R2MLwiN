@@ -27,10 +27,6 @@ estimates the length of a Markov chain required to produce a mean estimate
 to k significant figures with a given accuracy (alpha). See Browne (2012)
 for further details.
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
 Centre for Multilevel Modelling, University of Bristol.
@@ -38,4 +34,7 @@ Centre for Multilevel Modelling, University of Bristol.
 \seealso{
 \code{\link{sixway}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

@@ -43,11 +43,10 @@ caterpillarR(mymodel['residual'], lev = 2)
 }
 
 }
+\seealso{
+\code{\link{caterpillar}}, \code{\link[lattice]{qqmath}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{caterpillar}}, \code{\link[lattice]{qqmath}}
-}
-

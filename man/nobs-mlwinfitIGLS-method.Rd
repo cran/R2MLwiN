@@ -18,4 +18,3 @@ Returns the number of used observations from "mlwinfitIGLS" objects.
 \seealso{
 \code{\link[stats]{nobs}}
 }
-

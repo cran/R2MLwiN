@@ -28,4 +28,3 @@
 \description{
 Extract or Replace parts of "mlwinfitMCMC" objects
 }
-

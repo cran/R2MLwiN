@@ -458,6 +458,10 @@ determined by model formula; defaults to \code{FALSE}.
 keeping with the hierarchy implied by the model formula, and will return a warning
 if that is not the case.
 
+\item \code{rng.version}: An integer value specifing the random number generator
+version to be used by MLwiN. If 10 (the default) this will be the Mersenne Twister; 
+If 0 this will be the 3-Seed Wichmann-Hill (default in MLwiN prior to version 3).
+
 \item \code{mcmcMeth}: list of objects specifying MCMC methodology and prior
 options, including the following (see \code{\link{write.MCMC}} for further details):
 \itemize{
@@ -587,10 +591,6 @@ demo(MCMCGuide03)
 }
 
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
 
@@ -601,4 +601,7 @@ University of Bristol.
 \seealso{
 \code{\link[stats]{formula}}, \code{\link{Formula.translate}}, \code{\link{Formula.translate.compat}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

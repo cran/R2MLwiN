@@ -54,11 +54,10 @@ unlink(inputfile)
 }
 
 }
+\seealso{
+\code{\link[foreign]{read.dta}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link[foreign]{read.dta}}
-}
-

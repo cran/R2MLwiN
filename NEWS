@@ -1,3 +1,11 @@
+Mon Apr 24 2017
+1. Changes
+   * Add option for setting the random number generator used by MLwiN
+
+Fri Nov 04 2016
+1. Bug fixing
+   * Allow runMLwiN function to work with "with" function
+
 Sat Aug 27 2016
 1. Bug fixing
    * Fix an RStudio issue when calling dev.new()

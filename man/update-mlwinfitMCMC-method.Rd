@@ -30,4 +30,3 @@ either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated ex
 \description{
 Update "mlwinfitMCMC" objects
 }
-

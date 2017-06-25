@@ -64,11 +64,10 @@ predLines(mymodel, xname = "standlrt", lev = 2, selected = c(30, 44, 53, 59),
 }
 
 }
+\seealso{
+\code{\link{predCurves}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{predCurves}}
-}
-

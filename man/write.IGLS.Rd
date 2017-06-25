@@ -12,7 +12,8 @@ write.IGLS(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   mem.init = "default", optimat = FALSE, weighting = NULL,
   fpsandwich = FALSE, rpsandwich = FALSE, macrofile, IGLSfile, resifile,
   resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-  namemap = sapply(colnames(indata), as.character), saveworksheet = NULL)
+  namemap = sapply(colnames(indata), as.character), saveworksheet = NULL,
+  rng.version = 10)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}
@@ -195,6 +196,9 @@ estimates for the random part.}
 
 \item{saveworksheet}{A file name used to store the MLwiN worksheet after the
 model has been estimated.}
+
+\item{rng.version}{An integer indicating which random number generator should
+be used by MLwiN.}
 }
 \value{
 Outputs a modified version of namemap containing newly generated
@@ -203,10 +207,6 @@ short names.
 \description{
 write.IGLS is an internal function which creates an MLwiN macro file to
 fit a multilevel model using IGLS.
-}
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
 \references{
 Goldstein, H. (2011) Multilevel Statistical Models. 4th Edition. London: John Wiley and Sons.
@@ -218,4 +218,7 @@ University of Bristol.
 \seealso{
 \code{\link{write.MCMC}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

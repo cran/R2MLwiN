@@ -18,4 +18,3 @@ Returns the residual degrees-of-freedom extracted from "mlwinfitIGLS" objects.
 \seealso{
 \code{\link[stats]{nobs}}, \code{\link[stats]{coef}}
 }
-

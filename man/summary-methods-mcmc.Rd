@@ -2,9 +2,9 @@
 % Please edit documentation in R/mlwinfitMCMC.R
 \docType{methods}
 \name{summary,mlwinfitMCMC-method}
+\alias{summary,mlwinfitMCMC-method}
 \alias{print,mlwinfitMCMC-method}
 \alias{show,mlwinfitMCMC-method}
-\alias{summary,mlwinfitMCMC-method}
 \title{Summarize "mlwinfitMCMC" objects}
 \usage{
 \S4method{summary}{mlwinfitMCMC}(object, ...)
@@ -28,4 +28,3 @@
 \description{
 Summarize "mlwinfitMCMC" objects
 }
-

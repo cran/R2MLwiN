@@ -62,11 +62,10 @@ caterpillar(y = residuals[rankno], x = 1:65, qtlow = (residuals - residualsCI)[r
 }
 
 }
+\seealso{
+\code{\link{caterpillarR}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol, U.K.
 }
-\seealso{
-\code{\link{caterpillarR}}
-}
-

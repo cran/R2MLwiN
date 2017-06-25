@@ -78,10 +78,12 @@ An MLwiN model run via the MCMC estimation method is represented by an "mlwinfit
 
 \item{\code{data}}{The data.frame that was used to fit the model.}
 }}
+
 \section{An instance of the Class}{
 
  An instance is created by calling function \code{\link{runMLwiN}}.
 }
+
 \examples{
 \dontrun{
 
@@ -105,11 +107,10 @@ mymodel@BDIC
 }
 
 }
+\seealso{
+\code{\link{runMLwiN}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{runMLwiN}}
-}
-

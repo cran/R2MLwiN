@@ -90,11 +90,10 @@ there is no categorical variable in the random effects. If there is one in
 the random part, the categorical variable has to be converted into a set of
 binary variables (e.g., using \code{\link{Untoggle}}).
 }
+\seealso{
+\code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}, \code{\link{Formula.translate}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{runMLwiN}}, \code{\link{write.IGLS}}, \code{\link{write.MCMC}}, \code{\link{Formula.translate}}
-}
-

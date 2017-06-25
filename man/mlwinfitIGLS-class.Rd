@@ -54,10 +54,12 @@ An MLwiN model run via the IGLS estimation method is represented by an "mlwinfit
 
 \item{\code{version}}{The MLwiN version used to fit the model}
 }}
+
 \section{An instance of the Class}{
 
  An instance is created by calling function \code{\link{runMLwiN}}.
 }
+
 \examples{
 \dontrun{
 library(R2MLwiN)
@@ -80,11 +82,10 @@ logLik(mymodel)
 }
 
 }
+\seealso{
+\code{\link{runMLwiN}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{runMLwiN}}
-}
-

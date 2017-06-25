@@ -2,8 +2,8 @@
 % Please edit documentation in R/mlwinfitMCMC.R
 \docType{methods}
 \name{residuals,mlwinfitMCMC-method}
-\alias{resid,mlwinfitMCMC-method}
 \alias{residuals,mlwinfitMCMC-method}
+\alias{resid,mlwinfitMCMC-method}
 \title{Returns the residual data from "mlwinfitMCMC" objects.}
 \usage{
 \S4method{residuals}{mlwinfitMCMC}(object, ...)
@@ -21,4 +21,3 @@ Returns the residual data from "mlwinfitMCMC" objects.
 \seealso{
 \code{\link[stats]{residuals}}
 }
-

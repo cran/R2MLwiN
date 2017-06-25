@@ -2,9 +2,9 @@
 % Please edit documentation in R/mlwinfitIGLS.R
 \docType{methods}
 \name{summary,mlwinfitIGLS-method}
+\alias{summary,mlwinfitIGLS-method}
 \alias{print,mlwinfitIGLS-method}
 \alias{show,mlwinfitIGLS-method}
-\alias{summary,mlwinfitIGLS-method}
 \title{Summarize "mlwinfitIGLS" objects}
 \usage{
 \S4method{summary}{mlwinfitIGLS}(object, ...)
@@ -26,4 +26,3 @@
 \description{
 Summarize "mlwinfitIGLS" objects
 }
-

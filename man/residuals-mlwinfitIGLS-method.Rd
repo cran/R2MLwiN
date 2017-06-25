@@ -2,8 +2,8 @@
 % Please edit documentation in R/mlwinfitIGLS.R
 \docType{methods}
 \name{residuals,mlwinfitIGLS-method}
-\alias{resid,mlwinfitIGLS-method}
 \alias{residuals,mlwinfitIGLS-method}
+\alias{resid,mlwinfitIGLS-method}
 \title{Returns the residual data from "mlwinfitIGLS" objects.}
 \usage{
 \S4method{residuals}{mlwinfitIGLS}(object, ...)
@@ -21,4 +21,3 @@ Returns the residual data from "mlwinfitIGLS" objects.
 \seealso{
 \code{\link[stats]{residuals}}
 }
-

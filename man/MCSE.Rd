@@ -25,10 +25,6 @@ As MCMC is a simulation-based approach this induces (Monte Carlo) uncertainty
 due to the random numbers it uses. This uncertainty reduces with more
 iterations, and is measured by the MCSE. See Browne (2012) for further details.
 }
-\author{
-Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
-W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
-}
 \references{
 Browne, W.J. (2012) MCMC Estimation in MLwiN, v2.26.
 Centre for Multilevel Modelling, University of Bristol.
@@ -36,4 +32,7 @@ Centre for Multilevel Modelling, University of Bristol.
 \seealso{
 \code{\link{sixway}}
 }
-
+\author{
+Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
+W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
+}

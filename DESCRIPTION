@@ -1,6 +1,6 @@
 Package: R2MLwiN
-Version: 0.8-3
-Date: 2016-09-06
+Version: 0.8-4
+Date: 2017-06-25
 Title: Running 'MLwiN' from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
@@ -18,9 +18,9 @@ License: GPL (>= 2)
 URL:
         http://www.bristol.ac.uk/cmm/software/r2mlwin/,https://r-forge.r-project.org/projects/r2mlwin/,http://www.bristol.ac.uk/cmm/software/mlwin/
 SystemRequirements: MLwiN, (OpenBUGS, WinBUGS optional)
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2016-09-07 04:00:42 UTC; Zhengzheng
+Packaged: 2017-06-25 02:47:37 UTC; Zhengzheng
 Author: Zhengzheng Zhang [aut, cre],
   Chris Charlton [aut],
   Richard Parker [aut],
@@ -28,4 +28,4 @@ Author: Zhengzheng Zhang [aut, cre],
   William Browne [aut]
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-09-07 08:48:59
+Date/Publication: 2017-06-25 02:57:41 UTC

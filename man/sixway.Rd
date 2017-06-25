@@ -79,11 +79,10 @@ sixway(mymodel@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 }
 
 }
+\seealso{
+\code{\link{BD}},\code{\link{MCSE}},\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}
+}
 \author{
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-\seealso{
-\code{\link{BD}},\code{\link{MCSE}},\code{\link{density}},\code{\link{acf}},\code{\link{pacf}},\code{\link[coda]{raftery.diag}},\code{\link[coda]{effectiveSize}}
-}
-

@@ -23,4 +23,3 @@ from MLwiN which currently only stores data in single precision.
 Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 }
-

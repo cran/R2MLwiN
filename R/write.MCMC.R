@@ -228,6 +228,8 @@
 #' @param namemap A mapping of column names to DTA friendly shorter names
 #' @param saveworksheet A list of file names (one for each chain) used to store the
 #' MLwiN worksheet after the model has been estimated.
+#' @param rng.version An integer indicating which random number generator should
+#' be used by MLwiN.
 #'
 #' @details A list of other MCMC options as used in the argument
 #' \code{mcmcOptions}:
@@ -328,7 +330,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
                          mcmcOptions, fact = NULL, xc = NULL, mm = NULL, car = NULL, BUGO = NULL, mem.init = "default", optimat = FALSE,
                          modelfile, initfile, datafile, macrofile, IGLSfile, MCMCfile, chainfile, MIfile, resifile, resi.store = FALSE,
                          resioptions, resichains, FACTchainfile, resi.store.levs = NULL, debugmode = FALSE, startval = NULL, dami = NULL,
-                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL) {
+                         namemap = sapply(colnames(indata), as.character), saveworksheet = NULL, rng.version = 10) {
   
   shortname <- function(...) {
     name <- paste0(...)
@@ -457,6 +459,10 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
   
+
+  wrt("NOTE     Set the random number generator version")
+  wrt(paste0("RNGV ", rng.version))
+
   wrt("NOTE    Correct column names")
   for (name in names(namemap)) {
     wrt(paste0("COLN '", namemap[[name]], "' b50"))

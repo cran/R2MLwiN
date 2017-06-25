@@ -21,4 +21,3 @@ Extract the coefficient vector from "mlwinfitIGLS" objects
 \seealso{
 \code{\link[stats]{coef}}
 }
-
