@@ -1205,7 +1205,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   }
   
   if (is.list(nonfp)) {
-    wrt("NOTE Turn off the fixed part of the explotary varible(s)")
+    wrt("NOTE Turn off the fixed part of the explanatory varible(s)")
     nonfp.sep <- nonfp$nonfp.sep
     nonfp.common <- nonfp$nonfp.common
     if (!is.na(nonfp.sep[1])) {
@@ -1238,7 +1238,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
   } else {
     if (!is.na(nonfp[1])) {
-      wrt("NOTE Turn off the fixed part of the explotary varible(s)")
+      wrt("NOTE Turn off the fixed part of the explanatory varible(s)")
       for (p in nonfp) {
         if (oldsyntax){
           wrt(paste("FPAR 0  '", gsub("\\:", "\\.", p), "'", sep = ""))

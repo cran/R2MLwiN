@@ -1,6 +1,6 @@
 Package: R2MLwiN
-Version: 0.8-4
-Date: 2017-06-25
+Version: 0.8-5
+Date: 2017-09-01
 Title: Running 'MLwiN' from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
@@ -20,7 +20,7 @@ URL:
 SystemRequirements: MLwiN, (OpenBUGS, WinBUGS optional)
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-06-25 02:47:37 UTC; Zhengzheng
+Packaged: 2017-09-01 03:16:27 UTC; Zhengzheng
 Author: Zhengzheng Zhang [aut, cre],
   Chris Charlton [aut],
   Richard Parker [aut],
@@ -28,4 +28,4 @@ Author: Zhengzheng Zhang [aut, cre],
   William Browne [aut]
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Repository: CRAN
-Date/Publication: 2017-06-25 02:57:41 UTC
+Date/Publication: 2017-09-01 03:47:03 UTC

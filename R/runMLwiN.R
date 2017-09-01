@@ -939,10 +939,10 @@ version:date:md5:filename:x64:trial:platform
 3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:mac
 3.00:Mar 2017:f0c089a29e9971c229e96ef943abf0f2:mlnscript:TRUE:FALSE:bsd
 3.00:Mar 2017:5cf6e495dd2a24539d449f3de99fd53c:mlnscript:TRUE:FALSE:bsd
-3.01:May 2017:46651c378882426b6fa170ea422cef79:mlnscript:TRUE:FALSE:win
-3.01:May 2017:8276bb0844ba90017504fa4adeadf3fb:mlnscript:TRUE:FALSE:win
-3.01:May 2017:03ac1886150bd105d5564564a89b10ed:mlnscript:FALSE:FALSE:win
-3.01:May 2017:ae865c425357b0054c7f77c501ceb8c6:mlnscript:FALSE:FALSE:win
+3.01:May 2017:46651c378882426b6fa170ea422cef79:mlwin.exe:TRUE:FALSE:win
+3.01:May 2017:fe2488ce17d62b8497c2f89b764d6d2a:mlnscript.exe:TRUE:FALSE:win
+3.01:May 2017:f935ae2440aa34d087d104c7ef5d36b1:mlwin.exe:FALSE:FALSE:win
+3.01:May 2017:b0e178dd24e8b52820afa17ee6220087:mlnscript.exe:FALSE:FALSE:win
 3.01:May 2017:bd6d816fa6565c8b68ccacde8f553785:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:5c032755aab95f3e7341c04c6bbfd1e9:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:9f8474097dd168024096524eb0071ed3:mlnscript:TRUE:FALSE:lin
@@ -956,10 +956,13 @@ version:date:md5:filename:x64:trial:platform
 3.01:May 2017:b9b552fb7822abbb1918fdae2efa6323:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:a0345cf1a13dafe3a16afa23ee730cc7:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:5632195a4b361d3c20a60cbf9eb12384:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:2c93c64f2e7671744d48a6c6efc81665:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:b5efed180776a0635b081a9baffc043f:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:6a1e77d7e3fa89bd313a1b1318897d12:mlnscript:FALSE:FALSE:lin
 3.01:May 2017:a4b00b60d7f23e3b3e693bacac85a5a7:mlnscript:TRUE:FALSE:mac
 3.01:May 2017:b87173f7cdd4bec699a940ebd5f1cf4d:mlnscript:TRUE:FALSE:bsd
 3.01:May 2017:7eb4eee726311267c75135296a975996:mlnscript:TRUE:FALSE:bsd
+3.01:May 2017:de7600d7a04a415d1030a3d5aeb61cc2:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
@@ -1909,14 +1912,14 @@ version:date:md5:filename:x64:trial:platform
           if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
+                FP.names <- c(FP.names, paste("FP_", p, "_", resp.names[j], sep = ""))
               }
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               } else {
@@ -1925,7 +1928,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               }
@@ -1943,19 +1946,19 @@ version:date:md5:filename:x64:trial:platform
         nonfp.c <- nonfp.common
         if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+            FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             } else {
               categ.names <- levels(indata[[p]])
               refx <- categ["ref", which(p == categ["var", ])]
               categ.names <- categ.names[-which(refx == categ.names)]
               for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             }
           }
@@ -1977,14 +1980,14 @@ version:date:md5:filename:x64:trial:platform
         if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
             for (j in 1:nresp) {
-              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp.names[j], sep = ""))
+              FP.names <- c(FP.names, paste("FP_", p, "_", resp.names[j], sep = ""))
             }
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (j in 1:nresp) {
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j], sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                 }
               }
             } else {
@@ -1993,8 +1996,7 @@ version:date:md5:filename:x64:trial:platform
               categ.names <- categ.names[-which(refx == categ.names)]
               for (j in 1:nresp) {
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                 }
               }
             }
@@ -2018,15 +2020,14 @@ version:date:md5:filename:x64:trial:platform
             if (is.na(nonfp.sep[1]) || sum(p == nonfp.s) == 0) {
               if (is.null(categ) || sum(p == categ["var", ]) == 0) {
                 for (j in 1:nresp) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", p, "_", resp[j], sep = ""))
                 }
               } else {
                 if (is.na(categ["ref", which(p == categ["var", ])])) {
                   categ.names <- levels(indata[[p]])
                   for (j in 1:nresp) {
                     for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                    sep = ""))
+                      FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                     }
                   }
 
@@ -2036,8 +2037,7 @@ version:date:md5:filename:x64:trial:platform
                   categ.names <- categ.names[-which(refx == categ.names)]
                   for (j in 1:nresp) {
                     for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                      FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                    sep = ""))
+                      FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                     }
                   }
                 }
@@ -2054,19 +2054,19 @@ version:date:md5:filename:x64:trial:platform
           # for (i in 1:length(nonfp.c)){ nonfp.c[i]=gsub('\\.[[:digit:]]+$','',nonfp.c[i]) }
           if (is.na(nonfp.common[1]) || sum(newp == nonfp.c) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-              FP.names <- c(FP.names, paste("FP_", chartr(".", "_", newp), sep = ""))
+              FP.names <- c(FP.names, paste("FP_", newp, sep = ""))
             } else {
               if (is.na(categ["ref", which(p == categ["var", ])])) {
                 categ.names <- levels(indata[[p]])
                 for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
                 }
               } else {
                 categ.names <- levels(indata[[p]])
                 refx <- categ["ref", which(p == categ["var", ])]
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                  FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                  FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
                 }
               }
             }
@@ -2084,7 +2084,7 @@ version:date:md5:filename:x64:trial:platform
           if (is.na(nonfp[1]) || sum(p == nonfp.s) == 0) {
             if (is.null(categ) || sum(p == categ["var", ]) == 0) {
               for (j in 1:nresp) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), "_", resp[j], sep = ""))
+                FP.names <- c(FP.names, paste("FP_", p, "_", resp[j], sep = ""))
               }
 
             } else {
@@ -2092,8 +2092,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- levels(indata[[p]])
                 for (j in 1:nresp) {
                   for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                  sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               } else {
@@ -2102,8 +2101,7 @@ version:date:md5:filename:x64:trial:platform
                 categ.names <- categ.names[-which(refx == categ.names)]
                 for (j in 1:nresp) {
                   for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                    FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), "_", resp.names[j],
-                                                  sep = ""))
+                    FP.names <- c(FP.names, paste("FP_", categ.names[i], "_", resp.names[j], sep = ""))
                   }
                 }
               }
@@ -2116,19 +2114,19 @@ version:date:md5:filename:x64:trial:platform
       for (p in expla) {
         if (is.na(nonfp[1]) || sum(p == nonfp) == 0) {
           if (is.null(categ) || sum(p == categ["var", ]) == 0) {
-            FP.names <- c(FP.names, paste("FP_", chartr(".", "_", p), sep = ""))
+            FP.names <- c(FP.names, paste("FP_", p, sep = ""))
           } else {
             if (is.na(categ["ref", which(p == categ["var", ])])) {
               categ.names <- levels(indata[[p]])
               for (i in 1:as.numeric(categ["ncateg", which(p == categ["var", ])])) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             } else {
               categ.names <- levels(indata[[p]])
               refx <- categ["ref", which(p == categ["var", ])]
               categ.names <- categ.names[-which(refx == categ.names)]
               for (i in 1:(as.numeric(categ["ncateg", which(p == categ["var", ])]) - 1)) {
-                FP.names <- c(FP.names, paste("FP_", chartr(".", "_", categ.names[i]), sep = ""))
+                FP.names <- c(FP.names, paste("FP_", categ.names[i], sep = ""))
               }
             }
           }
@@ -2137,32 +2135,37 @@ version:date:md5:filename:x64:trial:platform
     }
   }
 
-  resid.names <- function(rpx, resid.lev, RP) {
+  resid.names <- function(rpx, resid.lev) {
     nrpx <- length(rpx)
+    RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
         if (i == j) {
-          RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+          RP <- c(RP, paste("RP", resid.lev, "_var_", rpx[i], sep = ""))
         } else {
-          RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]), sep = ""))
+          RP <- c(RP, paste("RP", resid.lev, "_cov_", rpx[i], "_", rpx[j], sep = ""))
         }
       }
     }
     RP
   }
 
-  resid2.names <- function(rpx, resid.lev, clre, RP) {
+  resid2.names <- function(rpx, resid.lev, clre) {
     nrpx <- length(rpx)
     nclre <- ncol(clre)
     k <- 1
+    RP <- NULL
     for (j in 1:nrpx) {
       for (i in 1:j) {
-        if (!any(as.numeric(clre[1, ]) == resid.lev & ((clre[2, ] == rpx[i] & clre[3, ] == rpx[j]) | (clre[2, ] == rpx[j] & clre[3, ] == rpx[i])))) {
+        # Create version where "." is replaced with "_"
+        clvar1 = chartr(".", "_", clre[2, ])
+        clvar2 = chartr(".", "_", clre[3, ])
+
+        if (!any(as.numeric(clre[1, ]) == resid.lev & ((clvar1 == rpx[i] & clvar2 == rpx[j]) | (clvar1 == rpx[j] & clvar2 == rpx[i])))) {
           if (i == j) {
-            RP <- c(RP, paste("RP", resid.lev, "_var_", chartr(".", "_", rpx[i]), sep = ""))
+            RP <- c(RP, paste("RP", resid.lev, "_var_", rpx[i], sep = ""))
           } else {
-            RP <- c(RP, paste("RP", resid.lev, "_cov_", chartr(".", "_", rpx[i]), "_", chartr(".", "_", rpx[j]),
-                              sep = ""))
+            RP <- c(RP, paste("RP", resid.lev, "_cov_", rpx[i], "_", rpx[j], sep = ""))
           }
         }
       }
@@ -2170,14 +2173,50 @@ version:date:md5:filename:x64:trial:platform
     RP
   }
 
+  nameordorig <- NULL
+  nameord <- NULL
+
+  # bcons parameters for mixed models need to be first in the list.
+  # We don't need to handle other bcons variants here as they will be the only parameter at the level and therefore won't need to be reordered
+  if (D[[1]] == "Mixed") {
+    for (i in 1:length(resp)) {
+      nameordorig <- c(nameordorig, paste0("bcons.", i))
+      nameord <- c(nameord, paste0("bcons_", i))
+    }
+  }
+
+  # names where "." have not been replaced with "_"
+  nameordorig <- c(nameordorig, sub("FP_", "", FP.names))
+
+  FP.names <- chartr(".", "_", FP.names)
+  nameord <- c(nameord, sub("FP_", "", FP.names))
+  
   RP.names <- NULL
   if (length(rp) > 0) {
     for (ii in 1:length(rp)) {
+      # Replace "." with "_"
+      rpname <- chartr(".", "_", rp[[ii]])
+      rpnameorig <- rp[[ii]]
+
+      # Identify variables not encountered yet
+      uniqrp <- rpname[!(rpname %in% nameord)]
+      uniqrporig <- rpnameorig[!(rpnameorig %in% nameordorig)]
+
+      # Add new parameters to order list
+      nameord <- c(nameord, uniqrp)      
+      nameordorig <- c(nameordorig, uniqrporig)
+
+      # Order rpname according to variables encountered so far
+      rpname <- nameord[sort(match(rpname, nameord))]
+      
       if (is.null(clre)) {
-        RP.names <- resid.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), RP.names)
+        RP.names <- c(RP.names, resid.names(rpname, as.numeric(sub("rp", "", names(rp)[ii]))))
       } else {
-        RP.names <- resid2.names(rp[[ii]], as.numeric(sub("rp", "", names(rp)[ii])), clre, RP.names)
+        RP.names <- c(RP.names, resid2.names(rpname, as.numeric(sub("rp", "", names(rp)[ii])), clre))
       }
+
+      # Reorder rp list based on name order calculated above
+      rp[[ii]] <- nameordorig[sort(match(rp[[ii]], nameordorig))]
     }
   }
 
@@ -2202,7 +2241,6 @@ version:date:md5:filename:x64:trial:platform
   RP.cov <- matrix(0, length(RP.names), length(RP.names))
   colnames(RP.cov) <- RP.names
   rownames(RP.cov) <- RP.names
-
 
   if (EstM == 1) {
     iterations <- mcmcMeth$iterations
@@ -3092,7 +3130,7 @@ version:date:md5:filename:x64:trial:platform
       resinames <- names(resilist[[1]])
       resiraw <- list()
       resi.means <- resinames[grep("_resi_est", resinames)]
-      resi.std <- resinames[grep("_resi_est", resinames)]
+      resi.std <- resinames[grep("_std_resi_est", resinames)]
       resi.var <- resinames[grep("_resi_variance", resinames)]
       resi.se <- resinames[grep("_resi_se", resinames)]
       for (name in resi.means) {

@@ -1,8 +1,8 @@
-272edcd2d4efdb8b7661f3a8a70a2011 *DESCRIPTION
+35244a07758cdb1ae159b63341959c22 *DESCRIPTION
 9cdcacc31c6b500e654d8b69f8db0f75 *NAMESPACE
-c2cd1ce9725ddf2026286571621b2c35 *NEWS
+67d3068fa5da9428dcc58f68a7b8bbfd *NEWS
 e784720f96928119198c7f7b025ea399 *R/BD.R
-ffcada79752ad378aa6c0308dd06de5d *R/Formula.translate.R
+a80f463472cf1de2fd930180095462ad *R/Formula.translate.R
 27224cffccf23f92617dc1e4a6af7630 *R/Formula.translate.compat.R
 3f486d286fc8997d3e89be63ff90c250 *R/MCSE.R
 92b86d4004c7a4b4de2cd1d436232de6 *R/Untoggle.R
@@ -19,11 +19,11 @@ e961c4bf855cb1ce11067cbc5d983ee5 *R/mlwinfitIGLS.R
 46b7ae7b3ba17ded96b2ab6159ad6484 *R/predCurves.r
 975e016c1cfdfc80bbd7487d5b8f69af *R/predLines.r
 ae4e81fbfe25b80465cf70b03bf1f86b *R/prior2macro.R
-7fa94d8021ec2f04f668eae03bb1aec7 *R/runMLwiN.R
+452228e31850ec0de1a761cc63ab8259 *R/runMLwiN.R
 3aa1e7c90374f23fcd420628d00975a0 *R/sixway.R
 e7305fed9770bab5d6b192bc6bf147c4 *R/trajectories.R
-31fc3d82c248e66d9d652a0b046695c3 *R/write.IGLS.R
-44d33b54b77b1162831806bf2396614e *R/write.MCMC.R
+5317782115dd5f2981d53c75222f63b7 *R/write.IGLS.R
+16e3ee41fcc9076bb9762dfbd1d87b8a *R/write.MCMC.R
 5ba52b43f319b663ec9c178f6216300e *R/ws2foreign.R
 eb1cf4cb551943e04fbc48a725ab50b3 *data/alevchem.rda
 13eb589e8f3ee4cb4a59c2359b119183 *data/bang.rda

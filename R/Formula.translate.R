@@ -1280,28 +1280,44 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (length(randC) == 0 && length(fixc) == 0) {
       invars$resp <- resp
       invars$expl <- fixs
-      if (length(rp) != 0) 
+      if (length(rp) != 0) {
         invars$rp <- rp
-      if (length(nonfps) != 0) 
+      }
+      if (length(nonfps) != 0) {
         invars$nonfp <- nonfps
+      }
       invars$indata <- categobj$indata
       invars$contrasts <- categobj$contrasts
       invars$xlevels <- categobj$xlevels
       invars$D <- D
     } else {
       invars$resp <- resp
-      if (length(fixs) != 0) 
-        invars$expl$sep.coeff <- fixs else invars$expl$sep.coeff <- NA
-      if (length(fixc) != 0) 
-        invars$expl$common.coeff <- fixc else invars$expl$common.coeff <- NA
-      if (length(rp) != 0) 
+      if (length(fixs) != 0) {
+        invars$expl$sep.coeff <- fixs
+      } else {
+        invars$expl$sep.coeff <- NA
+      }
+      if (length(fixc) != 0) {
+        invars$expl$common.coeff <- fixc
+      } else {
+        invars$expl$common.coeff <- NA
+      }
+      if (length(rp) != 0) {
         invars$rp <- rp
-      if (length(ccid.mat) != 0) 
+      }
+      if (length(ccid.mat) != 0) {
         invars$expl$common.coeff.id <- ccid.mat
-      if (length(nonfps) != 0) 
-        invars$nonfp$nonfp.sep <- nonfps else invars$nonfp$nonfp.sep <- NA
-      if (length(nonfpc) != 0) 
-        invars$nonfp$nonfp.common <- nonfpc else invars$nonfp$nonfp.common <- NA
+      }
+      if (length(nonfps) != 0) {
+        invars$nonfp$nonfp.sep <- nonfps
+      } else {
+        invars$nonfp$nonfp.sep <- NA
+      }
+      if (length(nonfpc) != 0) {
+        invars$nonfp$nonfp.common <- nonfpc
+      } else {
+        invars$nonfp$nonfp.common <- NA
+      }
       invars$indata <- categobj$indata
       invars$contrasts <- categobj$contrasts
       invars$xlevels <- categobj$xlevels
