@@ -83,10 +83,12 @@ sixway(mymodel4@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 (mymodel8 <- runMLwiN(probit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1), 
   data = bang1))
 
-if (!require(texreg)) install.packages("texreg")
-library(texreg)
-screenreg(list(mymodel7, mymodel8), custom.model.names=c("Gibbs", "Metropolis"), groups = list("Fixed Part" = 1:6, "Level-2" = 7:9, "Level-1" = 10:10),
- stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+if (!require(texreg)) {
+  warning("texreg package required to use screenreg() function")
+} else {
+  screenreg(list(mymodel7, mymodel8), custom.model.names=c("Gibbs", "Metropolis"), groups = list("Fixed Part" = 1:6, "Level-2" = 7:9, "Level-1" = 10:10),
+   stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+}
 
 cat("The effective sample sizes\n")
 ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])

@@ -10,10 +10,10 @@ write.IGLS(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
   nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset,
   rcon = NULL, fcon = NULL, maxiter = 20, convtol = 2,
   mem.init = "default", optimat = FALSE, weighting = NULL,
-  fpsandwich = FALSE, rpsandwich = FALSE, macrofile, IGLSfile, resifile,
-  resi.store = FALSE, resioptions, debugmode = FALSE, startval = NULL,
-  namemap = sapply(colnames(indata), as.character), saveworksheet = NULL,
-  rng.version = 10)
+  fpsandwich = FALSE, rpsandwich = FALSE, macrofile, IGLSfile,
+  resifile, resi.store = FALSE, resioptions, debugmode = FALSE,
+  startval = NULL, namemap = sapply(colnames(indata), as.character),
+  saveworksheet = NULL, rng.version = 10)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}

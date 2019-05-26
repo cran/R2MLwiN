@@ -42,10 +42,11 @@ addmargins(with(bang, table(lc, use)))
 
 (mymodel1 <- runMLwiN(logit(use) ~ 1 + lc, D = "Binomial", data = bang))
 
-if (!require(car)) install.packages("car")
-library(car)
-
-linearHypothesis(mymodel1, "FP_lcOne_child = FP_lcTwo_children")
+if (!require(car)) {
+  warning("car package required to use linearHypothesis() function")
+} else {
+  linearHypothesis(mymodel1, "FP_lcOne_child = FP_lcTwo_children")
+}
 
 # A probit model . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
 
@@ -67,10 +68,11 @@ linearHypothesis(mymodel1, "FP_lcOne_child = FP_lcTwo_children")
   M = 2), startval = list(FP.b = mymodel4@FP, FP.v = mymodel4@FP.cov, RP.b = mymodel4@RP, RP.v = mymodel4@RP.cov)),
   data = bang))
 
-if (!require(car)) install.packages("car")
-library(car)
-
-linearHypothesis(mymodel5, "RP2_var_Intercept = 0")
+ if (!require(car)) {
+  warning("car package required to use linearHypothesis() function")
+} else {
+  linearHypothesis(mymodel5, "RP2_var_Intercept = 0")
+}
 
 # Variance partition coeficient . . . . . . . . . . . . . . . . . . . . .131
 
@@ -118,12 +120,21 @@ table(bang$educ)
   estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel6@FP, FP.v = mymodel6@FP.cov, RP.b = mymodel6@RP,
     RP.v = mymodel6@RP.cov)), data = bang))
 
-if (!require(car)) install.packages("car")
-library(car)
-
-linearHypothesis(mymodel7, "RP2_cov_Intercept_urbanUrban = 0")
-linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
-linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanUrban = 0"))
+if (!require(car)) {
+  warning("car package required to use linearHypothesis() function")
+} else {
+  linearHypothesis(mymodel7, "RP2_cov_Intercept_urbanUrban = 0")
+}
+if (!require(car)) {
+  warning("car package required to use linearHypothesis() function")
+} else {
+  linearHypothesis(mymodel7, "RP2_var_urbanUrban = 0")
+}
+if (!require(car)) {
+  warning("car package required to use linearHypothesis() function")
+} else {
+  linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanUrban = 0"))
+}
 
 (mymodel8 <- runMLwiN(logit(use) ~ 1 + lc + age + urban + educ + hindu + d_lit + d_pray + (1 + urban | district),
   D = "Binomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel7@FP, FP.v = mymodel7@FP.cov,
@@ -135,20 +146,21 @@ linearHypothesis(mymodel7, c("RP2_cov_Intercept_urbanUrban = 0", "RP2_var_urbanU
 
 # Creating a district-level data set . . . . . . . . . . . . . . . . . . 140
 
-if (!require(doBy)) install.packages("doBy")
-library(doBy)
+if (!require(doBy)) {
+  warning("package doBy required to run this example")
+} else {
+  bangshort <- summaryBy(use + cons ~ district + d_lit + d_pray, FUN = c(mean, sum), data = bang)
+  bangshort$use.sum <- NULL
+  colnames(bangshort) <- c("district", "d_lit", "d_pray", "use", "cons", "denom")
+  bangshort$use <- bangshort$use - 1
 
-bangshort <- summaryBy(use + cons ~ district + d_lit + d_pray, FUN = c(mean, sum), data = bang)
-bangshort$use.sum <- NULL
-colnames(bangshort) <- c("district", "d_lit", "d_pray", "use", "cons", "denom")
-bangshort$use <- bangshort$use - 1
+  # Fitting the model . . . . . . . . . . . . . . . . . . . . . . . . . . .142
 
-# Fitting the model . . . . . . . . . . . . . . . . . . . . . . . . . . .142
+  (mymodel9 <- runMLwiN(logit(use, denom) ~ 1 + d_lit + d_pray + (1 | district), D = "Binomial", data = bangshort))
+  print(mymodel9)
 
-(mymodel9 <- runMLwiN(logit(use, denom) ~ 1 + d_lit + d_pray + (1 | district), D = "Binomial", data = bangshort))
-
-(mymodel10 <- runMLwiN(logit(use, denom) ~ 1 + d_lit + d_pray + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
-  M = 2), startval = list(FP.b = mymodel9@FP, FP.v = mymodel9@FP.cov, RP.b = mymodel9@RP, RP.v = mymodel9@RP.cov)),
-  data = bangshort))
-
+  (mymodel10 <- runMLwiN(logit(use, denom) ~ 1 + d_lit + d_pray + (1 | district), D = "Binomial", estoptions = list(nonlinear = c(N = 1,
+    M = 2), startval = list(FP.b = mymodel9@FP, FP.v = mymodel9@FP.cov, RP.b = mymodel9@RP, RP.v = mymodel9@RP.cov)),
+    data = bangshort))
+}
 ############################################################################

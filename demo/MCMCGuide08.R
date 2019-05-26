@@ -27,9 +27,6 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
-if (!require(doParallel)) install.packages("doParallel")
-library(doParallel)
-
 # User's input if necessary
 
 # 8.3 Generating simulated datasets based on true values . . . . . . . . 102
@@ -71,19 +68,26 @@ simu <- function(i) {
 }
 
 RNGkind("L'Ecuyer-CMRG")
-cl <- makeCluster(detectCores(logical = FALSE))
-registerDoParallel(cl)
 set.seed(1)
-r <- foreach(i=1:ns, .packages="R2MLwiN") %dopar% {
-  simu(i)
-}
+if (!require(doParallel)) {
+  warning("doParallel library is not installed, simulations will be run in series")
+  for (i in 1:ns) {
+    r[[i]] <- simu(i)
+  }
+} else {
+  cl <- makeCluster(detectCores(logical = FALSE))
+  registerDoParallel(cl)
+  r <- foreach(i=1:ns, .packages="R2MLwiN") %dopar% {
+    simu(i)
+  }
 
-stopCluster(cl)
-unregister <- function() {
-  env <- foreach:::.foreachGlobals
-  rm(list=ls(name=env), pos=env)
+  stopCluster(cl)
+  unregister <- function() {
+    env <- foreach:::.foreachGlobals
+    rm(list=ls(name=env), pos=env)
+  }
+  unregister()
 }
-unregister()
 
 for(i in 1:ns){
   if (Actual[1] > r[[i]]$quantiles[1,1] & Actual[1] < r[[i]]$quantiles[1,2]) {

@@ -2,7 +2,7 @@
 #' WinBUGS/OpenBUGS.
 #' 
 #' This function allows R to call WinBUGS using the output files from MLwiN.
-#' This function uses functionalities in the \code{\link[rbugs]{rbugs}}
+#' This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS}}
 #' package.
 #' 
 #' @param D A vector specifying the type of distribution used in the model.
@@ -61,99 +61,14 @@
 #'
 #' @return Returns an \code{\link[coda]{mcmc}} object.
 #'
-#' @note This function is derived from \code{\link[rbugs]{rbugs}} (written by
-#' Jun Yan and Marcos Prates).
-#'
 #' @author Zhang, Z., Charlton, C.M.J., Parker, R.M.A., Leckie, G., and Browne,
 #' W.J. (2016) Centre for Multilevel Modelling, University of Bristol.
 #'
-#' @seealso \code{\link{runMLwiN}},\code{\link[rbugs]{rbugs}}
+#' @seealso \code{\link{runMLwiN}},\code{\link[R2WinBUGS]{bugs}}
 #' @export
 mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
                        bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
-  
-  rbugs2 <- function (data.file, inits.files, paramSet, model, bugEst, fact, n.chains = 1, n.iter = 2000,
-                      n.burnin = floor(n.iter/2), n.thin = max(1, floor(n.chains * (n.iter - n.burnin)/1000)), dic = FALSE, debug = FALSE,
-                      bugs = system("which OpenBUGS", TRUE), bugsWorkingDir, OpenBugs = TRUE,
-                      cleanBugsWorkingDir = FALSE, genFilesOnly = FALSE, verbose = FALSE,
-                      seed = NULL) {
-    Windows = FALSE
-    os.type <- .Platform$OS.type
-    if (length(bugsWorkingDir) == 0)
-      stop("It is required to specify the bugsWorkingDir")
-    if (os.type == "windows") {
-      if (!file.exists(bugs))
-        stop(paste("BUGS executable", bugs, "does not exists."))
-      Windows = TRUE
-    }
-    else if (os.type == "unix") {
-      if (length(bugs) == 0)
-        bugs <- system("which OpenBUGS", TRUE)
-      if (length(bugs) == 0)
-        stop(paste("BUGS executable", bugs, "does not exists."))
-    }
-    else warning("This function has not been tested on mac-os.")
-    
-    if (is.null(bugsWorkingDir)) {
-      bugsWorkingDir <- tempfile("bugsWorkingDir")
-      if (!file.exists(bugsWorkingDir))
-        dir.create(bugsWorkingDir)
-      on.exit(if (cleanBugsWorkingDir) unlink(bugsWorkingDir,
-                                              TRUE))
-    }
-    workingDir <- bugsWorkingDir
-    
-    if (!file.exists(model)) stop("Model file doesn't exist.")
-    model.file <- file.path(workingDir, "model.txt")
-    file.copy(model, model.file, overwrite = TRUE)
-    
-    
-    script.file <- paste(workingDir, "script.txt", sep = "/")
-    rbugs::genBugsScript(paramSet, n.chains, n.iter, n.burnin, n.thin,
-                  dic, model.file, data.file, inits.files, bugsWorkingDir,
-                  script.file, debug, OpenBugs, Windows, seed)
-    
-    trLbr <- function(unix) {
-      lines <- readLines(unix)
-      writeLines(lines, unix, sep="\r\n")
-    }
-    if (OpenBugs) {
-      trLbr(model.file)
-      trLbr(data.file)
-      for (i in inits.files) trLbr(i)
-    }
-    if (genFilesOnly) {
-      cat("Files are generated in", workingDir, "\n")
-      return(TRUE)
-    }
-    rbugs::runBugs(bugs, script.file, n.chains, workingDir, OpenBugs,
-            Windows, verbose)
-    all <- rbugs::getBugsOutput(n.chains, workingDir, OpenBugs)  ##Modified by Marcos
-    all$n.iter = n.iter                                   ##Modified by Marcos
-    all$n.burnin = n.burnin                               ##Modified by Marcos
-    all$n.thin = n.thin                                   ##Modified by Marcos
-    
-    #### functions to get the output
-    getCodaFileNames <- function(n.chains, workingDir, OpenBugs) {
-      CODA <- if (OpenBugs) "codaCODA" else "coda"
-      INDEX <- if (OpenBugs) "index" else "Index"
-      CHAIN <- if (OpenBugs) "chain" else NULL
-      coda  <- file.path(workingDir, CODA)
-      codaFiles <- paste(coda, CHAIN, 1:n.chains, ".txt", sep="")
-      codaIndexFile <- paste(coda, INDEX, ".txt", sep="")
-      list(codaFiles=codaFiles, codaIndexFile=codaIndexFile)
-    }       
-    if(cleanBugsWorkingDir) { ##Modified by Marcos
-      fnames <- getCodaFileNames(n.chains, workingDir, OpenBugs) ##Modified by Marcos
-      coda.files <- c(fnames$codaIndexFile, fnames$codaFiles) ##Modified by Marcos
-      log.file <- file.path(workingDir, "log.txt") ##Modified by Marcos
-      file.remove(c(model.file, log.file, data.file, ##Modified by Marcos
-                    inits.files[1], script.file, coda.files)) ##Modified by Marcos
-    }
-    
-    all
-  }
-  environment(rbugs2)<-environment(rbugs)
+
   
   nlev= length(levID)
   if(nlev==1){
@@ -188,9 +103,18 @@ mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, ad
     }
   }
   if (!is.null(addmore)) parameters=c(parameters,addmore)
-  chains.bugs=rbugs2(data.file = datafile, inits.files = initfiles,
-                     paramSet=parameters, model=modelfile, bugEst=bugEst, n.chains = n.chains, n.iter = n.iter, n.burnin=n.burnin, n.thin=n.thin, debug=debug, bugs=bugs,
-                     bugsWorkingDir=bugsWorkingDir, OpenBugs=OpenBugs, cleanBugsWorkingDir=cleanBugsWorkingDir, seed = seed)
-  chains.bugs.mcmc=rbugs::rbugs2coda(chains.bugs,burnin=1,n.thin)
+
+  program <- "OpenBUGS"
+  if (!OpenBugs) {
+      program <- "WinBUGS"
+  }
+  chain.bugs <- R2WinBUGS::bugs(data = datafile, inits = initfiles,
+                             parameters.to.save = parameters, model.file = modelfile, 
+                             n.chains = n.chains, n.iter = n.iter, n.burnin = n.burnin, n.thin = n.thin,
+                             debug = debug, DIC = TRUE, codaPkg = FALSE,
+                             program = program, working.directory = bugsWorkingDir, clearWD = cleanBugsWorkingDir,
+                             bugs.seed = seed)
+  chains.bugs.mcmc <- as.mcmc.list(chain.bugs)
+
   chains.bugs.mcmc
 }

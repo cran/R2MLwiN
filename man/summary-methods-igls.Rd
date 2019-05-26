@@ -9,8 +9,8 @@
 \usage{
 \S4method{summary}{mlwinfitIGLS}(object, ...)
 
-\S4method{print}{mlwinfitIGLS}(x, digits = max(3, getOption("digits") - 2),
-  signif.stars = getOption("show.signif.stars"), ...)
+\S4method{print}{mlwinfitIGLS}(x, digits = max(3, getOption("digits") -
+  2), signif.stars = getOption("show.signif.stars"), ...)
 
 \S4method{show}{mlwinfitIGLS}(object)
 }

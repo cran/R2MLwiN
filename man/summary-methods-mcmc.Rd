@@ -9,8 +9,9 @@
 \usage{
 \S4method{summary}{mlwinfitMCMC}(object, ...)
 
-\S4method{print}{mlwinfitMCMC}(x, digits = max(3, getOption("digits") - 2),
-  signif.stars = getOption("show.signif.stars"), z.ratio = TRUE, ...)
+\S4method{print}{mlwinfitMCMC}(x, digits = max(3, getOption("digits") -
+  2), signif.stars = getOption("show.signif.stars"), z.ratio = TRUE,
+  ...)
 
 \S4method{show}{mlwinfitMCMC}(object)
 }

@@ -42,11 +42,12 @@ data(tutorial, package = "R2MLwiN")
 (mymodel3 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(priorcode = 0)), 
   data = tutorial))
 
-if (!require(texreg)) install.packages("texreg")
-library(texreg)
-screenreg(list(mymodel1, mymodel2, mymodel3), custom.model.names=c("IGLS", "Gibbs1", "Gibbs2"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:3, "Level-1" = 4:4),
- stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
-
+if (!require(texreg)) {
+  warning("texreg package required to use screenreg() function")
+} else {
+  screenreg(list(mymodel1, mymodel2, mymodel3), custom.model.names=c("IGLS", "Gibbs1", "Gibbs2"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:3, "Level-1" = 4:4),
+   stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+}
 rm(list = c("mymodel1", "mymodel2", "mymodel3"))
 
 # 5.3 Using informative priors . . . . . . . . . . . . . . . . . . . . . .62

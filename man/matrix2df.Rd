@@ -11,7 +11,8 @@ and (b) columns containing weights (in this example, if \code{standardise = TRUE
 row of generated weight vectors would be, say, \code{0.25, 0.25, 0.25, 0.25}, otherwise first
 row of generated weight vectors would be, say, \code{1, 1, 1, 1}).}
 \usage{
-matrix2df(mat, standardise = FALSE, idstub = "id", weightstub = "weight")
+matrix2df(mat, standardise = FALSE, idstub = "id",
+  weightstub = "weight")
 }
 \arguments{
 \item{mat}{A matrix.}

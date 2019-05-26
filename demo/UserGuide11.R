@@ -108,7 +108,7 @@ invlogit(mymodel12@FP["FP_Intercept_C"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
 invlogit(mymodel12@FP["FP_Intercept_B"] + mymodel12@FP["FP_gcseavnormal_12345"])
 
-(mymodel13 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (gcseavnormal[1:5] + gender[1:5] | school),
+(mymodel13 <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseavnormal[1:5] + gender[1:5] + I(gcseavnormal^2)[1:5] + (1[1:5] + gcseavnormal[1:5] + gender[1:5] | school),
  D = "Ordered Multinomial", estoptions = list(nonlinear = c(N = 1, M = 2), startval = list(FP.b = mymodel12@FP, 
   FP.v = mymodel12@FP.cov, RP.b = mymodel12@RP, RP.v = mymodel12@RP.cov)), data = alevchem))
 

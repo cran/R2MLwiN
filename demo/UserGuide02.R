@@ -65,10 +65,11 @@ tutorial$school <- relevel(tutorial$school, 65)
 
 aov(normexam ~ school, data = tutorial)
 
-if (!require(lmtest)) install.packages("lmtest")
-library(lmtest)
-
-lrtest(mymodel2, mymodel3)
+if (!require(lmtest)) {
+  warning("lmtest package required to use lrtest() function")
+} else {
+  lrtest(mymodel2, mymodel3)
+}
 
 (mymodel4 <- runMLwiN(normexam ~ 1 + school + schgend + (1 | student), data = tutorial))
 

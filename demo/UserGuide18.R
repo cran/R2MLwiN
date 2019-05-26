@@ -137,67 +137,69 @@ findClust <- function(data, var1, var2) {
   merge(data[, c(var1, var2)], ids, sort = FALSE)$id
 }
 
-if (!require(doBy)) install.packages("doBy")
-library(doBy)
+if (!require(doBy)) {
+  warning("package doBy required to run this example")
+} else {
+  data(xc, package = "R2MLwiN")
 
-data(xc, package = "R2MLwiN")
+  xc$region <- findClust(xc, "sid", "pid")
+  xc$region <- NULL
 
-xc$region <- findClust(xc, "sid", "pid")
-xc$region <- NULL
+  numchildren <- summaryBy(cons ~ sid + pid, FUN = length, data = xc)
+  colnames(numchildren) <- c("sid", "pid", "numchildren")
+  xc <- merge(xc, numchildren, sort = FALSE)
 
-numchildren <- summaryBy(cons ~ sid + pid, FUN = length, data = xc)
-colnames(numchildren) <- c("sid", "pid", "numchildren")
-xc <- merge(xc, numchildren, sort = FALSE)
+  xc <- xc[order(xc$sid, xc$pid), ]
 
-xc <- xc[order(xc$sid, xc$pid), ]
+  xc <- xc[xc$numchildren > 2, ]
 
-xc <- xc[xc$numchildren > 2, ]
+  xc$region <- findClust(xc, "sid", "pid")
 
-xc$region <- findClust(xc, "sid", "pid")
+  xc <- xc[order(xc$region, xc$sid), ]
 
-xc <- xc[order(xc$region, xc$sid), ]
+  xc$rsid <- rep(1, nrow(xc))
 
-xc$rsid <- rep(1, nrow(xc))
-
-rgrp <- xc$region[1]
-sgrp <- xc$sid[1]
-id <- 1
-for (i in 2:nrow(xc)) {
-  if (xc$region[i] != rgrp) {
-    rgrp <- xc$region[i]
-    sgrp <- xc$sid[i]
-    id <- 1
+  rgrp <- xc$region[1]
+  sgrp <- xc$sid[1]
+  id <- 1
+  for (i in 2:nrow(xc)) {
+    if (xc$region[i] != rgrp) {
+      rgrp <- xc$region[i]
+      sgrp <- xc$sid[i]
+      id <- 1
+    }
+    if (xc$sid[i] != sgrp) {
+      sgrp <- xc$sid[i]
+      id <- id + 1
+    }
+    xc$rsid[i] <- id
   }
-  if (xc$sid[i] != sgrp) {
-    sgrp <- xc$sid[i]
-    id <- id + 1
-  }
-  xc$rsid[i] <- id
-}
 
-rs_dummy <- model.matrix(~factor(xc$rsid) - 1)
-rs_dummy_names <- paste0("rs", 1:8)
-colnames(rs_dummy) <- rs_dummy_names
-xc <- cbind(xc, rs_dummy)
+  rs_dummy <- model.matrix(~factor(xc$rsid) - 1)
+  rs_dummy_names <- paste0("rs", 1:8)
+  colnames(rs_dummy) <- rs_dummy_names
+  xc <- cbind(xc, rs_dummy)
 
-covmatrix <- NULL
-for (i in 1:8) {
-  for (j in 1:i) {
-    if (i != j) {
-      covmatrix <- cbind(covmatrix, c(3, rs_dummy_names[j], rs_dummy_names[i]))
+  covmatrix <- NULL
+  for (i in 1:8) {
+    for (j in 1:i) {
+      if (i != j) {
+        covmatrix <- cbind(covmatrix, c(3, rs_dummy_names[j], rs_dummy_names[i]))
+      }
     }
   }
+
+  random.ui <- matrix(0, 10, 7)
+  random.ui[1, ] <- 1
+  random.ui[2:8, ] <- diag(7) * -1
+  random.ci <- rep(0, 7)
+
+  xc <- xc[order(xc$region, xc$pid, xc$pupil), ]
+
+  (mymode1 <- runMLwiN(attain ~ 1 + (rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8 | region) + (1 | pid) + (1 | pupil), 
+    estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
+
 }
-
-random.ui <- matrix(0, 10, 7)
-random.ui[1, ] <- 1
-random.ui[2:8, ] <- diag(7) * -1
-random.ci <- rep(0, 7)
-
-xc <- xc[order(xc$region, xc$pid, xc$pupil), ]
-
-(mymode1 <- runMLwiN(attain ~ 1 + (rs1 + rs2 + rs3 + rs4 + rs5 + rs6 + rs7 + rs8 | region) + (1 | pid) + (1 | pupil), 
-  estoptions = list(clre = covmatrix, constraints = list(random.ui = random.ui, random.ci = random.ci)), data = xc))
 
 # 18.7 Modelling a multi-way cross-classification . . . . . . . . . . . .280
 

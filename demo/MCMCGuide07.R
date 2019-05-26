@@ -43,7 +43,7 @@ while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1)
 
 ## The highest level comes first, then the second highest and so on
 ## Uses the results from IGLS to create initial values for bugs
-## Fit the model by calling openbugs using the rbugs package
+## Fit the model by calling openbugs using the R2WinBUGS package
 mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, show.file = TRUE), 
   BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = tutorial)
 

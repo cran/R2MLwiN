@@ -6,8 +6,8 @@
 \usage{
 runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
   estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-  stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE,
-  indata = NULL, saveworksheet = NULL)
+  stdout = "", stderr = "", workdir = tempdir(),
+  checkversion = TRUE, indata = NULL, saveworksheet = NULL)
 }
 \arguments{
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model
@@ -347,9 +347,9 @@ uncorrected, IGLS or RIGLS computation used.
 residuals are used, if \code{rpsandwich = FALSE} (default) then standard,
 uncorrected, IGLS or RIGLS `plug in' estimates used.
 
-\item \code{smat}: a matrix with two columns the levels at which a diagonal
-matrix is to be specified. The first column specifies the level.
-If the value of the second column is \code{1} then the random covariance matrix is
+\item \code{smat}: a matrix with two rows the levels at which a diagonal
+matrix is to be specified. The first row specifies the level.
+If the value of the second row is \code{1} then the random covariance matrix is
 set to be diagonal.
 
 \item \code{maxiter}: a numeric value specifying the maximum number of iterations, from

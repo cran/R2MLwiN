@@ -10,7 +10,7 @@
       options(MLwiN_path = "/usr/local/bin/mlnscript")
     }
     if (Sys.info()["sysname"] == "Windows") {
-      options(MLwiN_path = "C:/Program Files/MLwiN v3.01/")
+      options(MLwiN_path = "C:/Program Files/MLwiN v3.03/")
     }
   }
   packageStartupMessage("")
@@ -19,7 +19,7 @@
   packageStartupMessage("")
   packageStartupMessage("Support provided by the Economic and Social Research Council (ESRC)")
   packageStartupMessage("(Grants RES-149-25-1084, RES-576-25-0032 and ES/K007246/1)")
-  packageStartupMessage(paste(capture.output(citation(package="R2MLwiN")), collapse="\n"))
+  packageStartupMessage(paste(format(citation(package="R2MLwiN")), collapse="\n"))
   packageStartupMessage(paste0("The MLwiN_path option is currently set to ", getOption("MLwiN_path")))
   packageStartupMessage("To change this use: options(MLwiN_path=\"<path to MLwiN>\")")
 } 

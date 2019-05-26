@@ -4,7 +4,7 @@
 #' software package, allowing users to fit multilevel models using
 #' MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 #'
-#' @importFrom rbugs runBugs rbugs2coda genBugsScript getBugsOutput rbugs
+#' @importFrom R2WinBUGS bugs
 #' @importFrom coda mcmc mcmc.list as.mcmc.list read.coda effectiveSize raftery.diag thin is.mcmc
 #' @importFrom lattice histogram densityplot xyplot qqmath Rows trellis.par.get trellis.par.set panel.xyplot panel.grid panel.abline panel.segments
 #' @importFrom foreign read.dta write.dta
@@ -15,6 +15,7 @@
 #' @importFrom stats4 coef logLik summary vcov update
 #' @importFrom stats formula
 #' @importFrom Matrix nnzero sparseMatrix
+#' @importFrom utils citation
 #' 
 #' @section New features in version 0.8-3:
 #' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been

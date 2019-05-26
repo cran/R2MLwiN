@@ -1,3 +1,37 @@
+Mon May 20 2019
+1. Changes
+   * Replace calls to rbugs with R2WinBUGS
+   * Give warning if a necessary package is not installed for a demo, instead of automatically installing it
+
+Tue Feb 12 2019
+1. Changes
+   * Make the rbugs package dependency optional
+
+Mon Feb 11 2019
+1. Changes
+   * Increase minimum suggested version of MLwiN to 2.36
+
+Fri Feb 08 2019
+1. Bug fixing
+   * Warn the user if an expected column is not present in the data
+   * Correct documentation of smat to indicate that is should be a 2xN matrix instead of Nx2
+
+2. Changes
+   * Display citation information directly instead of capturing the print output
+   * Specify UTF-8 encoding in the DESCRIPTION file.
+
+Fri Apr 20 2018
+1. Bug fixing
+   * Correct stored hierarchy information when units IDs do not have unique values across higher levels
+
+Wed Feb 14 2017
+1. Bug fixing
+   * Correct final model in User Guide chapter 11 example to match manual
+
+Thu Sep 21 2017
+1. Bug fixing
+   * Fixed bug where some models with interactions would not run due to generated variables having different names to those expected by the formula
+
 Thu Aug 24 2017
 1. Bug fixing
    * Fixed bug where parameters could be incorrectly labelled in the random part if the order the variables are entered varies between levels or variables not included at lower levels are specified before those that are

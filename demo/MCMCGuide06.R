@@ -75,10 +75,12 @@ names(RP.b) <- c("RP2_var_Intercept", "RP2_cov_Intercept_standlrt", "RP2_var_sta
 
 # 6.6 Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
 
-if (!require(texreg)) install.packages("texreg")
-library(texreg)
-screenreg(list(mymodel0a, mymodel0, mymodel1, mymodel2, mymodel3), custom.model.names=c("IGLS", "default", "prior 2", "uniform", "prior 4"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:5, "Level-1" = 6:6),
- stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+if (!require(texreg)) {
+  warning("texreg package required to use screenreg() function")
+} else {
+  screenreg(list(mymodel0a, mymodel0, mymodel1, mymodel2, mymodel3), custom.model.names=c("IGLS", "default", "prior 2", "uniform", "prior 4"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:5, "Level-1" = 6:6),
+   stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+}
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 81
 

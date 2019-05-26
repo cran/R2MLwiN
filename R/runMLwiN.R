@@ -318,9 +318,9 @@
 #' residuals are used, if \code{rpsandwich = FALSE} (default) then standard,
 #' uncorrected, IGLS or RIGLS `plug in' estimates used.
 #'
-#' \item \code{smat}: a matrix with two columns the levels at which a diagonal
-#' matrix is to be specified. The first column specifies the level.
-#' If the value of the second column is \code{1} then the random covariance matrix is
+#' \item \code{smat}: a matrix with two rows the levels at which a diagonal
+#' matrix is to be specified. The first row specifies the level.
+#' If the value of the second row is \code{1} then the random covariance matrix is
 #' set to be diagonal.
 #'
 #' \item \code{maxiter}: a numeric value specifying the maximum number of iterations, from
@@ -958,21 +958,74 @@ version:date:md5:filename:x64:trial:platform
 3.01:May 2017:5632195a4b361d3c20a60cbf9eb12384:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:2c93c64f2e7671744d48a6c6efc81665:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:b5efed180776a0635b081a9baffc043f:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:fc01220384c818ed1f578dea7b77541f:mlnscript:TRUE:FALSE:lin
+3.01:May 2017:cc2822f59566108c1006f6400f726cab:mlnscript:TRUE:FALSE:lin
 3.01:May 2017:6a1e77d7e3fa89bd313a1b1318897d12:mlnscript:FALSE:FALSE:lin
+3.01:May 2017:6ec9428d34b1970b8568f2051ac6e914:mlnscript:FALSE:FALSE:lin
 3.01:May 2017:a4b00b60d7f23e3b3e693bacac85a5a7:mlnscript:TRUE:FALSE:mac
 3.01:May 2017:b87173f7cdd4bec699a940ebd5f1cf4d:mlnscript:TRUE:FALSE:bsd
 3.01:May 2017:7eb4eee726311267c75135296a975996:mlnscript:TRUE:FALSE:bsd
 3.01:May 2017:de7600d7a04a415d1030a3d5aeb61cc2:mlnscript:TRUE:FALSE:bsd
+3.02:May 2017:768ac5741e83560b6ec747dde2baec92:mlwin.exe:TRUE:FALSE:win
+3.02:May 2017:85edfb9504d073747c40833f11bc9c32:mlnscript.exe:TRUE:FALSE:win
+3.02:May 2017:3b193067975759d2e364360db34342a2:mlwin.exe:FALSE:FALSE:win
+3.02:May 2017:a1a4f45981752a56d57f17bcbc7fb1a1:mlnscript.exe:FALSE:FALSE:win
+3.02:Mar 2018:f40a544fce682e87729f5b3f5f6f575f:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:4123ffef26f169549893bebda46cbae8:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:062208c8247d252fe253f18496819cc5:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:7b61ee52bd97103bf8a75f4ada435ecd:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:64263933c3c6a38d578de33e13a23ba4:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:28e7f7537ea806852bdca102cb219e82:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:ba91ab776f6d9e633b0f5cf7bd277f0f:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:de69c8e27d3226eb8ad90ce17169c80a:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:601de28a14d23a4fe858735ff7a8213e:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:fc052d85048ef31684c5cac2f49f97f9:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:33ee31da3b675aec58e0d32070f4d0ad:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:55a2afa9ac6106b3427368446b0c7ef5:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:ff465ff3587e463267421856323a28e7:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:fce5f57d8df9d658249305f87793621a:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:b63259ece4317909d4125e538bf0eab3:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:5beb878dd2ad6c62f914ebcb74167146:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:c1b517f1cf6a291d109840d4a04df62e:mlnscript:TRUE:FALSE:lin
+3.02:Mar 2018:7b5933610804cf89abf3b73b3c540a91:mlnscript:FALSE:FALSE:lin
+3.02:Mar 2018:0197012ba6de825501d3a65e37eec6a6:mlnscript:TRUE:FALSE:mac
+3.02:Mar 2018:b3c36f4181e447b02f16b19f5e1e5841:mlnscript:TRUE:FALSE:bsd
+3.02:Mar 2018:8781911b4ff801ed07275cdd72b192d9:mlnscript:TRUE:FALSE:bsd
+3.02:Mar 2018:b32100e3193e1c9dc80c41f0aa9cf2a3:mlnscript:TRUE:FALSE:bsd
+3.03:Feb 2019:da16ba3c457ef8369ef19290691b1f3b:mlwin.exe:TRUE:FALSE:win
+3.03:Feb 2019:daacc2c74363e9f05924df746e270281:mlnscript.exe:TRUE:FALSE:win
+3.03:Feb 2019:981493e55bb5e3d509aad3d90c5a6279:mlwin.exe:FALSE:FALSE:win
+3.03:Feb 2019:741fcc1d42ac9d047f6aa2b2f2866061:mlnscript.exe:FALSE:FALSE:win
+3.03:Feb 2019:751b7c0119cfd231d450371e7d31f367:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:3ebf56f160a3daf16474e303e29f80e1:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:7beb8ddb566258dcd166e11a0b1a9108:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:dc217b155794b48659a2430ee6000e95:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:1c0c6f26edd20e9ec53b7e1498d73fcd:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:197545c8a4a625c99bc6069151b20b63:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:5ae216f1f836b18d9903581031a6d4e9:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:ce7f94ee546ea1f80af075398e0b13f6:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:ad70573f88f2ec0845614f0b19503f72:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:7b0a2c0b2c00c3b4591e6c89061e087b:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:197545c8a4a625c99bc6069151b20b63:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:5aee97dd674130c0159252a85e6fde1e:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:a6c1af4d910f8739f207045b89751cff:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:0e4e608eb141c832197c035db5697ba9:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:1f1f88ab501c658a6bfc6c8093a1a8ab:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:b7fa57d2021c9857dc27b73c494fe216:mlnscript:TRUE:FALSE:lin
+3.03:Feb 2019:972939241c2e9f50b252b8533943922c:mlnscript:FALSE:FALSE:lin
+3.03:Feb 2019:d25888d3fb0bf20a13b482174abce080:mlnscript:TRUE:FALSE:mac
+3.03:Feb 2019:6b092743e4496cd4a2db1a554a76e5ab:mlnscript:TRUE:FALSE:bsd
+3.03:Feb 2019:6e4eaace2e76088de6ecbdc9a50f1996:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >3.01)"
+      versiontext <- "MLwiN (version: unknown or >3.03)"
     } else {
-      if (currentver$version < 2.28) {
-        # Block versions >year older than current release
+      if (currentver$version < 2.36) {
+        # Block releases older than a year or so (allow 2.36 as this corresponds to the trial version)
         stop("The current version of MLwiN is too old, please update it from http://www.bris.ac.uk/cmm/software/mlwin/download/upgrades.html")
       }
       versiontext <- paste0("MLwiN (version: ", currentver$version, ")")
@@ -2622,6 +2675,10 @@ version:date:md5:filename:x64:trial:platform
       }
     }
 
+    unmatchedvars <- setdiff(outvars, colnames(indata))
+    if (length(unmatchedvars) != 0) {
+      stop(paste("variables", paste(unmatchedvars, collapse=", "), "are referenced by the model but are not present in the data"))
+    }
     outdata <- indata[, outvars]
   } else {
     outdata <- indata
@@ -2639,7 +2696,7 @@ version:date:md5:filename:x64:trial:platform
     if (isTRUE(sort.force)) {
       outdata <- outdata[do.call(order, outdata[na.omit(levID)]), ]
     } else {
-      if (is.null(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
+      if (!isTRUE(xc) && !isTRUE(all(do.call(order, outdata[na.omit(levID)]) == seq(1, nrow(outdata))))) {
         stop("The input data are not sorted according to the model hierarchy")
       }
     }
@@ -2680,11 +2737,15 @@ version:date:md5:filename:x64:trial:platform
   shortID <- na.omit(rev(levID))
   if (length(shortID) > 1) {
     for (lev in length(shortID):2) {
-      if (!is.null(xc) || !isTRUE(xc)) {
+      if (isTRUE(xc)) {
         groupsize <- by(outdata, outdata[, shortID[lev]], nrow)
         compgroupsize <- by(shortdata, shortdata[, shortID[lev]], nrow)
       } else {
         test <- requireNamespace("reshape", quietly = TRUE)
+        compIDs <- shortdata[, shortID[lev:length(shortID)]]
+        if (is.factor(compIDs)) {
+            compIDs <- droplevels(compIDs)
+        }
         if (isTRUE(test)) {
           # If the level identifiers are factors with string labels then the following can produce the warning 'coercing
           # argument of type 'list' to logical' from within cbind2 in the reshape package.  This is due to the call:
@@ -2692,11 +2753,11 @@ version:date:md5:filename:x64:trial:platform
           # still correct a suppressWarnings() call is added below to prevent this being passed onto the user
           groupsize <- as.vector(suppressWarnings(reshape::sparseby(outdata, outdata[, shortID[lev:length(shortID)]],
                                                                     nrow, GROUPNAMES = FALSE)))
-          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]),
+          compgroupsize <- as.vector(suppressWarnings(reshape::sparseby(shortdata, compIDs,
                                                                     nrow, GROUPNAMES = FALSE)))
         } else {
           groupsize <- na.omit(as.vector(by(outdata, outdata[, shortID[lev:length(shortID)]], nrow)))
-          compgroupsize <- na.omit(as.vector(by(shortdata, droplevels(shortdata[, shortID[lev:length(shortID)]]), nrow)))
+          compgroupsize <- na.omit(as.vector(by(shortdata, compIDs, nrow)))
         }
       }
       groupinfo <- cbind(length(groupsize), min(groupsize), mean(groupsize), max(groupsize), length(compgroupsize), min(compgroupsize), mean(compgroupsize), max(compgroupsize))

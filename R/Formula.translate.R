@@ -168,32 +168,37 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     svec <- sapply(left, function(x) unlist(strsplit(x, "\\|"))[2])
     nn <- length(svec)
-    Iterms <- character(0)
     for (ii in 1:nn) {
       xform <- as.formula(paste0("~", svec[ii]))
       tterms <- terms(xform, keep.order = TRUE)
       ttermsLabs <- attr(tterms, "term.labels")
       is_inter <- grepl("\\:", ttermsLabs)
       if (any(is_inter)) {
-        Iterms <- c(Iterms, ttermsLabs[is_inter])
+        Iterms <- sapply(regmatches(ttermsLabs[is_inter], gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", ttermsLabs[is_inter]), invert = TRUE), 
+                         function(x) paste(x, collapse = ""))
+        na_act <- options("na.action")[[1]]
+        options(na.action = "na.pass")
+        dataplus <- model.matrix(object = tterms, data = indata)
+        options(na.action = na_act)
+        explpos <- attr(dataplus, "assign")
+
+        dataplus <- as.data.frame(dataplus)
+        expanded <- NULL
+        for (jj in 1:length(ttermsLabs)) {
+          if (ttermsLabs[jj] %in% Iterms) {
+            expanded <- c(expanded, colnames(dataplus)[which(jj == explpos)])
+          }
+        }
+
+        dataplus <- dataplus[, match(expanded, colnames(dataplus)), drop = FALSE]
+        dataplus.names <- names(dataplus)
+        if (anycurly) {
+          dataplus.names <- gsub("\\[", "\\{", dataplus.names)
+          dataplus.names <- gsub("\\]", "\\}", dataplus.names)
+        }
+        names(dataplus) <- gsub("\\.", "\\_", dataplus.names)
+        indata <- cbind(indata, dataplus)
       }
-    }
-    if (length(Iterms) > 0) {
-      Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE), 
-                       function(x) paste(x, collapse = ""))
-      tform <- as.formula(paste0("~0+", paste(Iterms, collapse = "+")))
-      na_act <- options("na.action")[[1]]
-      options(na.action = "na.pass")
-      dataplus <- model.matrix(object = tform, data = indata)
-      options(na.action = na_act)
-      dataplus <- as.data.frame(dataplus)
-      dataplus.names <- names(dataplus)
-      if (anycurly) {
-        dataplus.names <- gsub("\\[", "\\{", dataplus.names)
-        dataplus.names <- gsub("\\]", "\\}", dataplus.names)
-      }
-      names(dataplus) <- gsub("\\.", "\\_", dataplus.names)
-      indata <- cbind(indata, dataplus)
     }
     indata
   }

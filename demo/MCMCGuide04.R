@@ -51,10 +51,12 @@ sixway(mymodel3@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 (mymodel4 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcMeth = list(fixM = 2, 
   residM = 2, Lev1VarM = 2, adaption = 0)), data = tutorial))
 
-if (!require(texreg)) install.packages("texreg")
-library(texreg)
-screenreg(list(mymodel1, mymodel2, mymodel4, mymodel3), custom.model.names=c("IGLS", "Gibbs", "MH", "MH Adaptive"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:3, "Level-1" = 4:4),
- stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+if (!require(texreg)) {
+  warning("texreg package required to use screenreg() function")
+} else {
+  screenreg(list(mymodel1, mymodel2, mymodel4, mymodel3), custom.model.names=c("IGLS", "Gibbs", "MH", "MH Adaptive"), groups = list("Fixed Part" = 1:2, "Level-2" = 3:3, "Level-1" = 4:4),
+   stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
+}
 
 rm(list = c("mymodel1", "mymodel2", "mymodel3", "mymodel4"))
 # 4.4 MH cycles per Gibbs iteration . . . . . . . . . . . . . . . . . . . 49
