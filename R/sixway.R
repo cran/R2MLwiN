@@ -11,7 +11,7 @@
 #' @param acf.maxlag Maximum lag at which to calculate the auto-correlation
 #' function. \code{acf.maxlag = 100} by default. See \code{\link[stats]{acf}}.
 #' @param pacf.maxlag Maximum lag at which to calculate the partial
-#' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats]{pacf}}.
+#' auto-correlation function. \code{pacf.maxlag = 10} by default. See \code{\link[stats:acf]{pacf}}.
 #' @param ...  Other graphical parameters (see \code{\link[graphics]{par}} for
 #' details).
 #'
@@ -23,7 +23,7 @@
 #' \item a kernel density plot; kernel density estimates are computed
 #' using \code{\link[stats]{density}};
 #' \item a plotted autocorrelation function (uses \code{\link[stats]{acf}});
-#' \item a plotted partial autocorrelation function (uses \code{\link[stats]{pacf}});
+#' \item a plotted partial autocorrelation function (uses \code{\link[stats:acf]{pacf}});
 #' \item a plot of the estimated
 #' Monte Carlo standard error (\code{\link{MCSE}}) of the posterior estimate of the
 #' mean against the number of iterations. As MCMC is a
@@ -116,65 +116,64 @@ sixway <- function(chain, name = NULL, acf.maxlag = 100, pacf.maxlag = 10, ...) 
                "windows" = "windows")
     options("device" = a)
   }
-  dev.new()
-  mypar <- par(mar = mar, mgp = mgp, ...)
-  on.exit(par(mypar))
-  split.screen(figs = c(4, 1))
-  split.screen(figs = c(1, 2), screen = 1)
-  split.screen(figs = c(1, 2), screen = 2)
-  split.screen(figs = c(1, 2), screen = 3)
-  split.screen(figs = c(1, 1), screen = 4)
+  mypar <- graphics::par(mar = mar, mgp = mgp, bg="white", no.readonly=TRUE, ...)
+  on.exit(graphics::par(mypar))
+  graphics::split.screen(figs = c(4, 1))
+  graphics::split.screen(figs = c(1, 2), screen = 1)
+  graphics::split.screen(figs = c(1, 2), screen = 2)
+  graphics::split.screen(figs = c(1, 2), screen = 3)
+  graphics::split.screen(figs = c(1, 1), screen = 4)
   
-  screen(5)
+  graphics::screen(5)
   coda::traceplot(chain, xlab = "Iterations", ylab = "parameter", type = "l", tcl = -0.1, cex.axis = 0.8, main = "")
   
   flatchain <- as.matrix(chain)
   
-  screen(6)
-  dens <- density(flatchain)
-  plot(dens, xlab = "parameter value", ylab = "kernel density", main = "", tcl = -0.1, cex.axis = 0.8)
+  graphics::screen(6)
+  dens <- stats::density(flatchain)
+  graphics::plot(dens, xlab = "parameter value", ylab = "kernel density", main = "", tcl = -0.1, cex.axis = 0.8)
   
-  screen(7)
-  aa <- acf(flatchain, acf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
+  graphics::screen(7)
+  aa <- stats::acf(flatchain, acf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
   rho <- aa$acf[2]
   
-  screen(8)
-  pacf(flatchain, pacf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
+  graphics::screen(8)
+  stats::pacf(flatchain, pacf.maxlag, main = "", mgp = c(1, 0.25, 0), tcl = -0.1, cex.axis = 0.8, ylim = c(0, 1))
   
-  screen(9)
+  graphics::screen(9)
   mcse <- MCSE(flatchain, rho, ll = 0.5, ul = 20)
-  plot(mcse[, 1], mcse[, 2], type = "l", xlab = "updates", ylab = "MCSE", tcl = -0.1, cex.axis = 0.8)
+  graphics::plot(mcse[, 1], mcse[, 2], type = "l", xlab = "updates", ylab = "MCSE", tcl = -0.1, cex.axis = 0.8)
   
-  RL1 <- raftery.diag(flatchain, q = 0.025, r = 0.005, s = 0.95, converge.eps = 0.001)
-  RL2 <- raftery.diag(flatchain, q = 0.975, r = 0.005, s = 0.95, converge.eps = 0.001)
-  Ndb <- BD(mean(flatchain), var(flatchain), rho, k = 2, alpha = 0.05)
+  RL1 <- coda::raftery.diag(flatchain, q = 0.025, r = 0.005, s = 0.95, converge.eps = 0.001)
+  RL2 <- coda::raftery.diag(flatchain, q = 0.975, r = 0.005, s = 0.95, converge.eps = 0.001)
+  Ndb <- BD(mean(flatchain), stats::var(flatchain), rho, k = 2, alpha = 0.05)
   
-  screen(10)
-  plot(1, xlim = c(1, 10), ylim = c(1, 5), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
-  text(5, 4.8, "Accuracy Diagnostics", cex = 1.2)
+  graphics::screen(10)
+  graphics::plot(1, xlim = c(1, 10), ylim = c(1, 5), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
+  graphics::text(5, 4.8, "Accuracy Diagnostics", cex = 1.2)
   if (RL1$resmatrix[1] == "Error") {
-    text(5, 4, paste("RL diagnostic only available after ", RL1$resmatrix[2], " updates.", sep = ""), cex = 0.8)
+    graphics::text(5, 4, paste("RL diagnostic only available after ", RL1$resmatrix[2], " updates.", sep = ""), cex = 0.8)
   } else {
-    text(5, 4, paste("Raftery-Lewis (quantile) : Nhat =(", RL1$resmatrix[1, "N"], ",", RL2$resmatrix[1, "N"],
+    graphics::text(5, 4, paste("Raftery-Lewis (quantile) : Nhat =(", RL1$resmatrix[1, "N"], ",", RL2$resmatrix[1, "N"],
                      ")", sep = ""), cex = 0.8)
   }
-  text(5, 3, "when q=(0.025,0.975), r=0.005 and s=0.95", cex = 0.8)
-  text(5, 2.1, paste("Brooks-Draper (mean) : Nhat =", Ndb), cex = 0.8)
-  text(5, 1.2, "when k=2 sigfigs and alpha=0.05", cex = 0.8)
-  screen(11)
-  plot(1, xlim = c(1, 22), ylim = c(1, 4), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
-  text(10, 3.8, "Summary Statistics", cex = 1.2)
-  quants <- round(quantile(flatchain, c(0.025, 0.05, 0.5, 0.95, 0.975)), 3)
-  text(10, 2.9, paste("param name :", name, "posterior mean =", round(mean(flatchain), 3), "SD = ", round(sd(flatchain),
+  graphics::text(5, 3, "when q=(0.025,0.975), r=0.005 and s=0.95", cex = 0.8)
+  graphics::text(5, 2.1, paste("Brooks-Draper (mean) : Nhat =", Ndb), cex = 0.8)
+  graphics::text(5, 1.2, "when k=2 sigfigs and alpha=0.05", cex = 0.8)
+  graphics::screen(11)
+  graphics::plot(1, xlim = c(1, 22), ylim = c(1, 4), type = "n", axes = FALSE, xlab = "", ylab = "", frame.plot = TRUE)
+  graphics::text(10, 3.8, "Summary Statistics", cex = 1.2)
+  quants <- round(stats::quantile(flatchain, c(0.025, 0.05, 0.5, 0.95, 0.975)), 3)
+  graphics::text(10, 2.9, paste("param name :", name, "posterior mean =", round(mean(flatchain), 3), "SD = ", round(stats::sd(flatchain),
                                                                                                           3), "mode =", round(dens$x[which.max(dens$y)], 3)), cex = 0.8)
-  text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4],
+  graphics::text(10, 2, paste("quantiles : 2.5% =", quants[1], "5% =", quants[2], "50% =", quants[3], "95% =", quants[4],
                     "97.5% =", quants[5]), cex = 0.8)
   if (isMCMC) {
-    text(10, 1.2, paste(coda::niter(chain) * coda::thin(chain), "actual iterations storing every ", paste(coda::thin(chain), "th",
+    graphics::text(10, 1.2, paste(coda::niter(chain) * coda::thin(chain), "actual iterations storing every ", paste(coda::thin(chain), "th",
                                                                                               sep = ""), " iteration. Effective Sample Size (ESS) =", round(coda::effectiveSize(chain))), cex = 0.8)
   } else {
-    text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =",
+    graphics::text(10, 1.2, paste(length(chain), "actual iterations. Diagnostics assume storing every 1th iteration. Effective Sample Size (ESS) =",
                         round(coda::effectiveSize(chain))), cex = 0.8)
   }
-  close.screen(all.screens = TRUE)
+  graphics::close.screen(all.screens = TRUE)
 }

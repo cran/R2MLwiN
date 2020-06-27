@@ -28,8 +28,8 @@ data(tutorial, package = "R2MLwiN")
 
 # 14.1 Effects of measurement error on predictors . . . . . . . . . . . .200
 set.seed(1)
-error <- double2singlePrecision(rnorm(length(tutorial$standlrt), 0, sqrt(0.2)))
-obslrt <- double2singlePrecision(tutorial$standlrt + error)
+error <- rnorm(length(tutorial$standlrt), 0, sqrt(0.2))
+obslrt <- tutorial$standlrt + error
 tutorial <- cbind(tutorial, error, obslrt)
 
 (mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), data = tutorial))
@@ -58,7 +58,7 @@ tutorial <- cbind(tutorial, error, obslrt)
 data(bang1, package = "R2MLwiN")
 
 set.seed(1)
-bang1$obsage <- double2singlePrecision(bang1$age + rnorm(length(bang1$age), 0, 5))
+bang1$obsage <- bang1$age + rnorm(length(bang1$age), 0, 5)
 
 (mymodel <- runMLwiN(logit(use) ~ 1 + age, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
 

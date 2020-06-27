@@ -1,3 +1,57 @@
+Thu Apr 02 2020
+1. Changes
+   * Add initial support for the broom package
+
+Fri Mar 27 2020
+1. Bug fixing
+   * Set graph layout back after plotting in MCMC chapter 4 replication example
+
+Thu Mar 26 2020
+1. Bug fixing
+   * Allow sixway graphs to be displayed correctly in rmarkdown
+
+Thu Feb 27 2020
+1. Changes
+   * Ensure that exported generic methods match the type in their base package
+   * Simplify model output code
+
+Wed Feb 26 2020
+1. Changes
+   * Update @S3method to @exportS3Method to reflect changes in roxygen2 version 7.
+   * Ensure functions called from other packages are prefixed with a namespace
+   * Explicitly check for and load packages used in the demos
+   * Only import functions used from other packages, rather than loading the whole package
+
+Wed Jun 26 2019
+1. Bug fixing
+   * Correct the confidence intervals used in caterpillar plots for some of the examples
+
+Thu Jun 13 2019
+1. Changes
+   * Add checks that user supplied MCMC starting value and informative prior matrices are positive-definite
+
+Wed Jun 12 2019
+1. Bug fixing
+   * Allow "Intercept" to be used in prior specification if the formula contains "1"
+   * Corrected level number in rp<level> part of informative prior specification for multivariate/multinomial models
+   * Added further checks when interpreting the user-supplied informative prior specification
+   * Fix some cases where informative priors could not be applied to multinomial and mixed response models
+
+2. Changes
+   * Recent versions of MLwiN work in double precision, so remove precision reduction in examples
+   * Avoid parsing the formula a second time when applying priors to a model
+
+Tue Jun 11 2019
+1. Bug fixing
+   * Allow non-alphanumeric characters (such as ".") in response variable names for non-normal models
+   * Do not replace "." with "_" within variable names used to generate parameter labels
+   * Update documentation for MCMC information prior specification
+
+Tue Jun 04 2019
+1. Bug fixing
+   * Correct options for running via WinBUGS (as an alternative to OpenBUGS)
+   * BRugs does not provide a way to specify the OpenBUGS path, so update options to reflect this
+
 Mon May 20 2019
 1. Changes
    * Replace calls to rbugs with R2WinBUGS

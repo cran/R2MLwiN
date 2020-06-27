@@ -2,7 +2,7 @@
 #' WinBUGS/OpenBUGS.
 #' 
 #' This function allows R to call WinBUGS using the output files from MLwiN.
-#' This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS}}
+#' This function uses functionalities in the \code{\link[R2WinBUGS]{R2WinBUGS-package}}
 #' package.
 #' 
 #' @param D A vector specifying the type of distribution used in the model.
@@ -26,7 +26,8 @@
 #' @param debug A logical value indicating whether (\code{TRUE}) or not
 #' (\code{FALSE}; the default) to close the BUGS window after completion of the
 #' model run
-#' @param bugs The full name (including the path) of the BUGS executable
+#' @param bugs.directory The full path of location where WinBUGS is installed 
+#' (ignored if OpenBugs is \code{TRUE}).
 #' @param bugsWorkingDir A directory where all the intermediate files are to be
 #' stored; defaults to \code{tempdir()}.
 #' @param OpenBugs If \code{TRUE}, OpenBUGS is used, if \code{FALSE} (the
@@ -66,41 +67,35 @@
 #'
 #' @seealso \code{\link{runMLwiN}},\code{\link[R2WinBUGS]{bugs}}
 #' @export
-mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, bugs,
-                       bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
+mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, addmore, n.chains, n.iter, n.burnin, n.thin, debug=FALSE, 
+                       bugs.directory=bugs.directory, bugsWorkingDir=tempdir(), OpenBugs = FALSE, cleanBugsWorkingDir = FALSE, seed = NULL){
 
   
   nlev= length(levID)
-  if(nlev==1){
-    parameters=c("beta","va0","sigma")
-  }else{
-    if (D[1]=="Multivariate Normal"||D[1]=="Multinomial"||D[1]=="Mixed"){
-      ux=sapply(3:nlev, function(x) paste("u",x,sep=""))
-      sigma2=sapply(2:nlev, function(x) paste("sigma2.u",x,sep=""))
-      if (!is.null(fact)){
-        nfact=fact$nfact
-        loadname=NULL
-        sigma2.fact.name=factname=rep(0,nfact)
-        for (i in 1:nfact){
-          loadname=c(loadname,sapply(1:(ncol(fact$loading)-1), function(x) paste("load",i,".",x,sep="")))
-          factname[i]=paste("fact",i,sep="")
-          sigma2.fact.name[i]=paste("sigma2.fact",i,sep="")
-        }
-        parameters=c("beta",ux, sigma2, loadname,factname,sigma2.fact.name)
-      }else{
-        parameters=c("beta",ux, sigma2)
+  parameters = "beta"
+  if (D[1]=="Normal") {
+    parameters = c(parameters, "sigma2")
+  }
+  if (D[1]=="Multivariate Normal"||D[1]=="Multinomial"||D[1]=="Mixed"){
+    ux = sapply(3:nlev, function(x) paste("u",x,sep=""))
+    sigma2u = sapply(2:nlev, function(x) paste("sigma2.u",x,sep=""))
+    if (!is.null(fact)){
+      nfact = fact$nfact
+      loadname = NULL
+      sigma2.fact.name = factname=rep(0,nfact)
+      for (i in 1:nfact){
+        loadname = c(loadname,sapply(1:(ncol(fact$loading)-1), function(x) paste("load",i,".",x,sep="")))
+        factname[i] = paste("fact",i,sep="")
+        sigma2.fact.name[i] = paste("sigma2.fact",i,sep="")
       }
+      parameters = c(parameters, ux, sigma2u, loadname, factname, sigma2.fact.name)
     }else{
-      if(D[1]=="t"){
-        ux=sapply(2:nlev, function(x) paste("u",x,sep=""))
-        sigma2=sapply(2:nlev, function(x) paste("sigma2.u",x,sep=""))
-        parameters=c("beta",ux, sigma2, "va0", "sigma","sigma2","df")
-      }else{
-        ux=sapply(2:nlev, function(x) paste("u",x,sep=""))
-        sigma2=sapply(2:nlev, function(x) paste("sigma2.u",x,sep=""))
-        parameters=c("beta",ux, sigma2, "va0", "sigma","sigma2")
-      }
+      parameters = c(parameters, ux, sigma2u)
     }
+  }else{
+    ux = sapply(2:nlev, function(x) paste("u",x,sep=""))
+    sigma2u = sapply(2:nlev, function(x) paste("sigma2.u",x,sep=""))
+    parameters = c(parameters, ux, sigma2u)
   }
   if (!is.null(addmore)) parameters=c(parameters,addmore)
 
@@ -113,8 +108,8 @@ mlwin2bugs <- function(D,levID, datafile, initfiles, modelfile, bugEst, fact, ad
                              n.chains = n.chains, n.iter = n.iter, n.burnin = n.burnin, n.thin = n.thin,
                              debug = debug, DIC = TRUE, codaPkg = FALSE,
                              program = program, working.directory = bugsWorkingDir, clearWD = cleanBugsWorkingDir,
-                             bugs.seed = seed)
-  chains.bugs.mcmc <- as.mcmc.list(chain.bugs)
+                             bugs.directory = bugs.directory, bugs.seed = seed)
+  chains.bugs.mcmc <- coda::as.mcmc.list(chain.bugs)
 
   chains.bugs.mcmc
 }

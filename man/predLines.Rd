@@ -4,9 +4,18 @@
 \alias{predLines}
 \title{Draws predicted lines using a fitted model object}
 \usage{
-predLines(object, indata = NULL, xname, lev = 2, selected = NULL,
-  probs = c(0.025, 0.975), legend = TRUE, legend.space = "top",
-  legend.ncol = 4, ...)
+predLines(
+  object,
+  indata = NULL,
+  xname,
+  lev = 2,
+  selected = NULL,
+  probs = c(0.025, 0.975),
+  legend = TRUE,
+  legend.space = "top",
+  legend.ncol = 4,
+  ...
+)
 }
 \arguments{
 \item{object}{Either an \code{\link{mlwinfitIGLS-class}} or \code{\link{mlwinfitMCMC-class}}

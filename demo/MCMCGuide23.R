@@ -29,18 +29,6 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) ==
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-## winbugs executable
-#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-
 data(bang1, package="R2MLwiN")
 
 ## Define the model
@@ -86,7 +74,7 @@ data(alevchem, package = "R2MLwiN")
 # combination. Thus, here we generated a unique school ID.
 alevchem$school <- as.numeric(factor(paste0(alevchem$lea, alevchem$estab)))
 
-alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no - 6
 
 ## MCMC
 (mymodel <- runMLwiN(logit(a_point, cons, 6) ~ 1 + gcseav[1:5] + I(gcseav^2)[1:5] + gender[1:5] + (1[1:5] | school),
@@ -109,10 +97,14 @@ data(bang1, package = "R2MLwiN")
 
 mymodel <- runMLwiN(logit(use) ~ 1 + age + lc + urban + (1 + urban | district), D = "Binomial", estoptions = list(EstM = 1,
   mcmcOptions = list(orth = 1), show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1,
-  bugs = openbugs, OpenBugs = TRUE), data = bang1)
+  OpenBugs = TRUE), data = bang1)
 
 summary(mymodel)
-effectiveSize(mymodel)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  effectiveSize(mymodel)
+}
 sixway(mymodel[, "beta[1]", drop = FALSE])
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .379

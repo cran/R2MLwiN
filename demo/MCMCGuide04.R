@@ -78,6 +78,7 @@ plot(4951:nrow(estimates), estimates[4951:nrow(estimates), "RP2_var_Intercept"],
   sigma[u0]^2)), type = "l")
 plot(4951:nrow(estimates), estimates[4951:nrow(estimates), "RP1_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
   sigma[e0]^2)), type = "l")
+par(mfrow = c(1, 1))
 rm(mymodel5)
 
 # 4.6 Residuals in MCMC . . . . . . . . . . . . . . . . . . . . . . . . . 51

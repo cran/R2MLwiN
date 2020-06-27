@@ -4,21 +4,30 @@
 #' software package, allowing users to fit multilevel models using
 #' MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 #'
+#' @import methods
+#' @import doParallel foreach parallel
 #' @importFrom R2WinBUGS bugs
-#' @importFrom coda mcmc mcmc.list as.mcmc.list read.coda effectiveSize raftery.diag thin is.mcmc
-#' @importFrom lattice histogram densityplot xyplot qqmath Rows trellis.par.get trellis.par.set panel.xyplot panel.grid panel.abline panel.segments
+#' @importFrom coda mcmc mcmc.list as.mcmc.list effectiveSize raftery.diag thin is.mcmc
+#' @importFrom lattice xyplot qqmath Rows trellis.par.get panel.xyplot panel.grid panel.abline panel.segments
 #' @importFrom foreign read.dta write.dta
 #' @importFrom digest digest
-#' @importFrom methods show
-#' @importFrom texreg extract
-#' @importFrom memisc getSummary
-#' @importFrom stats4 coef logLik summary vcov update
-#' @importFrom stats formula
+#' @importMethodsFrom stats4 coef logLik summary vcov update show
+#' @importFrom stats coef coefficients logLik vcov update df.residual fitted fitted.values residuals resid predict deviance nobs
+#' @importFrom stats acf pacf
+#' @importFrom stats confint symnum update.formula
+#' @importFrom stats formula as.formula get_all_vars model.frame model.matrix model.offset terms terms.formula
+#' @importFrom stats cov density end getCall na.omit pnorm qnorm quantile sd start var window complete.cases reshape
 #' @importFrom Matrix nnzero sparseMatrix
-#' @importFrom utils citation
+#' @importFrom utils citation read.delim stack
+#' @importFrom grDevices dev.new
+#' @importFrom graphics close.screen lines par plot points screen split.screen text
+#' @importMethodsFrom texreg extract
+#' @importFrom memisc getSummary
+#' @importFrom tibble tibble
+#' @importFrom broom tidy augment glance
 #' 
 #' @section New features in version 0.8-3:
-#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
+#' Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{memisc-package} have been
 #' added to \pkg{R2MLwiN} version 0.8-3. For an example of using \code{\link[texreg]{texreg-package}} see e.g. \code{demo(MCMCGuide04)}.
 #' 
 #' @section Important differences between version 0.8-0 and earlier versions:
@@ -71,7 +80,7 @@
 #'  \item{A number of generic s4 methods have been added to improve compatibility with statistical functions
 #'  which use them (e.g. see \code{\link[stats4]{stats4-package}}). So, for example, the addition of 
 #'  a \code{\link{logLik}} means a likelihood ratio test can now be conducted
-#'  on two \code{\link{mlwinfitIGLS-class}} objects using the \code{\link[lmtest]{lrtest}} function,
+#'  on two \code{\link{mlwinfitIGLS-class}} objects using the \code{lrtest} function,
 #'  e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN")} for
 #'  the index listing these various methods.}
 #'  }

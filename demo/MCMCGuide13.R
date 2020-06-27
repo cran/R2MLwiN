@@ -30,7 +30,7 @@ options(MLwiN_path = mlwin)
 ## Read alevchem data
 data(alevchem, package = "R2MLwiN")
 
-alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no - 6
 
 hist(alevchem$gcseav, breaks = 20)
 

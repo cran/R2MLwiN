@@ -34,10 +34,11 @@ data(tutorial, package = "R2MLwiN")
 
 u0 <- mymodel1@residual$lev_2_resi_est_Intercept
 u0se <- sqrt(mymodel1@residual$lev_2_resi_var_Intercept)
+u0CI95 <- 1.96 * u0se
 
 u0rank <- rank(u0)
-u0rankhi <- u0 + u0se
-u0ranklo <- u0 - u0se
+u0rankhi <- u0 + u0CI95
+u0ranklo <- u0 - u0CI95
 u0rankno <- order(u0rank)
 
 plot(1:65, u0[u0rankno], ylim = c(-1, 1), pch = 15, xlab = "Rank", ylab = "u0 residual estimate")
@@ -60,12 +61,16 @@ pred <- as.data.frame(cbind(mymodel1@data$school, mymodel1@data$standlrt, xb, xb
 
 colnames(pred) <- c("school", "standlrt", "xb", "xbu")
 
-xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
 
-xyplot(xbu ~ standlrt, panel = function(x, y, subscripts) {
-  panel.xyplot(x, y, type = "l", groups = pred$school, subscripts = subscripts)
-  panel.xyplot(pred$standlrt, pred$xb, type = "l", lwd = 3, color = "black")
-}, data = pred)
+  xyplot(xbu ~ standlrt, panel = function(x, y, subscripts) {
+    panel.xyplot(x, y, type = "l", groups = pred$school, subscripts = subscripts)
+    panel.xyplot(pred$standlrt, pred$xb, type = "l", lwd = 3, color = "black")
+  }, data = pred)
+}
 
 c(unique(mymodel1@data$school)[u0rank == 65], u0rank[u0rank == 65])
 

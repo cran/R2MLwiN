@@ -86,8 +86,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
       fstr <- gsub("\\{", "\\[", fstr)
       fstr <- gsub("\\}", "\\]", fstr)
     }
-    form <- as.formula(paste0("~", fstr))
-    Terms <- terms(form, keep.order = TRUE)
+    form <- stats::as.formula(paste0("~", fstr))
+    Terms <- stats::terms(form, keep.order = TRUE)
     xterm <- attr(Terms, "term.labels")
     fstr <- unlist(strsplit(fstr, "\\+"))
     fstr <- gsub("[[:space:]]", "", fstr)
@@ -102,7 +102,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   }
   
   get.offset <- function(Formula, indata) {
-    tterms <- terms.formula(Formula, keep.order = TRUE)
+    tterms <- stats::terms.formula(Formula, keep.order = TRUE)
     pos_offset <- attr(tterms, "offset")
     if (length(pos_offset) > 0) {
       tlabs <- as.character(attr(tterms, "variables"))[-1]
@@ -115,9 +115,9 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     trespname <- names(indata)[is_num]
     trespname <- trespname[1]
     
-    tform <- as.formula(paste0(trespname, "~", paste(left0, collapse = "+")))
-    tframe <- model.frame(formula = tform, data = indata, na.action = NULL)
-    myoffset <- model.offset(tframe)
+    tform <- stats::as.formula(paste0(trespname, "~", paste(left0, collapse = "+")))
+    tframe <- stats::model.frame(formula = tform, data = indata, na.action = NULL)
+    myoffset <- stats::model.offset(tframe)
     if (is.null(myoffset)) {
       return(list(offset.label = character(0), indata = indata))
     } else {
@@ -136,8 +136,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     nn <- length(svec)
     Iterms <- character(0)
     for (ii in 1:nn) {
-      xform <- as.formula(paste0("~", svec[ii]))
-      tterms <- terms(xform, keep.order = TRUE)
+      xform <- stats::as.formula(paste0("~", svec[ii]))
+      tterms <- stats::terms(xform, keep.order = TRUE)
       ttermsLabs <- unlist(sapply(attr(tterms, "term.labels"), function(x) unlist(strsplit(x, "\\:"))))
       is_Ifunc <- grepl("^[[:alpha:]]{1}[[:alnum:]]*\\({1}[[:print:]]+\\)+", ttermsLabs)
       if (any(is_Ifunc)) {
@@ -147,8 +147,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (length(Iterms) > 0) {
       Iterms <- sapply(regmatches(Iterms, gregexpr("\\[{1}([[:digit:]]|\\,|[[:space:]])*\\]{1}", Iterms), invert = TRUE), 
                        function(x) paste(x, collapse = ""))
-      tform <- as.formula(paste0("~0+", paste(Iterms, collapse = "+")))
-      dataplus <- model.frame(formula = tform, data = indata, na.action = NULL)
+      tform <- stats::as.formula(paste0("~0+", paste(Iterms, collapse = "+")))
+      dataplus <- stats::model.frame(formula = tform, data = indata, na.action = NULL)
       dataplus.names <- names(dataplus)
       if (anycurly) {
         dataplus.names <- gsub("\\[", "\\{", dataplus.names)
@@ -169,8 +169,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     svec <- sapply(left, function(x) unlist(strsplit(x, "\\|"))[2])
     nn <- length(svec)
     for (ii in 1:nn) {
-      xform <- as.formula(paste0("~", svec[ii]))
-      tterms <- terms(xform, keep.order = TRUE)
+      xform <- stats::as.formula(paste0("~", svec[ii]))
+      tterms <- stats::terms(xform, keep.order = TRUE)
       ttermsLabs <- attr(tterms, "term.labels")
       is_inter <- grepl("\\:", ttermsLabs)
       if (any(is_inter)) {
@@ -178,7 +178,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
                          function(x) paste(x, collapse = ""))
         na_act <- options("na.action")[[1]]
         options(na.action = "na.pass")
-        dataplus <- model.matrix(object = tterms, data = indata)
+        dataplus <- stats::model.matrix(object = tterms, data = indata)
         options(na.action = na_act)
         explpos <- attr(dataplus, "assign")
 
@@ -235,8 +235,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
             is_labs.common <- !(labs.common == "")
             otherterms <- xlabs[!pos_polyfunc]
             for (kk in 1:length(xployterms)) {
-              tform <- as.formula(paste0("~0+", paste(xployterms[kk], collapse = "+")))
-              dataplus <- as.data.frame(model.frame(formula = tform, data = indata, na.action = NULL)[[1]])
+              tform <- stats::as.formula(paste0("~0+", paste(xployterms[kk], collapse = "+")))
+              dataplus <- as.data.frame(stats::model.frame(formula = tform, data = indata, na.action = NULL)[[1]])
               dataplus.names <- paste(make.names(names(dataplus)), xployterms[kk], sep = "_")
               dataplus.names <- gsub("[[:space:]]", "", dataplus.names)
               ndp <- sapply(dataplus.names, nchar)
@@ -325,15 +325,15 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     if (ncategstr0 > 0) {
       # extend data
       for (ii in 1:ncategstr1) {
-        f.ext <- as.formula(eval(paste("~0+", categstr1[ii])))
+        f.ext <- stats::as.formula(eval(paste("~0+", categstr1[ii])))
         contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
         na_act <- options("na.action")[[1]]
         options(na.action = "na.pass")
         if (is.null(contrMat)) {
-          data.ext <- model.matrix(f.ext, indata)[, -1, drop = FALSE]
+          data.ext <- stats::model.matrix(f.ext, indata)[, -1, drop = FALSE]
         } else {
           keeppos <- rowSums(contrMat) > 0
-          data.ext <- model.matrix(f.ext, indata)[, keeppos, drop = FALSE]
+          data.ext <- stats::model.matrix(f.ext, indata)[, keeppos, drop = FALSE]
         }
         options(na.action = na_act)
         colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
@@ -524,7 +524,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     Formula <- update(Formula, ~. + (0 | l1id))
   }
   
-  Terms <- terms.formula(Formula, keep.order = TRUE)
+  Terms <- stats::terms.formula(Formula, keep.order = TRUE)
   resp <- rownames(attr(Terms, "factors"))[attr(Terms, "response")]
   resp <- gsub("[[:space:]]", "", resp)
   left <- attr(Terms, "term.labels")
@@ -612,7 +612,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     if (D[1] == "Unordered Multinomial") {
       D <- rep(NA, 5)
-      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
       link <- resp[2]
       resp <- strsplit(resp[3], ",")[[1]]
       D[1] <- "Unordered Multinomial"
@@ -640,7 +640,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     if (D[1] == "Ordered Multinomial") {
       D <- rep(NA, 5)
-      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+      resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
       link <- resp[2]
       resp <- strsplit(resp[3], ",")[[1]]
       D[1] <- "Ordered Multinomial"
@@ -697,7 +697,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           resp[i] <- respx
         } else if (D[[i + 1]] == "Binomial") {
           D[[i + 1]] <- rep(NA, 3)
-          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\((.*?)\\)", respx))[[1]]
           link <- respx[2]
           D[[i + 1]][1] <- "Binomial"
           D[[i + 1]][2] <- link
@@ -711,7 +711,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           }         
           resp[i] <- respx[1]
         } else if (D[[i + 1]] == "Poisson") {
-          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", respx))[[1]]
+          respx <- regmatches(respx, regexec("([[:alnum:]]+)\\((.*?)\\)", respx))[[1]]
           link <- respx[2]
           respx <- strsplit(respx[3], ",")[[1]]
           D[[i + 1]] <- rep(NA, 3)
@@ -841,7 +841,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           }
         }
       }
-      randS <- unique(na.omit(unlist(rands)))
+      randS <- unique(stats::na.omit(unlist(rands)))
       for (i in 1:length(randS)) {
         if (sum(grepl("\\.", randS[i])) > 0) {
           ttemp <- unlist(strsplit(randS[i], "\\."))
@@ -968,7 +968,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         }
       }
       
-      randC <- na.omit(unlist(randc))
+      randC <- stats::na.omit(unlist(randc))
       randCC <- rep(NA, length(randC))
       
       if (length(randC) != 0) {
@@ -1009,7 +1009,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
           ccid.mat[i, nonrefcatpos] <- 1
         }
         
-        randC <- unique(na.omit(unlist(randc)))
+        randC <- unique(stats::na.omit(unlist(randc)))
         if (length(fixc) != 0) {
           fixC <- paste(fixc, fixcid, sep = ".")
           nonfpc <- gsub("\\,", "", common.coeff[!(common.coeff %in% fixC)])
@@ -1337,7 +1337,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     D[1] <- "Binomial"
     nlev <- length(levID)
     
-    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
     link <- resp[2]
     D[2] <- link
     resp <- strsplit(resp[3], ",")[[1]]
@@ -1390,7 +1390,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         rands[[i]] <- get.terms(rands[[i]][2])
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS
@@ -1475,7 +1475,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   
   if (D[1] == "Poisson" || D[1] == "Negbinom") {
     nlev <- length(levID)
-    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\(([[:alnum:][:space:],_]+)\\)", resp))[[1]]
+    resp <- regmatches(resp, regexec("([[:alnum:]]+)\\((.*?)\\)", resp))[[1]]
     link <- resp[2]
     resp <- strsplit(resp[3], ",")[[1]]
     DD <- D[1]
@@ -1538,7 +1538,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         rands[[i]] <- get.terms(rands[[i]][2])
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS
@@ -1660,7 +1660,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
         rands[[i]] <- get.terms(rands[[i]][2])
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS

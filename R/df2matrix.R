@@ -29,11 +29,11 @@ df2matrix <- function(data, idcols, weightcols) {
   
   a <- NULL
   for (i in 1:ncol(id)) {
-    a <- na.omit(union(a, id[, i]))
+    a <- stats::na.omit(union(a, id[, i]))
   }
   a <- sort(a)
   
-  dat <- rep(0, nnzero(weight))
+  dat <- rep(0, Matrix::nnzero(weight))
   indi <- dat
   indj <- dat
   
@@ -49,6 +49,6 @@ df2matrix <- function(data, idcols, weightcols) {
     }
   }
   
-  c <- sparseMatrix(indi, indj, x = dat, dimnames = list(1:nrow(id), a))
+  c <- Matrix::sparseMatrix(indi, indj, x = dat, dimnames = list(1:nrow(id), a))
   c
 } 

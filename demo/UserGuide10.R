@@ -72,9 +72,10 @@ hipos[2] <- which(levels(as.factor(bang$district)) == 11)
 
 u0 <- mymodel3@residual$lev_2_resi_est_Intercept.Sterilization
 u0se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Sterilization)
+u0CI95 <- 1.96 * u0se
 u0rank <- rank(u0)
-u0rankhi <- u0 + u0se
-u0ranklo <- u0 - u0se
+u0rankhi <- u0 + u0CI95
+u0ranklo <- u0 - u0CI95
 u0rankno <- order(u0rank)
 plot(1:60, u0[u0rankno], ylim = c(-2, 2), pch = 15, xlab = "Rank", ylab = "u0 residual estimate")
 points(1:60, u0rankhi[u0rankno], pch = 24, bg = "grey")
@@ -85,9 +86,10 @@ for (i in 1:2) points(x = which(u0rankno == hipos[i]), y = u0[u0rankno[which(u0r
 
 u1 <- mymodel3@residual$lev_2_resi_est_Intercept.Modern_reversible_method
 u1se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Modern_reversible_method)
+u1CI95 <- 1.96 * u1se
 u1rank <- rank(u1)
-u1rankhi <- u1 + u1se
-u1ranklo <- u1 - u1se
+u1rankhi <- u1 + u1CI95
+u1ranklo <- u1 - u1CI95
 u1rankno <- order(u1rank)
 plot(1:60, u1[u1rankno], ylim = c(-2, 2), pch = 15, xlab = "Rank", ylab = "u1 residual estimate")
 points(1:60, u1rankhi[u1rankno], pch = 24, bg = "grey")
@@ -98,9 +100,10 @@ for (i in 1:2) points(x = which(u1rankno == hipos[i]), y = u1[u1rankno[which(u1r
 
 u2 <- mymodel3@residual$lev_2_resi_est_Intercept.Traditional_method
 u2se <- sqrt(mymodel3@residual$lev_2_resi_var_Intercept.Traditional_method)
+u2CI95 <- 1.96 * u2se
 u2rank <- rank(u2)
-u2rankhi <- u2 + u2se
-u2ranklo <- u2 - u2se
+u2rankhi <- u2 + u2CI95
+u2ranklo <- u2 - u2CI95
 u2rankno <- order(u2rank)
 plot(1:60, u2[u2rankno], ylim = c(-2, 2), pch = 15, xlab = "Rank", ylab = "u2 residual estimate")
 points(1:60, u2rankhi[u2rankno], pch = 24, bg = "grey")

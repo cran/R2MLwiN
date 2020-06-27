@@ -4,10 +4,21 @@
 \alias{runMLwiN}
 \title{Calls MLwiN from R.}
 \usage{
-runMLwiN(Formula, levID = NULL, D = "Normal", data = NULL,
-  estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-  stdout = "", stderr = "", workdir = tempdir(),
-  checkversion = TRUE, indata = NULL, saveworksheet = NULL)
+runMLwiN(
+  Formula,
+  levID = NULL,
+  D = "Normal",
+  data = NULL,
+  estoptions = list(EstM = 0),
+  BUGO = NULL,
+  MLwiNPath = NULL,
+  stdout = "",
+  stderr = "",
+  workdir = tempdir(),
+  checkversion = TRUE,
+  indata = NULL,
+  saveworksheet = NULL
+)
 }
 \arguments{
 \item{Formula}{A \code{\link[stats]{formula}} object specifying the model
@@ -482,9 +493,9 @@ multinomial and mixed response models, if common coefficients are added, use
 coefficients are added, use \code{fixe.sep} for the separate coefficients;
 \code{rp1} -- a list object specifying the Wishart or gamma prior for the
 covariance matrix or scalar variance at level 1 (this consists of: (1)
-\code{estimate} -- an estimate for the true value of the inverse of the
-covariance matrix; (2) \code{size} -- the number of rows in the covariance
-matrix. Note that this is a weakly-informative prior and the default prior
+\code{estimate} -- a prior guess for the true value of the covariance matrix;
+(2) \code{size} -- sample size for guess.
+Note that this is a weakly-informative prior and the default prior
 is used if missing); \code{rp2} -- a list object specifying the Wishart or
 gamma prior for the covariance matrix or scalar variance at level 2 (this
 consists of: (1) \code{estimate} -- an estimate for the true value of the
@@ -558,8 +569,8 @@ whether BUGS stays open following completion of the model run;
 \code{debug = FALSE} by default.
 \item \code{seed}: sets the random number
 generator in BUGS.
-\item \code{bugs}: specifies the path of the BUGS
-executable.
+\item \code{bugs.directory}: specifies the path where WinBUGS
+has been installed (not required if \code{OpenBugs = TRUE}).
 \item \code{OpenBugs}: if \code{OpenBugs = TRUE}, OpenBUGS is used.
 Otherwise (i.e. \code{OpenBugs = FALSE}, the default) WinBUGS is used.
 }

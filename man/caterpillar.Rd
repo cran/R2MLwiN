@@ -4,8 +4,17 @@
 \alias{caterpillar}
 \title{Draws a caterpillar plot (in MLwiN style).}
 \usage{
-caterpillar(y, x, qtlow, qtup, xlab = "", ylab = "", xlim = NULL,
-  ylim = NULL, main = "")
+caterpillar(
+  y,
+  x,
+  qtlow,
+  qtup,
+  xlab = "",
+  ylab = "",
+  xlim = NULL,
+  ylim = NULL,
+  main = ""
+)
 }
 \arguments{
 \item{y}{A numerical vector specifying the \code{y} coordinates
@@ -33,7 +42,7 @@ should be used; see \code{\link[graphics]{plot.default}}.}
 \item{main}{A main title for the plot; see \code{\link[graphics]{plot.default}}.}
 }
 \description{
-A convenient wrapper for the \code{\link[graphics]{plot}} function with the addition
+A convenient wrapper for the \code{plot} function with the addition
 of error bars, e.g. to create caterpillar plots.
 }
 \examples{

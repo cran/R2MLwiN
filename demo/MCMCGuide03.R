@@ -34,18 +34,24 @@ data(tutorial, package = "R2MLwiN")
 ## The highest level comes first, then the second highest and so on
 (mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
-estimates <- mymodel1@chains
-par(mfrow = c(3, 2))
-plot(4501:niter(estimates), estimates[4501:niter(estimates), "deviance"], xlab = "iteration", ylab = expression(paste("Est. of deviance")), 
-  type = "l")
-plot(4501:niter(estimates), estimates[4501:niter(estimates), "FP_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
-  beta[0])), type = "l")
-plot(4501:niter(estimates), estimates[4501:niter(estimates), "FP_standlrt"], xlab = "iteration", ylab = expression(paste("Est. of ", 
-  beta[1])), type = "l")
-plot(4501:niter(estimates), estimates[4501:niter(estimates), "RP2_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
-  sigma[u0]^2)), type = "l")
-plot(4501:niter(estimates), estimates[4501:niter(estimates), "RP1_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
-  sigma[e0]^2)), type = "l")
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  estimates <- mymodel1@chains
+  par(mfrow = c(3, 2))
+  plot(4501:niter(estimates), estimates[4501:niter(estimates), "deviance"], xlab = "iteration", ylab = expression(paste("Est. of deviance")), 
+    type = "l")
+  plot(4501:niter(estimates), estimates[4501:niter(estimates), "FP_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
+    beta[0])), type = "l")
+  plot(4501:niter(estimates), estimates[4501:niter(estimates), "FP_standlrt"], xlab = "iteration", ylab = expression(paste("Est. of ", 
+    beta[1])), type = "l")
+  plot(4501:niter(estimates), estimates[4501:niter(estimates), "RP2_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
+    sigma[u0]^2)), type = "l")
+  plot(4501:niter(estimates), estimates[4501:niter(estimates), "RP1_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
+    sigma[e0]^2)), type = "l")
+  ## reinstate par settings
+  par(mypar)
+}
 
 sixway(mymodel1@chains[, "FP_standlrt", drop = FALSE], "beta_1")
 sixway(mymodel1@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
@@ -58,8 +64,6 @@ sixway(mymodel1@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 43
 
-## reinstate par settings
-par(mypar)
 
 
 ############################################################################

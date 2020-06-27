@@ -65,8 +65,11 @@ l1varfn <- mymodel3@RP["RP1_var_Intercept"] + (2 * mymodel3@RP["RP1_cov_Intercep
 varfndata <- as.data.frame(cbind(mymodel3@data$standlrt, l2varfn, l1varfn)[order(mymodel3@data$standlrt), ])
 colnames(varfndata) <- c("standlrt", "l2varfn", "l1varfn")
 
-xyplot(l2varfn + l1varfn ~ standlrt, data = varfndata, type = "l")
-
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(l2varfn + l1varfn ~ standlrt, data = varfndata, type = "l")
+}
 
 covmatrix <- matrix(, nrow = 3, ncol = 3)
 covmatrix[1, 1] <- 1
@@ -105,7 +108,11 @@ varfndata <- as.data.frame(cbind(mymodel5@data$standlrt, l2varfn, l1varfnboys, l
   ])
 colnames(varfndata) <- c("standlrt", "l2varfn", "l1varfnboys", "l1varfngirls")
 
-xyplot(l2varfn + l1varfnboys + l1varfngirls ~ standlrt, data = varfndata, type = "l")
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(l2varfn + l1varfnboys + l1varfngirls ~ standlrt, data = varfndata, type = "l")
+}
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . .106
 

@@ -3,7 +3,6 @@
 \docType{package}
 \name{R2MLwiN}
 \alias{R2MLwiN}
-\alias{R2MLwiN-package}
 \title{Running MLwiN from within R}
 \description{
 \pkg{R2MLwiN} is an R command interface to the MLwiN multilevel modelling
@@ -12,7 +11,7 @@ MLwiN (and also WinBUGS / OpenBUGS) from within the R environment.
 }
 \section{New features in version 0.8-3}{
 
-Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{\link[memisc]{memisc-package}} have been
+Support for model comparison tables via \code{\link[texreg]{texreg-package}} and \code{memisc-package} have been
 added to \pkg{R2MLwiN} version 0.8-3. For an example of using \code{\link[texreg]{texreg-package}} see e.g. \code{demo(MCMCGuide04)}.
 }
 
@@ -67,7 +66,7 @@ type e.g. \code{demo(UserGuide03)} or view a demo's script via
  \item{A number of generic s4 methods have been added to improve compatibility with statistical functions
  which use them (e.g. see \code{\link[stats4]{stats4-package}}). So, for example, the addition of 
  a \code{\link{logLik}} means a likelihood ratio test can now be conducted
- on two \code{\link{mlwinfitIGLS-class}} objects using the \code{\link[lmtest]{lrtest}} function,
+ on two \code{\link{mlwinfitIGLS-class}} objects using the \code{lrtest} function,
  e.g. \code{lrtest(mymodel1, mymodel2)}. See \code{help(package = "R2MLwiN")} for
  the index listing these various methods.}
  }

@@ -28,20 +28,6 @@ options(MLwiN_path = mlwin)
 ## Read bang1 data
 data(bang1, package = "R2MLwiN")
 
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) == 
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-# User's input if necessary
-
-## winbugs executable
-#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-
 # 10.1 Simple logistic regression model . . . . . . . . . . . . . . . . .130
 
 (mymodel1 <- runMLwiN(logit(use) ~ 1 + age, D = "Binomial", estoptions = list(EstM = 1), data = bang1))
@@ -90,17 +76,21 @@ if (!require(texreg)) {
    stars = numeric(0), include.nobs=FALSE, include.loglik=FALSE, include.deviance=FALSE, include.dbar=FALSE, include.dthetabar=FALSE, include.pd=FALSE, include.dic=FALSE)
 }
 
-cat("The effective sample sizes\n")
-ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])
-ESS.bb <- effectiveSize(mymodel8@chains[, 2:11])
-ctable <- cbind(round(ESS.aa), round(ESS.bb))
-colnames(ctable) <- c("ESS(Gibbs)", "ESS(Metropolis)")
-print(ctable)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  cat("The effective sample sizes\n")
+  ESS.aa <- effectiveSize(mymodel7@chains[, 2:11])
+  ESS.bb <- effectiveSize(mymodel8@chains[, 2:11])
+  ctable <- cbind(round(ESS.aa), round(ESS.bb))
+  colnames(ctable) <- c("ESS(Gibbs)", "ESS(Metropolis)")
+  print(ctable)
+}
 
 # 10.6 Comparison with WinBUGS . . . . . . . . . . . . . . . . . . . . . 144
 
 mymodel9 <- runMLwiN(logit(use) ~ 1 + age + (1 | district), D = "Binomial", estoptions = list(EstM = 1), BUGO = c(version = 4, 
-  n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = bang1)
+  n.chains = 1, debug = FALSE, seed = 1, OpenBugs = TRUE), data = bang1)
 
 summary(mymodel9)
 summary(mymodel9[, "beta[1]"])

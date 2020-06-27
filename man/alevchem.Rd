@@ -35,7 +35,7 @@ Yang, M., Woodhouse, G. (2001) Progress from GCSE to A and AS level: institution
 
 data(alevchem, package = "R2MLwiN")
 
-alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no - 6
 
 # Note: Establishment codes on their own do not uniquely identify schools.
 # Schools are instead uniquely identified by LEA code, establishment ID

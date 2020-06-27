@@ -28,9 +28,9 @@
 # rho is acf for first lag
 # runlength is the length of unthinned chain
 MCSE <- function(chain, rho, ll = 0.5, ul = 20) {
-  chain_var <- var(chain)
+  chain_var <- stats::var(chain)
   if (coda::is.mcmc(chain)) {
-    runlength <- end(chain) - (start(chain) - 1)
+    runlength <- stats::end(chain) - (stats::start(chain) - 1)
   } else {
     runlength <- length(chain)
   }

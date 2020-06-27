@@ -335,7 +335,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
   shortname <- function(...) {
     name <- paste0(...)
     if (!name %in% names(namemap)) {
-      sname <- paste0("v", digest(name, algo = "xxhash64", serialize = FALSE))
+      sname <- paste0("v", digest::digest(name, algo = "xxhash64", serialize = FALSE))
       names(sname) <- name
       namemap <<- c(namemap, sname)
     }

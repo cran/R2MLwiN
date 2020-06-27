@@ -4,21 +4,21 @@
 \alias{prior2macro}
 \title{Translates informative prior information into a concise MLwiN macro.}
 \usage{
-prior2macro(prior, formula, levID, D, indata)
+prior2macro(prior, D, fpart, nrand)
 }
 \arguments{
 \item{prior}{An R list object containing prior information for a multilevel
 model. See `Details' below.}
 
-\item{formula}{A formula object; see
-\code{\link{Formula.translate}} or \code{\link{Formula.translate.compat}}.}
+\item{D}{A character string specifying the type of distribution, which
+can be one of \code{'Normal'}, \code{'Binomial'}, \code{'Poisson'},
+\code{'Negbinom'}, \code{'Multinomial'}, \code{'Multivariate Normal'},
+or \code{'Mixed'}}
 
-\item{levID}{A string vector specifying the level ID(s).}
+\item{fpart}{An R list containing the list of fixed part parameter labels.}
 
-\item{D}{A character string/vector specifying the distribution of the
-current model.}
-
-\item{indata}{A data.frame object containing the variables to be modelled.}
+\item{nrand}{An R list of lists, containing the number of random parameters
+at each level.}
 }
 \value{
 A long vector is returned in the format of MLwiN macro language. This
@@ -32,22 +32,17 @@ vector object to be used in an MLwiN macro.
 \details{
 The \code{prior} list can contain the following:
 \itemize{
-\item \code{fixe}: For the fixed
-parameters, if proper normal priors are used for some parameters, a list of
-vectors of length two is provided, each of which specifies the mean and the
-standard deviation. If not given, default ('flat' or 'diffuse') priors are
-used for the parameters.
-\item \code{fixe.common}: For multivariate normal,
-multinomial and mixed response models, if common coefficients are added, use
-\code{fixe.common} rather than \code{fixe}.
-\item \code{fixe.sep}: If the common
-coefficients are added, use \code{fixe.sep} for the separate coefficients.
+\item \code{fixe}: For the fixed parameters, if proper normal priors are used
+for some parameters, a list of vectors of length two is provided, each of which
+specifies the mean and the standard deviation. If not given, default ('flat' or 'diffuse')
+priors are used for the parameters. The names used in the list should match those in the
+model output.
 \item \code{rp<level number>}: A list object specifying the Wishart or gamma prior for the
 covariance matrix or scalar variance at the levels specified, e.g. \code{rp1} for
 level 1, \code{rp2} for level 2, etc. Consists of: (1)
-\code{estimate} -- an estimate for the true value of the inverse of the
-covariance matrix; (2) \code{size} -- the number of rows in the covariance
-matrix. Note that this is a weakly-informative prior and the default prior
+\code{estimate} -- a prior guess for the true value of the covariance matrix;
+(2) \code{size} -- sample size for guess.
+Note that this is a weakly-informative prior and the default prior
 is used if missing.
 }
 }

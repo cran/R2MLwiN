@@ -96,9 +96,9 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         Formula <- sub(paste(i, "c\\|", sep = ""), paste("\\`", i, "c`\\|", sep = ""), Formula)
       }
     }
-    Formula <- as.formula(Formula)
+    Formula <- stats::as.formula(Formula)
   }
-  Terms <- terms.formula(Formula, keep.order = TRUE)
+  Terms <- stats::terms.formula(Formula, keep.order = TRUE)
   resp <- rownames(attr(Terms, "factors"))[attr(Terms, "response")]
   resp <- gsub("[[:space:]]", "", resp)
   left <- attr(Terms, "term.labels")
@@ -325,7 +325,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           }
         }
       }
-      randS <- unique(na.omit(unlist(rands)))
+      randS <- unique(stats::na.omit(unlist(rands)))
       for (i in 1:length(randS)) {
         if (sum(grepl("\\.", randS[i])) > 0) {
           ttemp <- unlist(strsplit(randS[i], "\\."))
@@ -450,7 +450,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         }
       }
       
-      randC <- na.omit(unlist(randc))
+      randC <- stats::na.omit(unlist(randc))
       randCC <- rep(NA, length(randC))
       
       if (length(randC) != 0) {
@@ -491,7 +491,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
           ccid.mat[i, nonrefcatpos] <- 1
         }
         
-        randC <- unique(na.omit(unlist(randc)))
+        randC <- unique(stats::na.omit(unlist(randc)))
         randCC <- rep(NA, length(randC))
         for (i in 1:length(randC)) {
           randCC[i] <- grep(randC[i], common.coeff)
@@ -763,7 +763,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         rands[[i]] <- unlist(strsplit(rands[[i]][2], "\\+"))
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS
@@ -875,7 +875,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         rands[[i]] <- unlist(strsplit(rands[[i]][2], "\\+"))
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS
@@ -967,7 +967,7 @@ Formula.translate.compat <- function(Formula, levID, D = "Normal", indata) {
         rands[[i]] <- unlist(strsplit(rands[[i]][2], "\\+"))
       }
     }
-    randS <- unique(na.omit(unlist(rands)))
+    randS <- unique(stats::na.omit(unlist(rands)))
     if (length(fixs) == 0) {
       nonfps <- randS
       fixs <- randS

@@ -28,24 +28,11 @@ options(MLwiN_path = mlwin)
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) == 
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-# User's input if necessary
-
-## winbugs executable winbugs <- 'C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe'
-
 ## The highest level comes first, then the second highest and so on
 ## Uses the results from IGLS to create initial values for bugs
 ## Fit the model by calling openbugs using the R2WinBUGS package
 mymodel1 <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, show.file = TRUE), 
-  BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = tutorial)
+  BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, OpenBugs = TRUE), data = tutorial)
 
 summary(mymodel1)
 summary(mymodel1[, "beta[2]"])
@@ -70,14 +57,14 @@ bugEst <- paste0(tempdir(), "/tutorial1_log.txt")
 
 
 chains.bugs1 <- mlwin2bugs(D = "t", levID = c("school", "student"), datafile, initfile, modelfile, bugEst, fact = NULL, 
-  addmore = NULL, n.chains = 1, n.iter = 5500, n.burnin = 500, n.thin = 1, debug = TRUE, bugs = openbugs, bugsWorkingDir = tempdir(), 
+  addmore = c("sigma2", "df"), n.chains = 1, n.iter = 5500, n.burnin = 500, n.thin = 1, debug = TRUE, bugsWorkingDir = tempdir(), 
   OpenBugs = TRUE)
 ## Close winbugs manually
 summary(chains.bugs1)
 sixway(chains.bugs1[, "df", drop = FALSE])
 
 chains.bugs2 <- mlwin2bugs(D = "t", levID = c("school", "student"), datafile, initfile, modelfile, bugEst, fact = NULL, 
-  addmore = NULL, n.chains = 1, n.iter = 12000, n.burnin = 2000, n.thin = 1, debug = TRUE, bugs = openbugs, bugsWorkingDir = tempdir(), 
+  addmore = c("sigma2", "df"), n.chains = 1, n.iter = 12000, n.burnin = 2000, n.thin = 1, debug = TRUE, bugsWorkingDir = tempdir(), 
   OpenBugs = TRUE)
 ## Close winbugs manually
 summary(chains.bugs2)

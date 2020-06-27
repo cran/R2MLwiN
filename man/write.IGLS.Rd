@@ -5,15 +5,43 @@
 \title{Writes MLwiN macros to fit models using the iterative generalized least
 squares (IGLS) algorithm.}
 \usage{
-write.IGLS(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp,
-  D = "Normal", nonlinear = c(0, 1), categ = NULL, notation = NULL,
-  nonfp = NA, clre = NULL, Meth = 1, extra = FALSE, reset,
-  rcon = NULL, fcon = NULL, maxiter = 20, convtol = 2,
-  mem.init = "default", optimat = FALSE, weighting = NULL,
-  fpsandwich = FALSE, rpsandwich = FALSE, macrofile, IGLSfile,
-  resifile, resi.store = FALSE, resioptions, debugmode = FALSE,
-  startval = NULL, namemap = sapply(colnames(indata), as.character),
-  saveworksheet = NULL, rng.version = 10)
+write.IGLS(
+  indata,
+  dtafile,
+  oldsyntax = FALSE,
+  resp,
+  levID,
+  expl,
+  rp,
+  D = "Normal",
+  nonlinear = c(0, 1),
+  categ = NULL,
+  notation = NULL,
+  nonfp = NA,
+  clre = NULL,
+  Meth = 1,
+  extra = FALSE,
+  reset,
+  rcon = NULL,
+  fcon = NULL,
+  maxiter = 20,
+  convtol = 2,
+  mem.init = "default",
+  optimat = FALSE,
+  weighting = NULL,
+  fpsandwich = FALSE,
+  rpsandwich = FALSE,
+  macrofile,
+  IGLSfile,
+  resifile,
+  resi.store = FALSE,
+  resioptions,
+  debugmode = FALSE,
+  startval = NULL,
+  namemap = sapply(colnames(indata), as.character),
+  saveworksheet = NULL,
+  rng.version = 10
+)
 }
 \arguments{
 \item{indata}{A data.frame object containing the data to be modelled.}

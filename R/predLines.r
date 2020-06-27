@@ -82,7 +82,7 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
       stop("Residuals were not stored at the requested level")
     }
     if (length(est.names) == 1) {
-      est0 <- na.omit(myresi[[est.names]])
+      est0 <- stats::na.omit(myresi[[est.names]])
       if (length(est0) == length(unique(categrv))) {
         est <- as.matrix(est0[categrv])
         colnames(est) <- sub("_resi_est", "", est.names)
@@ -126,20 +126,20 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
     x.max <- max(x)
     
     if (legend) {
-      key <- list(lines = Rows(trellis.par.get("superpose.line"), 1:length(selected)), text = list(lab = as.character(selected)), 
+      key <- list(lines = lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:length(selected)), text = list(lab = as.character(selected)), 
                   space = legend.space, columns = legend.ncol)
     } else {
       key <- NULL
     }
     
-    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+    trellis.obj <- lattice::xyplot(tval ~ x, prepanel = function(x, y, ...) {
       list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
     }, groups = categrv, panel = function(x, y, groups, ...) {
-      col <- Rows(trellis.par.get("superpose.line"), 1:length(selected))$col
+      col <- lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:length(selected))$col
       j <- 1
       for (i in selected) {
         ypred <- y[which(groups == i)]
-        panel.xyplot(x = sort(x[which(groups == i)]), y = ypred[order(x[which(groups == i)])], col = col[j], 
+        lattice::panel.xyplot(x = sort(x[which(groups == i)]), y = ypred[order(x[which(groups == i)])], col = col[j], 
                      type = "l", ...)
         j <- j + 1
       }
@@ -190,7 +190,7 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
       }
     }
     
-    quants <- apply(tval, 1, function(x) quantile(x, c(probs[1], 0.5, probs[2])))
+    quants <- apply(tval, 1, function(x) stats::quantile(x, c(probs[1], 0.5, probs[2])))
     tval.med <- quants[2,]
     tval.low <- quants[1,]
     tval.up <- quants[3,]
@@ -203,25 +203,25 @@ predLines <- function(object, indata = NULL, xname, lev = 2, selected = NULL, pr
     x.max <- max(x)
     
     if (legend) {
-      key <- list(lines = Rows(trellis.par.get("superpose.line"), 1:length(selected)), text = list(lab = as.character(selected)), 
+      key <- list(lines = lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:length(selected)), text = list(lab = as.character(selected)), 
                   space = legend.space, columns = legend.ncol)
     } else {
       key <- NULL
     }
     
-    trellis.obj <- xyplot(tval.med ~ x, prepanel = function(x, y, ...) {
+    trellis.obj <- lattice::xyplot(tval.med ~ x, prepanel = function(x, y, ...) {
       list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
     }, groups = categrv, panel = function(x, y, groups, ...) {
-      col <- Rows(trellis.par.get("superpose.line"), 1:length(selected))$col
+      col <- lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:length(selected))$col
       j <- 1
       for (i in selected) {
         xg <- x[which(groups == i)]
         ypred <- y[which(groups == i)]
         ypred.low <- tval.low[which(groups == i)]
         ypred.up <- tval.up[which(groups == i)]
-        panel.xyplot(x = sort(xg), y = ypred[order(xg)], col = col[j], type = "l", ...)
-        panel.xyplot(x = sort(xg), y = ypred.low[order(xg)], col = col[j], type = "l", lty = 3, ...)
-        panel.xyplot(x = sort(xg), y = ypred.up[order(xg)], col = col[j], type = "l", lty = 3, ...)
+        lattice::panel.xyplot(x = sort(xg), y = ypred[order(xg)], col = col[j], type = "l", ...)
+        lattice::panel.xyplot(x = sort(xg), y = ypred.low[order(xg)], col = col[j], type = "l", lty = 3, ...)
+        lattice::panel.xyplot(x = sort(xg), y = ypred.up[order(xg)], col = col[j], type = "l", lty = 3, ...)
         j <- j + 1
       }
     }, key = key, ylab = "ypred", xlab = xname, ...)

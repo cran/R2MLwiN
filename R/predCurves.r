@@ -37,7 +37,7 @@
 #' ## Read alevchem data
 #' data(alevchem, package = "R2MLwiN")
 #'
-#' alevchem$gcseav <- double2singlePrecision(alevchem$gcse_tot/alevchem$gcse_no - 6)
+#' alevchem$gcseav <- alevchem$gcse_tot/alevchem$gcse_no - 6
 #' # Avoids warning when fitting factor as continuous response:
 #' alevchem$a_point_num <- as.numeric(alevchem$a_point)
 #'
@@ -88,7 +88,7 @@ predCurves <- function(object, indata = NULL, xname, group = NULL, legend = TRUE
   x.max <- max(x)
   
   if (legend && length(group)) {
-    key <- list(lines = Rows(trellis.par.get("superpose.line"), 1:nlevels(group)), text = list(lab = levels(group)), 
+    key <- list(lines = lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:nlevels(group)), text = list(lab = levels(group)), 
                 space = legend.space, columns = legend.ncol)
   } else {
     key <- NULL
@@ -97,20 +97,20 @@ predCurves <- function(object, indata = NULL, xname, group = NULL, legend = TRUE
   if (!is.null(group)) {
     levs <- levels(group)
     nlev <- length(levs)
-    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+    trellis.obj <- lattice::xyplot(tval ~ x, prepanel = function(x, y, ...) {
       list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
     }, groups = group, panel = function(x, y, groups, ...) {
-      col <- Rows(trellis.par.get("superpose.line"), 1:nlev)$col
+      col <- lattice::Rows(lattice::trellis.par.get("superpose.line"), 1:nlev)$col
       for (i in 1:nlev) {
         ypred <- y[groups == levs[i]]
-        panel.xyplot(x = sort(x[groups == levs[i]]), y = ypred[order(x[groups == levs[i]])], col = col[i], type = "l", ...)
+        lattice::panel.xyplot(x = sort(x[groups == levs[i]]), y = ypred[order(x[groups == levs[i]])], col = col[i], type = "l", ...)
       }
     }, key = key, ylab = "ypred", xlab = xname, ...)
   } else {
-    trellis.obj <- xyplot(tval ~ x, prepanel = function(x, y, ...) {
+    trellis.obj <- lattice::xyplot(tval ~ x, prepanel = function(x, y, ...) {
       list(xlim = c(x.min, x.max), ylim = c(pred.min, pred.max))
     }, panel = function(x, y, ...) {
-      panel.xyplot(x = sort(x), y = y[order(x)], type = "l", ...)
+      lattice::panel.xyplot(x = sort(x), y = y[order(x)], type = "l", ...)
     }, ylab = "ypred", xlab = xname, ...)
   }
   print(trellis.obj)

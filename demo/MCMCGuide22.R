@@ -65,7 +65,7 @@ data(tutorial, package = "R2MLwiN")
 sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], "sigma2u0")
 
 set.seed(1)
-tutorial$temp <- double2singlePrecision(rnorm(4059))
+tutorial$temp <- rnorm(4059)
 
 ## Define the model
 

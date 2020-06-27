@@ -32,22 +32,10 @@ options(MLwiN_path = mlwin)
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) == 
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-## winbugs executable
-#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-
 ## Hierarchical centring at level 2 (DO NOT USE VERSION 2.25; the bug has been fixed for VERSION 2.26)
 
 mymodel <- runMLwiN(normexam ~ 1 + standlrt + (1 | school) + (1 | student), estoptions = list(EstM = 1, mcmcOptions = list(hcen = 2), 
-  show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), 
+  show.file = TRUE), BUGO = c(version = 4, n.chains = 1, debug = FALSE, seed = 1, OpenBugs = TRUE), 
   data = tutorial)
 
 summary(mymodel)

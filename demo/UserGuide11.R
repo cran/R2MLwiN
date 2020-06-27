@@ -32,7 +32,11 @@ summary(alevchem)
 
 # 11.2 An analysis using the traditional approach . . . . . . . . . . . .162
 
-histogram(as.integer(alevchem$a_point))
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  histogram(as.integer(alevchem$a_point))
+}
 
 a_point_rank <- rank(alevchem$a_point)
 a_point_uniform <- (a_point_rank - 0.5)/length(a_point_rank)

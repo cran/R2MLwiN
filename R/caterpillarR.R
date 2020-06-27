@@ -49,13 +49,13 @@ caterpillarR <- function(resi, lev = 2) {
       list(xlim = range(x - hw, x + hw, finite = TRUE))
     }
     panel.ci <- function(x, y, se, subscripts, pch = 16, ...) {
-      panel.grid(h = -1, v = -1)
-      panel.abline(v = 0)
+      lattice::panel.grid(h = -1, v = -1)
+      lattice::panel.abline(v = 0)
       x <- as.numeric(x)
       y <- as.numeric(y)
       se <- as.numeric(se[subscripts])
-      panel.segments(x - 1.96 * se, y, x + 1.96 * se, y, col = "black")
-      panel.xyplot(x, y, pch = pch, ...)
+      lattice::panel.segments(x - 1.96 * se, y, x + 1.96 * se, y, col = "black")
+      lattice::panel.xyplot(x, y, pch = pch, ...)
     }
     f <- function(nx) {
       xt <- x[[nx]]
@@ -69,11 +69,11 @@ caterpillarR <- function(resi, lev = 2) {
         ord <- unlist(lapply(xt, order)) + rep((0:(nc - 1)) * nr, each = nr)
         rr <- 1:nr
         ind <- gl(nc, nr, labels = names(xt))
-        xyplot(rep(qnorm((rr - 0.5)/nr), nc) ~ unlist(xt)[ord] | ind[ord], se = se[ord], prepanel = prepanel.ci, 
+        lattice::xyplot(rep(stats::qnorm((rr - 0.5)/nr), nc) ~ unlist(xt)[ord] | ind[ord], se = se[ord], prepanel = prepanel.ci, 
                panel = panel.ci, scales = list(x = list(relation = "free")), ylab = "Standard normal quantiles", 
                xlab = NULL, main = mtit, ...)
       } else {
-        qqmath(~values | ind, stack(xt), scales = list(y = list(relation = "free")), xlab = "Standard normal quantiles", 
+        lattice::qqmath(~values | ind, utils::stack(xt), scales = list(y = list(relation = "free")), xlab = "Standard normal quantiles", 
                ylab = NULL, main = mtit, ...)
       }
     }
@@ -99,9 +99,9 @@ caterpillarR <- function(resi, lev = 2) {
   
   est.names <- names(myresi)[grep(paste("lev_", lev, "_resi_est", sep = ""), names(myresi))]
   if (length(est.names) == 1) {
-    est <- as.matrix(na.omit(myresi[[est.names]]))
+    est <- as.matrix(stats::na.omit(myresi[[est.names]]))
     colnames(est) <- sub("_resi_est", "", est.names)
-    var <- na.omit(myresi[[grep(paste("lev_", lev, "_resi_(var|variance)_", sep = ""), names(myresi))[1]]])
+    var <- stats::na.omit(myresi[[grep(paste("lev_", lev, "_resi_(var|variance)_", sep = ""), names(myresi))[1]]])
     d1 <- length(est)
     tt <- array(, c(1, 1, d1))
     tt[1, 1, ] <- var
@@ -110,7 +110,7 @@ caterpillarR <- function(resi, lev = 2) {
     for (i in 1:length(est.names)) {
       est <- cbind(est, myresi[[est.names[i]]])
     }
-    est <- na.omit(est)
+    est <- stats::na.omit(est)
     colnames(est) <- sub("_resi_est", "", est.names)
     tempnames <- sub(paste("lev_", lev, "_resi_est_", sep = ""), "", est.names)
     d1 <- dim(est)[1]
@@ -123,14 +123,14 @@ caterpillarR <- function(resi, lev = 2) {
         if (i == j) {
           tmatch <- grep(paste("lev_", lev, "_resi_(var|variance)_", tempnames[i], sep = ""), names(myresi))[1]
           if (length(tmatch) != 0) {
-            cov.lower[ccount, ] <- na.omit(myresi[[tmatch]])
+            cov.lower[ccount, ] <- stats::na.omit(myresi[[tmatch]])
           } else {
             cov.lower[ccount, ] <- rep(0, d1)
           }
         } else {
           tmatch <- grep(paste("lev_", lev, "_resi_cov_", tempnames[i], "_", tempnames[j], sep = ""), names(myresi))
           if (length(tmatch) != 0) {
-            cov.lower[ccount, ] <- na.omit(myresi[[tmatch]])
+            cov.lower[ccount, ] <- stats::na.omit(myresi[[tmatch]])
           } else {
             cov.lower[ccount, ] <- rep(0, d1)
           }

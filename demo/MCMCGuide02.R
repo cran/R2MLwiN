@@ -37,16 +37,23 @@ data(tutorial, package = "R2MLwiN")
 ## Choose MCMC algoritm for estimation
 (mymodel2 <- runMLwiN(normexam ~ 1 + standlrt + (1 | student), estoptions = list(EstM = 1), data = tutorial))
 
-estimates <- mymodel2@chains
-par(mfrow = c(2, 2))
-plot(1:niter(estimates), estimates[, "deviance"], xlab = "iteration", ylab = expression(paste("Est. of deviance")), 
-  type = "l")
-plot(1:niter(estimates), estimates[, "FP_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", beta[0])), 
-  type = "l")
-plot(1:niter(estimates), estimates[, "FP_standlrt"], xlab = "iteration", ylab = expression(paste("Est. of ", beta[1])), 
-  type = "l")
-plot(1:niter(estimates), estimates[, "RP1_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
-  sigma[e0]^2)), type = "l")
+
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  par(mfrow = c(2, 2))
+  estimates <- mymodel2@chains
+  plot(1:niter(estimates), estimates[, "deviance"], xlab = "iteration", ylab = expression(paste("Est. of deviance")), 
+    type = "l")
+  plot(1:niter(estimates), estimates[, "FP_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", beta[0])), 
+    type = "l")
+  plot(1:niter(estimates), estimates[, "FP_standlrt"], xlab = "iteration", ylab = expression(paste("Est. of ", beta[1])), 
+    type = "l")
+  plot(1:niter(estimates), estimates[, "RP1_var_Intercept"], xlab = "iteration", ylab = expression(paste("Est. of ", 
+    sigma[e0]^2)), type = "l")
+  ## reinstate par settings
+  par(mypar)
+}
 
 # 2.2 Deviance statistic and the DIC diagnostic . . . . . . . . . . . . . 28
 
@@ -67,8 +74,6 @@ tutorial$school <- as.factor(tutorial$school)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . . 33
 
-## reinstate par settings
-par(mypar)
 
 
 

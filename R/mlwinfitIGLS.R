@@ -354,11 +354,9 @@ setReplaceMethod("[[", signature(x = "mlwinfitIGLS"), function(x, i, j, value) {
 })
 
 #' Summarize "mlwinfitIGLS" objects
-#' @param object,x an \code{\link{mlwinfitIGLS-class}} object
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @param ... other parameters
-#' @param digits the number of significant digits to use when printing.
-#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
-#' @rdname summary-methods-igls
+#' @seealso \code{\link[stats4]{summary-methods}}
 #' @export
 setMethod("summary", signature(object = "mlwinfitIGLS"), function(object, ...) {
   object
@@ -396,25 +394,9 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   }
   
   signifstar <- function(pval) {
-    starstr <- "N/A"
-    if (!is.na(pval) && pval >= 0 && pval <= 1) {
-      if (pval < 0.001) {
-        starstr <- "***"
-      }
-      if (pval >= 0.001 && pval < 0.01) {
-        starstr <- "** "
-      }
-      if (pval >= 0.01 && pval < 0.05) {
-        starstr <- "*  "
-      }
-      if (pval >= 0.05 && pval < 0.1) {
-        starstr <- ".  "
-      }
-      if (pval >= 0.1) {
-        starstr <- "   "
-      }
-    }
-    starstr
+    symnum(pval, corr = FALSE, na = "N/A", 
+           cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+           symbols = c("***", "** ", "*  ", ".  ", "   "))
   }
   cat("\n")
   cat(paste(rep("-", 50), collapse = "*"), "\n")
@@ -447,7 +429,7 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste("Deviance statistic: ", round(object@LIKE, 1)), "\n")
   cat(paste(rep("-", 50), collapse = "-"), "\n")
   cat("The model formula:\n")
-  print(object@Formula)  #cat(gsub('[[:space:]]','',object@Formula),'\n')
+  print(formula(object))
   levID0 <- object@levID
   levID.display <- ""
   if (is.na(levID0[length(levID0)])) {
@@ -462,25 +444,25 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   FP.names <- names(object@FP)
   RP.names <- names(object@RP)
   
+  est.all <- coef(object)
+  sd.all <- sqrt(diag(vcov(object)))
+  zscore.all <- est.all / sd.all
+  pvalue.all <- 2 * stats::pnorm(abs(zscore.all), lower.tail = FALSE)
+  confint.all <- confint(object)
+  stars.all <- signifstar(pvalue.all)
+  
   cat("The fixed part estimates: ", "\n")
-  FP.print <- rbind(object@FP, sqrt(diag(object@FP.cov)))
-  z.score <- FP.print[1, ]/FP.print[2, ]
-  p.value <- 2 * pnorm(abs(z.score), lower.tail = FALSE)
-  strstar <- as.vector(sapply(p.value, signifstar))
-  qt025 <- FP.print[1, ] - qnorm(0.975) * FP.print[2, ]
-  qt975 <- FP.print[1, ] + qnorm(0.975) * FP.print[2, ]
-  FP.print <- rbind(FP.print, z.score, p.value, qt025, qt975)
   FP.names2 <- gsub("FP+\\_", "", FP.names)
   
   printcol0 <- align2left("        ", FP.names2)
-  printcol1 <- align2right("Coef.", format(round(FP.print[1, ], digits), nsmall = digits))
-  printcol2 <- align2right("Std. Err.", format(round(FP.print[2, ], digits), nsmall = digits))
-  printcol3 <- align2right("z", format(round(FP.print[3, ], 2), nsmall = 2))
-  printcol4 <- align2right("Pr(>|z|)", formatC(FP.print[4, ]))
-  printcol4b <- align2right("   ", strstar)
-  printcol5 <- align2right("[95% Conf.", format(round(FP.print[5, ], digits), nsmall = digits))
-  printcol6 <- align2right("Interval]", format(round(FP.print[6, ], digits), nsmall = digits))
-  for (i in 1:(ncol(FP.print) + 1)) {
+  printcol1 <- align2right("Coef.", format(round(est.all[FP.names], digits), nsmall = digits))
+  printcol2 <- align2right("Std. Err.", format(round(sd.all[FP.names], digits), nsmall = digits))
+  printcol3 <- align2right("z", format(round(zscore.all[FP.names], 2), nsmall = 2))
+  printcol4 <- align2right("Pr(>|z|)", formatC(pvalue.all[FP.names]))
+  printcol4b <- align2right("   ", stars.all[FP.names])
+  printcol5 <- align2right("[95% Conf.", format(round(confint.all[FP.names, 1], digits), nsmall = digits))
+  printcol6 <- align2right("Interval]", format(round(confint.all[FP.names, 2], digits), nsmall = digits))
+  for (i in 1:(1+length(FP.names2))) {
     cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], " ", printcol3[i], " ", printcol4[i], " ", printcol4b[i],
         " ", printcol5[i], " ", printcol6[i], "\n")
   }
@@ -496,21 +478,16 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
     levID2 <- object@levID
   }
   
-  RP.print <- rbind(object@RP, sqrt(diag(object@RP.cov)))
-  qt025 <- RP.print[1, ] - qnorm(0.975) * RP.print[2, ]
-  qt975 <- RP.print[1, ] + qnorm(0.975) * RP.print[2, ]
-  RP.print <- rbind(RP.print, qt025, qt975)
   for (i in 1:length(mlwinlev)) {
     RPx.pos <- grep(paste("RP", mlwinlev[i], sep = ""), RP.names)
     if (length(RPx.pos) != 0) {
       cat(paste(rep("-", 50), collapse = "-"), "\n")
       RPx.names <- gsub(paste("RP+", mlwinlev[i], "+\\_", sep = ""), "", RP.names[RPx.pos])
-      RPx <- as.matrix(RP.print[, RPx.pos], nrow = 4)
       printcol0 <- align2left("        ", RPx.names)
-      printcol1 <- align2right("Coef.", format(round(RPx[1, ], digits), nsmall = digits))
-      printcol2 <- align2right("Std. Err.", format(round(RPx[2, ], digits), nsmall = digits))
+      printcol1 <- align2right("Coef.", format(round(est.all[RP.names[RPx.pos]], digits), nsmall = digits))
+      printcol2 <- align2right("Std. Err.", format(round(sd.all[RP.names[RPx.pos]], digits), nsmall = digits))
       cat("The random part estimates at the", levID2[i], "level:", "\n")
-      for (i in 1:(ncol(RPx) + 1)) {
+      for (i in 1:(1+length(RPx.names))) {
         cat(printcol0[i], " ", printcol1[i], " ", printcol2[i], "\n")
       }
     }
@@ -518,11 +495,9 @@ printIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars 
   cat(paste(rep("-", 50), collapse = "*"), "\n")
 }
 
-#' @rdname summary-methods-igls
-#' @export
-setMethod("print", "mlwinfitIGLS", printIGLS)
-
-#' @rdname summary-methods-igls
+#' Show objects of class "mlwinfitIGLS"
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
+#' @seealso \code{\link[stats4]{show-methods}}
 #' @export
 setMethod("show", signature(object = "mlwinfitIGLS"), function(object) printIGLS(object))
 
@@ -530,36 +505,36 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
   update.formula2 <- function (old, new, ...) 
   {
       C_updateform <- get("C_updateform", asNamespace("stats"), inherits=FALSE)
-      tmp <- .Call(C_updateform, as.formula(old), as.formula(new))
-      out <- formula(terms.formula(tmp, simplify = FALSE))
+      tmp <- .Call(C_updateform, stats::as.formula(old), stats::as.formula(new))
+      out <- stats::formula(terms.formula(tmp, simplify = FALSE))
       return(out)
   }
   environment(update.formula2) <- environment(update.formula)
   my.update.formula <- function(old, new, keep.order = TRUE, ...) {
-    env <- environment(as.formula(old))
-    tmp <- update.formula2(as.formula(old), as.formula(new))
-    out <- formula(terms.formula(tmp, simplify = FALSE, keep.order = keep.order))
+    env <- environment(stats::as.formula(old))
+    tmp <- update.formula2(stats::as.formula(old), stats::as.formula(new))
+    out <- formula(stats::terms.formula(tmp, simplify = FALSE, keep.order = keep.order))
     environment(out) <- env
     return(out)
   }
-  if (is.null(newcall <- getCall(object)))
+  if (is.null(newcall <- stats::getCall(object)))
     stop("need an object with call component")
   extras <- match.call(expand.dots = FALSE)$...
   if (length(newcall$Formula))
     newcall$Formula <- eval(newcall$Formula)
   if (!missing(Formula.)) {
-    newcall$Formula <- my.update.formula(as.formula(newcall$Formula), Formula., keep.order = keep.order)
+    newcall$Formula <- my.update.formula(stats::as.formula(newcall$Formula), Formula., keep.order = keep.order)
   }
   if (!missing(levID.)) {
     newcall$levID <- {
       if (length(newcall$levID))
-        my.update.formula(as.formula(newcall$levID), levID., keep.order = keep.order) else levID.
+        my.update.formula(stats::as.formula(newcall$levID), levID., keep.order = keep.order) else levID.
     }
   }
   if (!missing(estoptions.)) {
     newcall$estoptions <- {
       if (length(newcall$estoptions))
-        my.update.formula(as.formula(newcall$estoptions), estoptions., keep.order = keep.order) else estoptions.
+        my.update.formula(stats::as.formula(newcall$estoptions), estoptions., keep.order = keep.order) else estoptions.
     }
   }
   if (length(extras)) {
@@ -584,37 +559,23 @@ updateMLwiN <- function(object, Formula., levID., estoptions., ..., keep.order =
 #' @param evaluate  if \code{TRUE} (the default) the new call is evaluated;
 #' otherwise the call is returned as an unevaluated expression.
 #' @return either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated expression for creating such an object.
+#' @seealso \code{\link[stats4]{update-methods}}
 #' @export
 setMethod("update", signature(object = "mlwinfitIGLS"), updateMLwiN)
-
-#' "mlwinfitIGLS" model formula
-#' @param x See \code{\link[stats]{formula}}
-#' @param env See \code{\link[stats]{formula}}
-#' @param ... Other arguments; see \code{\link[stats]{formula}}
-#' @export
-setMethod("formula", "mlwinfitIGLS", function(x, env = parent.frame(), ...) {
-  as.formula(x@Formula)
-})
 
 #' Extract the coefficient vector from "mlwinfitIGLS" objects
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
-#' @seealso \code{\link[stats]{coef}}
+#' @seealso \code{\link[stats4]{coef-methods}}
 #' @export
 setMethod("coef", signature(object = "mlwinfitIGLS"), function(object, ...) {
   c(object@FP, object@RP)
 })
 
-#' @rdname coef-mlwinfitIGLS-method
-#' @export
-setMethod("coefficients", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  coef(object)
-})
-
 #' Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
-#' @seealso \code{\link[stats]{vcov}}
+#' @seealso \code{\link[stats4]{vcov-methods}}
 #' @export
 setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
   m <- matrix(0, nrow(object@FP.cov) + nrow(object@RP.cov), ncol(object@FP.cov) + ncol(object@RP.cov))
@@ -630,32 +591,25 @@ setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{nobs}}, \code{\link[stats]{coef}}
 #' @export
-setMethod("df.residual", signature(object = "mlwinfitIGLS"), function(object, ...) {
+df.residual.mlwinfitIGLS <- function(object, ...) {
   nobs(object) - length(coef(object))
-})
+}
 
 #' Returns the fitted values from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
-#' @seealso \code{\link[stats]{fitted}}
+#' @seealso \code{\link[stats]{fitted.values}}
 #' @export
-setMethod("fitted", signature(object = "mlwinfitIGLS"), function(object, ...) {
+fitted.mlwinfitIGLS <- function(object, ...) {
   predict(object, type = "response")
-})
-
-#' @rdname fitted-mlwinfitIGLS-method
-#' @export
-setMethod("fitted.values", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  fitted(object)
-})
+}
 
 #' Returns the residual data from "mlwinfitIGLS" objects.
-#'
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{residuals}}
 #' @export
-setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...) {
+residuals.mlwinfitIGLS <- function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
   if (!is.list(form$resp)) {
     D <- object@D
@@ -674,13 +628,7 @@ setMethod("residuals", signature(object = "mlwinfitIGLS"), function(object, ...)
     warning("residuals only implemented for univariate models")
     NULL
   }
-})
-
-#' @rdname residuals-mlwinfitIGLS-method
-#' @export
-setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
-  residuals(object)
-})
+}
 
 #' Returns the predicted data from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
@@ -694,7 +642,7 @@ setMethod("resid", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{predict}}
 #' @export
-setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE,
+predict.mlwinfitIGLS <-  function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE,
                                               terms = NULL, ...) {
   if (is.null(newdata)) {
     indata <- object@data
@@ -750,7 +698,7 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
         return(antilogit(tval) * indata[, D[3]])
       }
       if (D[2] == "probit") {
-        return(pnorm(tval) * indata[, D[3]])
+        return(stats::pnorm(tval) * indata[, D[3]])
       }
       if (D[2] == "cloglog") {
         anticloglog <- function(x) {
@@ -780,12 +728,12 @@ setMethod("predict", signature(object = "mlwinfitIGLS"), function(object, newdat
     warning("link function transformation not yet implemented")
     return(NULL)
   }
-})
+}
 
 #' Returns the log-likelihood from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
-#' @seealso \code{\link[stats]{logLik}}
+#' @seealso \code{\link[stats4]{logLik-methods}}
 #' @export
 setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
   D <- object@D
@@ -806,7 +754,7 @@ setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{deviance}}
 #' @export
-setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) {
+deviance.mlwinfitIGLS <- function(object, ...) {
   D <- object@D
   if (D[1] == "Normal" || D[1] == "Multivariate Normal") {
     return(object@LIKE)
@@ -814,16 +762,93 @@ setMethod("deviance", signature(object = "mlwinfitIGLS"), function(object, ...) 
     warning("deviance only available for Normal models")
     return(NULL)
   }
-})
+}
 
 #' Returns the number of used observations from "mlwinfitIGLS" objects.
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{nobs}}
 #' @export
-setMethod("nobs", signature(object = "mlwinfitIGLS"), function(object, ...) {
+nobs.mlwinfitIGLS <- function(object, ...) {
   object@Nobs
-})
+}
+
+#' Summarize "mlwinfitIGLS" objects
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
+#' @param ... other parameters
+#' @method summary mlwinfitIGLS
+#' @exportS3Method summary mlwinfitIGLS
+summary.mlwinfitIGLS <- function(object, ...) {
+  summary(object)
+}
+
+
+#' Summarize "mlwinfitIGLS" objects
+#' @param x an \code{\link{mlwinfitIGLS-class}} object
+#' @param digits the number of significant digits to use when printing.
+#' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param ... other parameters
+#' @seealso \code{\link[base]{print}}
+#' @export 
+print.mlwinfitIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), ...) {
+  printIGLS(x, digits = digits, signif.stars = signif.stars)
+}
+
+#' Summarize "mlwinfitIGLS" objects
+#' @param object an \code{\link{mlwinfitIGLS-class}} object
+#' @param ... other parameters
+#' @seealso \code{\link[methods]{show}}
+#' @method show mlwinfitIGLS
+#' @exportS3Method show mlwinfitIGLS
+show.mlwinfitIGLS <- function(object, ...) {
+  show(object)
+}
+
+#' Update "mlwinfitIGLS" objects
+#' @param object a valid \code{mlwinfitIGLS} class object with an R function call component named \code{call}, the expression used to create itself.
+#' @param ...  additional arguments to the call, or arguments with changed values.
+#' @return either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated expression for creating such an object.
+#' @seealso \code{\link[stats]{update}}
+#' @method update mlwinfitIGLS
+#' @exportS3Method update mlwinfitIGLS
+update.mlwinfitIGLS <- function(object, ...) {
+  update(object)
+}
+
+#' Extract the coefficient vector from "mlwinfitIGLS" objects
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{coef}}
+#' @method coef mlwinfitIGLS
+#' @exportS3Method coef mlwinfitIGLS
+coef.mlwinfitIGLS <- function(object, ...) {
+  coef(object)
+}
+
+#' Extract the approximate variance-covariance matrix from "mlwinfitIGLS" objects
+#' @param object An \code{\link{mlwinfitIGLS-class}} object
+#' @param ... Other arguments
+#' @seealso \code{\link[stats]{vcov}}
+#' @method vcov mlwinfitIGLS
+#' @exportS3Method vcov mlwinfitIGLS
+vcov.mlwinfitIGLS <- function(object, ...) {
+  vcov(object)
+}
+
+#' "mlwinfitIGLS" model formula
+#' @param x See \code{\link[stats]{formula}}
+#' @param env See \code{\link[stats]{formula}}
+#' @param ... Other arguments; see \code{\link[stats]{formula}}
+#' @export
+formula.mlwinfitIGLS <- function(x, env = parent.frame(), ...) {
+  stats::as.formula(x@Formula)
+}
+
+#' @method logLik mlwinfitIGLS
+#' @exportS3Method logLik mlwinfitIGLS
+logLik.mlwinfitIGLS <- function(object, ...) {
+  logLik(object)
+}
 
 #' Extract coefficients and GOF measures from a statistical object (texreg package).
 #' @param model An \code{\link{mlwinfitIGLS-class}} model.
@@ -866,34 +891,95 @@ setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(
   return(tr)
 })
 
-getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) 
-    {
-          co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
-          z <- co[, 1]/co[,2]
-          p <- 2 * pnorm(abs(z), lower.tail = FALSE)
-          lower <- qnorm(p=alpha/2,mean=co[,1],sd=co[,2])
-          upper <- qnorm(p=1-alpha/2,mean=co[,1],sd=co[,2])
-          co <- cbind(co, z, p, lower, upper)
-          colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr")
-
-          N <- nobs(obj)
-          ll <- logLik(obj)
-          deviance <- deviance(obj)
-  
-          sumstat <- c(
-              logLik        = ll,
-              deviance      = deviance,
-              N             = N
-          )
-  
-          list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
-    }
-
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
 #' @param obj An \code{\link{mlwinfitIGLS-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
 #' @export 
-setMethod("getSummary", "mlwinfitIGLS", getSummary.mlwinfitIGLS)
+getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) {
+  co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
+  z <- co[, 1]/co[,2]
+  p <- 2 * stats::pnorm(abs(z), lower.tail = FALSE)
+  ci <- confint(obj, level = 1-alpha)
+  co <- cbind(co, z, p, ci[, 1], ci[, 2])
+  colnames(co) <- c("est", "se", "stat", "p", "lwr", "upr")
+
+  N <- nobs(obj)
+  ll <- logLik(obj)
+  deviance <- deviance(obj)
+  
+  sumstat <- c(
+    logLik        = ll,
+    deviance      = deviance,
+    N             = N
+  )
+  
+  list(coef=co, sumstat=sumstat, contrasts=obj@contrasts, xlevels=obj@xlevels, call=obj@call)
+}
+
+#' Summarises information about the components of a model from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param conf.int should the confidence interval be included?
+#' @param conf.level confidence interval level
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{tidy}}
+#' @export 
+tidy.mlwinfitIGLS <- function(x, conf.int = FALSE, conf.level = .95, ...) {
+  est <- coef(x)
+  term <- names(est)
+  sd <- sqrt(diag(vcov(x)))
+  zscore <- est / sd
+  pval <- 2 * stats::pnorm(abs(zscore), lower.tail = FALSE)
+  group <- rep("", length(term))
+  group[grep("FP", term)] <- "fixed"
+  nlev <- length(x@levID)
+  if (is.na(x@levID[nlev])) {
+    mlwinlev <- (nlev - 1):1
+  } else {
+    mlwinlev <- nlev:1
+  }
+  for (i in 1:length(mlwinlev)) {
+    group[grep(paste0("RP", i), term)] <- x@levID[mlwinlev[i]]
+  }
+
+  ret <- tibble::tibble(term=term, estimate=est, std.error=sd, statistic=zscore, p.value=pval, group=group)
+
+  if (conf.int) {
+      conf <- confint(x, level = conf.level)
+      rownames(conf) <- NULL
+      colnames(conf) <- c("conf.low", "conf.high")
+      ret <- cbind(ret, conf)
+  }
+  ret
+}
+
+#' Augment data frame with information derived from the model fit (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param data original data onto which columns should be added
+#' @param newdata new data to predict on, optional 
+#' @param type.predict Type of prediction to compute
+#' @param type.residuals Type of residuals to compute
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{augment}}
+#' @export 
+augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, type.predict, type.residuals, ...) {
+    warning("augment method not yet implemented for mlwinfitIGLS objects")
+    NULL
+}
+
+#' Extract GOF measures from a statistical object (broom package).
+#' @param x An \code{\link{mlwinfitIGLS-class}} model.
+#' @param ... Other arguments.
+#' @seealso \code{\link[generics]{glance}}
+#' @export 
+glance.mlwinfitIGLS <- function(x, ...) {
+  tibble::tibble(
+    logLik = stats::logLik(x),
+    AIC = stats::AIC(x),
+    BIC = stats::BIC(x),
+    df.residual = stats::df.residual(x), 
+    nobs = stats::nobs(x)
+  )
+}
 

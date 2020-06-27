@@ -55,7 +55,11 @@ pred <- as.data.frame(cbind(mymodel2@data$school, mymodel2@data$standlrt, xbu)[o
 
 colnames(pred) <- c("school", "standlrt", "xbu")
 
-xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+}
 
 # 4.3 The effect of clustering on the standard errors of coeficients . . .58
 
@@ -84,7 +88,11 @@ pred <- as.data.frame(cbind(mymodel5@data$school, mymodel5@data$standlrt, xbu)[o
 
 colnames(pred) <- c("school", "standlrt", "xbu")
 
-xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+if (!require(lattice)) {
+  warning("package lattice required to run this example")
+} else {
+  xyplot(xbu ~ standlrt, type = "l", group = school, data = pred)
+}
 
 
 #     Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . 64

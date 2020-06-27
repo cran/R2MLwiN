@@ -55,14 +55,16 @@ points(mymodel1@data$n_vrq[mymodel1@data$school == 17], mymodel1@data$n_ilea[mym
 u0se <- mymodel1@residual$lev_2_resi_se_Intercept
 u1se <- mymodel1@residual$lev_2_resi_se_n_vrq
 
+u0CI95 <- 1.96 * u0se
 u0rank <- rank(u0)
-u0rankhi <- u0 + u0se
-u0ranklo <- u0 - u0se
+u0rankhi <- u0 + u0CI95
+u0ranklo <- u0 - u0CI95
 u0rankno <- order(u0rank)
 
+u1CI95 <- 1.96 * u0se
 u1rank <- rank(u1)
-u1rankhi <- u1 + u1se
-u1ranklo <- u1 - u1se
+u1rankhi <- u1 + u1CI95
+u1ranklo <- u1 - u1CI95
 u1rankno <- order(u1rank)
 
 sch17 <- which(levels(as.factor(mymodel1@data$school)) == 17)
@@ -145,14 +147,16 @@ u1 <- mymodel2@residual$lev_2_resi_est_n_vrq
 u0se <- sqrt(mymodel2@residual$lev_2_resi_var_Intercept)
 u1se <- sqrt(mymodel2@residual$lev_2_resi_var_n_vrq)
 
+u0CI95 <- 1.96 * u0se
 u0rank <- rank(u0)
-u0rankhi <- u0 + u0se
-u0ranklo <- u0 - u0se
+u0rankhi <- u0 + u0CI95
+u0ranklo <- u0 - u0CI95
 u0rankno <- order(u0rank)
 
+u1CI95 <- 1.96 * u1se
 u1rank <- rank(u1)
-u1rankhi <- u1 + u1se
-u1ranklo <- u1 - u1se
+u1rankhi <- u1 + u1CI95
+u1ranklo <- u1 - u1CI95
 u1rankno <- order(u1rank)
 
 plot(1:18, u0[u0rankno], ylim = c(-0.3, 0.3), pch = 15, xlab = "Rank", ylab = "u0 residual estimate")

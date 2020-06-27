@@ -25,18 +25,6 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) ==
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-## winbugs executable
-#winbugs="C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe"
-
 ## Read lips1 data
 data(lips1, package = "R2MLwiN")
 summary(lips1)
@@ -72,7 +60,7 @@ lips1 <- lips1[with(lips1, order(neigh1, area, area)), ]
 mymodel <- runMLwiN(log(obs) ~ 0 + perc_aff + offset(offs) + (1 | area) + (0 | area), D = "Poisson", estoptions = list(car = list(list(carvar = list("neigh1",
   "neigh2", "neigh3", "neigh4", "neigh5", "neigh6", "neigh7", "neigh8", "neigh9", "neigh10", "neigh11"), weights = list("wcar1",
   "wcar2", "wcar3", "wcar4", "wcar5", "wcar6", "wcar7", "wcar8", "wcar9", "wcar10", "wcar11")), NA, NA), EstM = 1,
-  mcmcMeth = list(iterations = 50000)), BUGO = c(version = 4, n.chains = 1, bugs = openbugs, OpenBugs = TRUE), data = lips1)
+  mcmcMeth = list(iterations = 50000)), BUGO = c(version = 4, n.chains = 1, OpenBugs = TRUE), data = lips1)
 
 summary(mymodel)
 # 17.7 Including exchangeable random effects . . . . . . . . . . . . . . 259

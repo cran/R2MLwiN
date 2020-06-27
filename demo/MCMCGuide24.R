@@ -27,19 +27,6 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
-# User's input if necessary
-
-## openbugs executable
-if (!exists("openbugs")) openbugs <- "C:/Program Files (x86)/OpenBUGS/OpenBUGS323/OpenBUGS.exe"
-while (!file.access(openbugs, mode = 0) == 0 || !file.access(openbugs, mode = 1) == 0 || !file.access(openbugs, mode = 4) == 
-  0) {
-  cat("Please specify the path for the OpenBUGS executable:\n")
-  openbugs <- scan(what = character(0), sep = "\n")
-  openbugs <- gsub("\\", "/", openbugs, fixed = TRUE)
-}
-
-## winbugs executable winbugs='C:/Program Files (x86)/WinBUGS14/WinBUGS14.exe'
-
 ## Read tutorial data
 data(tutorial, package = "R2MLwiN")
 
@@ -90,10 +77,14 @@ sixway(mymodel@chains[, "RP2_var_Intercept", drop = FALSE], acf.maxlag = 100, "s
 
 mymodel <- runMLwiN(logit(votecons) ~ 1 + defence + unemp + taxes + privat + (1 | area), D = "Binomial", estoptions = list(EstM = 1, 
   mcmcMeth = list(priorcode = 0), mcmcOptions = list(paex = c(2, 1)), show.file = TRUE), BUGO = c(version = 4, n.chains = 1, 
-  debug = FALSE, seed = 1, bugs = openbugs, OpenBugs = TRUE), data = bes83)
+  debug = FALSE, seed = 1, OpenBugs = TRUE), data = bes83)
 
 summary(mymodel)
-effectiveSize(mymodel)
+if (!require(coda)) {
+  warning("package coda required to run this example")
+} else {
+  effectiveSize(mymodel)
+}
 sixway(mymodel[, "sigma2.u2", drop = FALSE], acf.maxlag = 250)
 sixway(mymodel[, "sigma2.v2", drop = FALSE], acf.maxlag = 100)
 
