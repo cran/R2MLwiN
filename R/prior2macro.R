@@ -80,7 +80,7 @@ prior2macro <- function(prior, D, fpart, nrand) {
       }
       mat[upper.tri(mat)] <- mat[lower.tri(mat)]
       testpd <- try(chol(mat), silent=TRUE)
-      if (class(testpd) == "try-error") {
+      if (is(testpd, "try-error") == TRUE) {
         stop(paste0("Prior matrix at level ", rlev, " must be positive-definite"))
       }
       if (prior[[rlev]]$size < 0) {

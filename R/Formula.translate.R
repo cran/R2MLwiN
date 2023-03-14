@@ -91,6 +91,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     xterm <- attr(Terms, "term.labels")
     fstr <- unlist(strsplit(fstr, "\\+"))
     fstr <- gsub("[[:space:]]", "", fstr)
+    fstr <- gsub("\\(", "", fstr)
+    fstr <- gsub("\\)", "", fstr)
     if (any(fstr == "1")) {
       xterm <- c("1", xterm)
     }
@@ -294,13 +296,12 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   get_categstr <- function(left, indata) {
     categstr0 <- NULL
     categstr1 <- NULL
-    leftsplit <- strsplit(left, "\\|")
-    for (ii in 1:length(leftsplit)) {
-      leftsplit[[ii]] <- get.terms(leftsplit[[ii]][2])
+    leftsplit <- NULL
+    for (part in strsplit(left, "\\|")) {
+      leftsplit[[part[1]]] <- gsub("\\{{1}([[:digit:]]|\\,)*\\}{1}", "", get.terms(part[2]))
     }
-    tmpcategstr <- unique(unlist(leftsplit))
-    tmpcategstr <- gsub("\\{{1}([[:digit:]]|\\,)*\\}{1}", "", tmpcategstr)
     lfcol <- sapply(indata, is.factor)
+    tmpcategstr <- unique(unlist(leftsplit))
     for (ii in 1:length(tmpcategstr)) {
       ttcategstr <- unlist(strsplit(tmpcategstr[ii], "\\:"))
       lttcateg <- ttcategstr %in% names(indata)[lfcol]
@@ -324,18 +325,20 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     
     if (ncategstr0 > 0) {
       # extend data
+      firstterm <- TRUE
       for (ii in 1:ncategstr1) {
-        f.ext <- stats::as.formula(eval(paste("~0+", categstr1[ii])))
-        contrMat <- attr(indata[[categstr1[ii]]], "contrasts")
-        na_act <- options("na.action")[[1]]
-        options(na.action = "na.pass")
-        if (is.null(contrMat)) {
-          data.ext <- stats::model.matrix(f.ext, indata)[, -1, drop = FALSE]
+        # Handle giving first factor treatment full set of dummies when there is no intercept in the fixed part
+        f.ext <- NULL
+        if (firstterm == FALSE || "1" %in% leftsplit[["0"]] || "1" %in% leftsplit[["0s"]] || "1" %in% leftsplit[["0c"]]) {
+          f.ext <- stats::as.formula(eval(paste("~", categstr1[ii])))
         } else {
-          keeppos <- rowSums(contrMat) > 0
-          data.ext <- stats::model.matrix(f.ext, indata)[, keeppos, drop = FALSE]
+          f.ext <- stats::as.formula(eval(paste("~ 0 + ", categstr1[ii])))
         }
-        options(na.action = na_act)
+        firstterm <- FALSE
+        mf.ext <- stats::model.frame(f.ext, indata, na.action = stats::na.pass)
+        contrMat <- attr(mf.ext, "contrasts")
+        mm.ext <- stats::model.matrix(f.ext, mf.ext)
+        data.ext <- mm.ext[, which(attr(mm.ext, "assign") == 1), drop = FALSE]
         colnames(data.ext) <- gsub("\\.", "\\_", colnames(data.ext))
         categstr2[[categstr1[ii]]] <- colnames(data.ext)
         indata <- cbind(indata, as.data.frame(data.ext))
@@ -519,6 +522,8 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
   tempfstr <- as.character(Formula)[3]
   tempfstr <- unlist(strsplit(tempfstr, "\\+"))
   tempfstr <- gsub("[[:space:]]", "", tempfstr)
+  tempfstr <- gsub("\\(", "", tempfstr)
+  tempfstr <- gsub("\\)", "", tempfstr)
   
   if (!any(D %in% c("Normal", "Multivariate Normal"))) {
     Formula <- update(Formula, ~. + (0 | l1id))
@@ -732,7 +737,7 @@ Formula.translate <- function(Formula, D = "Normal", indata) {
     }
     if (D[[1]] == "Mixed") {
       for (i in 1:nresp) {
-        if (D[[i + 1]] == "Poisson" && is.na(D[[i + 1]][3])) {
+        if (D[[i + 1]][1] == "Poisson" && is.na(D[[i + 1]][3])) {
           myoffset <- get.offset(Formula, indata)
           if (length(myoffset$offset.label) > 0) {
             D[[i + 1]][3] <- myoffset$offset.label

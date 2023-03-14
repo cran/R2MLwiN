@@ -770,6 +770,7 @@ setMethod("vcov", signature(object = "mlwinfitMCMC"), function(object, ...) {
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{fitted.values}}
+#' @method fitted mlwinfitMCMC
 #' @export 
 fitted.mlwinfitMCMC <- function(object, ...) {
   predict(object, type = "response")
@@ -779,6 +780,7 @@ fitted.mlwinfitMCMC <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitMCMC-class}} object
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{residuals}}
+#' @method residuals mlwinfitMCMC
 #' @export 
 residuals.mlwinfitMCMC <- function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -811,6 +813,7 @@ residuals.mlwinfitMCMC <- function(object, ...) {
 #' @param terms if \code{type="terms"}, which terms (default is all terms), a character vector.
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{predict}}
+#' @method predict mlwinfitMCMC
 #' @export 
 predict.mlwinfitMCMC <- function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE, 
                                               terms = NULL, ...) {
@@ -903,6 +906,7 @@ predict.mlwinfitMCMC <- function(object, newdata = NULL, params = NULL, type = "
 #' @param object An \code{\link{mlwinfitMCMC-class}} object.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{nobs}}
+#' @method nobs mlwinfitMCMC
 #' @export 
 nobs.mlwinfitMCMC <- function(object, ...) {
   object@Nobs
@@ -912,7 +916,7 @@ nobs.mlwinfitMCMC <- function(object, ...) {
 #' @param object an \code{\link{mlwinfitMCMC-class}} object
 #' @param ... other parameters
 #' @method summary mlwinfitMCMC
-#' @exportS3Method summary mlwinfitMCMC
+#' @export
 summary.mlwinfitMCMC <- function(object, ...) {
   summary(object)
 }
@@ -924,6 +928,7 @@ summary.mlwinfitMCMC <- function(object, ...) {
 #' @param z.ratio logical. If TRUE, z-ratio values are displayed for each coefficient.
 #' @param ... other parameters
 #' @seealso \code{\link[base]{print}}
+#' @method print mlwinfitMCMC
 #' @export 
 print.mlwinfitMCMC <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), 
                       z.ratio = TRUE, ...) {
@@ -936,7 +941,7 @@ print.mlwinfitMCMC <- function(x, digits = max(3, getOption("digits") - 2), sign
 #' @param ... other parameters
 #' @seealso \code{\link[methods]{show}}
 #' @method show mlwinfitMCMC
-#' @exportS3Method show mlwinfitMCMC
+#' @export
 show.mlwinfitMCMC <- function(object,...) {
   show(object)
 }
@@ -947,7 +952,7 @@ show.mlwinfitMCMC <- function(object,...) {
 #' @return either a new updated \code{mlwinfitMCMC} class object, or else an unevaluated expression for creating such an object.
 #' @seealso \code{\link[stats]{update}}
 #' @method update mlwinfitMCMC
-#' @exportS3Method update mlwinfitMCMC
+#' @export
 update.mlwinfitMCMC <- function(object, ...) {
   update(object)
 }
@@ -957,7 +962,7 @@ update.mlwinfitMCMC <- function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{coef}}
 #' @method coef mlwinfitMCMC
-#' @exportS3Method coef mlwinfitMCMC
+#' @export
 coef.mlwinfitMCMC <- function(object, ...) {
   coef(object)
 }
@@ -967,7 +972,7 @@ coef.mlwinfitMCMC <- function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{vcov}}
 #' @method vcov mlwinfitMCMC
-#' @exportS3Method vcov mlwinfitMCMC
+#' @export
 vcov.mlwinfitMCMC <- function(object, ...) {
   vcov(object)
 }
@@ -976,6 +981,7 @@ vcov.mlwinfitMCMC <- function(object, ...) {
 #' @param x See \code{\link[stats]{formula}}
 #' @param env See \code{\link[stats]{formula}}
 #' @param ... Other arguments; see \code{\link[stats]{formula}}
+#' @method formula mlwinfitMCMC
 #' @export
 formula.mlwinfitMCMC <- function(x, env = parent.frame(), ...) {
   stats::as.formula(x@Formula)
@@ -1044,10 +1050,11 @@ setMethod("extract", signature = className("mlwinfitMCMC", "R2MLwiN"), function(
 })
 
 #' Extract coefficients and GOF measures from a statistical object (memisc package).
-#' @param obj An \code{\link{mlwinfitIGLS-class}} model.
+#' @param obj An \code{\link{mlwinfitMCMC-class}} model.
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
+#' @method getSummary mlwinfitMCMC
 #' @export 
 getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) {
   chainnames <- coda::varnames(obj@chains)
@@ -1088,6 +1095,7 @@ getSummary.mlwinfitMCMC <- function (obj, alpha = 0.05, ...) {
 #' @param conf.level confidence interval level
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{tidy}}
+#' @method tidy mlwinfitMCMC
 #' @export 
 tidy.mlwinfitMCMC <- function(x, conf.int = FALSE, conf.level = .95, ...) {
   alpha = 1 - conf.level
@@ -1139,6 +1147,7 @@ tidy.mlwinfitMCMC <- function(x, conf.int = FALSE, conf.level = .95, ...) {
 #' @param type.residuals Type of residuals to compute
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{augment}}
+#' @method augment mlwinfitMCMC
 #' @export 
 augment.mlwinfitMCMC <- function(x, data = x@data, newdata = NULL, type.predict, type.residuals, ...) {
     warning("augment method not yet implemented for mlwinfitMCMC objects")
@@ -1149,6 +1158,7 @@ augment.mlwinfitMCMC <- function(x, data = x@data, newdata = NULL, type.predict,
 #' @param x An \code{\link{mlwinfitMCMC-class}} model.
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{glance}}
+#' @method glance mlwinfitMCMC
 #' @export 
 glance.mlwinfitMCMC <- function(x, ...) {
   bdic <- x@BDIC

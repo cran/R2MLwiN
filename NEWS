@@ -1,3 +1,38 @@
+Tue Nov 08 2022
+1. Bug fixing
+    * Allow "1" to be recognised as the intercept in the fixed part even when it is enclosed in a bracketed expression
+
+Mon Oct 24 2022
+1. Changes
+    * Replace predictor variables with a constant value of one with "1" in the formula
+    * Update contrast handling where no intercept is specified to match standard R
+
+Fri Aug 19 2022
+1. Bug fixing
+   * Correct intercept variable substitution for cases where it is in the random but not fixed part
+
+Mon May 16 2022
+1. Bug fixing
+   * Correct use of | instead of || when comparing vectors
+   * Correct response type check for Poisson in mixed response models
+
+Mon Feb 21 2022
+1. Bug fixing
+   * Allow return of residual chains when more than one chain have been run
+
+Mon Aug 02 2021
+1. Changes
+   * Add option to allow use of R contrast specification
+
+Tue Apr 27 2021
+1. Bug fixing
+   * Since R version 4.0.0 matrix objects inherit from class "array". Update check for positive-definite starting value matrix to take this into account.
+
+Mon Apr 26 2021
+1. Bug fixing
+   * Correct expected number of random variables when calculating level-1 (R)IGLS residuals for mixed response models
+   * Correct level number in "residual ID" column for multivariate/multinomial models for (R)IGLS models
+
 Thu Apr 02 2020
 1. Changes
    * Add initial support for the broom package

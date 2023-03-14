@@ -80,7 +80,7 @@ caterpillarR <- function(resi, lev = 2) {
     sapply(names(x), f, simplify = FALSE)
   }
   
-  if (class(resi) == "mlwinfitIGLS" || class(resi) == "mlwinfitMCMC") {
+  if (inherits(resi, "mlwinfitIGLS") || inherits(resi, "mlwinfitMCMC")) {
     myresi <- resi@residual
     if (is.null(myresi)) {
       stop("To generate a caterpillar plot the model must be run with the resi.store option set to TRUE")

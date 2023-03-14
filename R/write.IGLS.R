@@ -1466,13 +1466,6 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
     
     len.rpx <- length(rpx)
-    if (level == 2 & D[[1]][1] == "Mixed") {
-      for (i in 2:length(D)) {
-        if (D[[i]][1] == "Binomial" | D[[i]][1] == "Poisson") {
-          len.rpx <- len.rpx + 1
-        }
-      }
-    }
     
     wrt(paste("LINK", len.rpx, "G21"))
     for (k in 1:len.rpx) {
@@ -1650,7 +1643,7 @@ write.IGLS <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt(paste0("NOBS ", level, " b30 b31"))
     wrt("LINK 1 G29")
     wrt("GENE 1 b30 1 G29[1]")
-    wrt(paste0("NAME G29[1] 'lev_", level, "_residualid'"))
+    wrt(paste0("NAME G29[1] 'lev_", displevel, "_residualid'"))
     outgroups <- c(outgroups, "G29")
     if (!("norecode" %in% resioptions)) {
       wrt("MISR 1")

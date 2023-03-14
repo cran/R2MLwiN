@@ -49,6 +49,9 @@
 #' function call stopped and user invited to update via usual channels. Can
 #' disable via \code{FALSE} e.g. if slowing execution time down (for example
 #' in a simulation).
+#' @param allowcontrast If \code{TRUE}, factor variables will follow the R
+#' behaviour when creating contrast variables. If code {FALSE} (default) factor
+#' variables will be converted into a series of zero/one dummies.
 #' @param indata A \code{data.frame} object containing the data to be modelled.
 #' Deprecated syntax: by default this is \code{NULL} and the \code{data.frame}
 #' is instead referenced via \code{data}.
@@ -583,7 +586,7 @@
 #'
 #' @export
 runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoptions = list(EstM = 0), BUGO = NULL, MLwiNPath = NULL,
-                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, indata = NULL, saveworksheet = NULL) {
+                     stdout = "", stderr = "", workdir = tempdir(), checkversion = TRUE, allowcontrast = FALSE, indata = NULL, saveworksheet = NULL) {
   if (!is.null(indata) && !is.null(data)) {
     stop("Only one of data and indata can be specified")
   }
@@ -649,6 +652,28 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
     }
   }
 
+  # Replace any variables in the predictor that are constants of one with "1"
+  subIntercept <- function(f, vars) {
+   if (length(f) > 1) { # Non-leaf
+     if (f[[1]] == "|") { # Ignore level identifier (f[[3]])
+       f[[2]] <- Recall(f[[2]], vars)
+     } else {
+       for (i in 2:length(f)) { # All other formula parts
+         f[[i]] <- Recall(f[[i]], vars)
+       }
+     }
+   } else { # Leaf node
+     if (toString(f) %in% colnames(vars)) { # Data variable
+       if (all(vars[[f]] == 1)) {
+         f <- 1
+       }
+     }
+   }
+   return(f)
+  }
+
+  Formula[[3]] <- subIntercept(Formula[[3]], indata)
+
   if (drop.levels) {
     for (var in colnames(indata)) {
       if (is.factor(indata[[var]])) {
@@ -659,6 +684,31 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
       }
     }
   }
+
+  respvars <- all.vars(stats::update(Formula, . ~ NULL))
+
+  for (var in colnames(indata)) {
+    if (!(var %in% respvars)) {
+      unordcontr <- options("contrasts")$contrasts["unordered"]
+      ordcontr <- options("contrasts")$contrasts["ordered"]
+      resetcontr <- FALSE
+      if (is.factor(indata[[var]])) {
+        if (!is.ordered(indata[[var]]) && unordcontr != "contr.treatment") {
+          resetcontr <- TRUE
+        }
+        if (is.ordered(indata[[var]]) && ordcontr != "contr.treatment") {
+          resetcontr <- TRUE
+        }
+      }
+      if (is.null(attr(indata[[var]], "contrasts")) && resetcontr == TRUE) {
+        if (allowcontrast == FALSE) {
+          warning(paste0("specified contrasts for variable ", var, " will be ignored. To enable this set allowcontrast to TRUE (this will be the default in future package releases)"))
+          stats::contrasts(indata[[var]]) <- stats::contr.treatment(levels(indata[[var]]))
+        }
+      }
+    }
+  }
+
 
   EstM <- estoptions$EstM
   if (is.null(EstM))
@@ -1060,17 +1110,49 @@ version:date:md5:filename:x64:trial:platform
 3.05:Mar 2020:fa0bf732ca9b3b1c6e350b239e6cc0f1:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:eb46354774077891b78d2caa4d3c5249:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:ee626d9f149450de8ea29973214860fc:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:131da804275e8f7fb4b752c6ed355944:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:d54cf6d16aebe7f542e93fec4b010fa9:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:510f01a981c70fe0b4936cdef1013570:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:24b5369bf38540607fba2a45b2f4d209:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:68a94c69c99f28141c3130c499bd908a:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:28c56907e185d83d1dc420c91152d43d:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:a6ce95a8781e54f8cd2b3e5a22dbcca1:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:e64cb21f80fb28fe4a55e3a5f647e505:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:2bb59e3c8651f4688c2bfb357c9c32a7:mlnscript:TRUE:FALSE:lin
+3.05:Mar 2020:9744322a187cb80209aa18616372ee8c:mlnscript:TRUE:FALSE:lin
 3.05:Mar 2020:242fa9c879cc51df5a1fd613a739d4c3:mlnscript:FALSE:FALSE:lin
 3.05:Mar 2020:3ab89e99ef98912084a9404c65ca233b:mlnscript:TRUE:FALSE:mac
 3.05:Mar 2020:714a19157648de1e59903ea491dcc6b7:mlnscript:TRUE:FALSE:bsd
 3.05:Mar 2020:7b19bb2ad6dbac4d3604438927bb35d3:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:89ad7d8d544ef52cad30827f00032fd3:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:94fbe79fba472f00cd834e66b6f06319:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:ae50df14bfe1d4f1124881a5a2a85dd7:mlnscript:TRUE:FALSE:bsd
+3.05:Mar 2020:df6cfbf3d682b5b60ebaff0a3c46b1de:mlnscript:TRUE:FALSE:bsd
+3.06:Nov 2022:969206894a8b6321dae3e66693064103:mlwin.exe:TRUE:FALSE:win
+3.06:Nov 2022:0f8a54599dd428dcc623801780df28bc:mlnscript.exe:TRUE:FALSE:win
+3.06:Nov 2022:457caa98e9104bfcb6f59078c1b8c70a:mlwin.exe:FALSE:FALSE:win
+3.06:Nov 2022:426ebcc471f5c5c8ec304d35a5d3506b:mlnscript.exe:FALSE:FALSE:win
+3.06:Nov 2022:7c136f986836f30de80af60fe6f3cbfa:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:b09917ef69eac7f38faf40558f79cf62:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:c9983632ceb9b95af017799202255f69:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:94eb40e516e3e6916fd734a3a147519e:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:a0c8d4ce46513618e983d61248eb60cb:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:e174263b1ba2c4c03375751cae37be71:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:5570721ef194029129164244f259e847:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:4727688e068e381bc33e9757ebb84bfa:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:318a09a203265d5acab7161de49180da:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:84a4dbe914d44962efc7ca9ea60e5731:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:5ed9c7bacc1fc4f0662c02851e38ed06:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:008974270da0e0a100ba515652e00a10:mlnscript:TRUE:FALSE:mac
+3.06:Nov 2022:f9f718399c080dec7ce1595f7b8ebc48:mlnscript:TRUE:FALSE:bsd
+3.06:Nov 2022:1b2ca999d6add4ad19ae3312964a12ee:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest::digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >3.05)"
+      versiontext <- "MLwiN (version: unknown or >3.06)"
     } else {
       if (currentver$version < 2.36) {
         # Block releases older than a year or so (allow 2.36 as this corresponds to the trial version)
@@ -1396,9 +1478,15 @@ version:date:md5:filename:x64:trial:platform
       nonfp$nonfp.common[pos.cvar.one] <- gsub("^1\\.", "Intercept.", nonfp$nonfp.common[pos.cvar.one])
     }
   } else {
-    if ("1" %in% nonfp) {
-      needsint <- TRUE
-      nonfp[nonfp == "1"] <- "Intercept"
+    if (!is.na(nonfp[1])) {
+      if (any(startsWith(nonfp, "1."))) {
+        needsint <- TRUE
+        nonfp <- gsub("^1.", "Intercept.", nonfp)
+      }
+      if ("1" %in% nonfp) {
+        needsint <- TRUE
+        nonfp[nonfp == "1"] <- "Intercept"
+      }
     }
   }
 
@@ -1613,7 +1701,7 @@ version:date:md5:filename:x64:trial:platform
       if (length(reset) != length(levID)) {
         stop("reset vector is wrong length")
       }
-      if (any(reset < 0 || reset > 2)) {
+      if (any(reset < 0 | reset > 2)) {
         stop("Invalid reset value")
       }
     }
@@ -2646,8 +2734,8 @@ version:date:md5:filename:x64:trial:platform
               }
             }
           }
-          testpd <- try(chol(startmat), silent=TRUE)
-          if (class(testpd) == "try-error") {
+          testpd <- try(chol(startmat), silent = TRUE)
+          if (is(testpd, "try-error") == TRUE) {
             stop(paste0("Starting value matrix at level ", startlev, " must be positive-definite"))
           }
         }
@@ -3262,7 +3350,10 @@ version:date:md5:filename:x64:trial:platform
     if (nchains != 1) {
       chains <- coda::mcmc.list(chainslist)
       if (!is.null(resi.store.levs)) {
-        resiChains <- coda::mcmc.list(resichainslist)
+        resiChains <- list()
+        for (resname in names(resichainslist[[1]])) {
+          resiChains[[resname]] <- coda::mcmc.list(unname(sapply(resichainslist, '[', resname)))
+        }
       }
       if (!is.null(fact)) {
         factChains$loadings <- coda::mcmc.list(factloadchainslist)

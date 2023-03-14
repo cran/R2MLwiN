@@ -36,7 +36,7 @@
 trajectories <- function(object, Range = c(1, 5000), selected = NULL) {
   # This function draws trajectories of the chains for each parameter estimate
   
-  if (class(object) == "mlwinfitMCMC") {
+  if (inherits(object, "mlwinfitMCMC")) {
     chains <- object@chains
   } else {
     if (coda::is.mcmc(object) || coda::is.mcmc.list(object)) {

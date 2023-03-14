@@ -47,9 +47,6 @@ sixway(mymodel2@chains[, "FP_uvbi", drop = FALSE], "beta_1")
 (mymodel3 <- runMLwiN(log(obs) ~ 1 + uvbi + offset(log(exp)) + (1 | nation) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000, seed = 13)), data = mmmec))
 
-
-contrasts(mmmec$nation, 9) <- diag(9)
-
 (mymodel4 <- runMLwiN(log(obs) ~ 0 + uvbi + nation + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000)), data = mmmec))
 

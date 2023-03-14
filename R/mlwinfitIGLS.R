@@ -590,6 +590,7 @@ setMethod("vcov", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{nobs}}, \code{\link[stats]{coef}}
+#' @method df.residual mlwinfitIGLS
 #' @export
 df.residual.mlwinfitIGLS <- function(object, ...) {
   nobs(object) - length(coef(object))
@@ -599,6 +600,7 @@ df.residual.mlwinfitIGLS <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{fitted.values}}
+#' @method fitted mlwinfitIGLS
 #' @export
 fitted.mlwinfitIGLS <- function(object, ...) {
   predict(object, type = "response")
@@ -608,6 +610,7 @@ fitted.mlwinfitIGLS <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{residuals}}
+#' @method residuals mlwinfitIGLS
 #' @export
 residuals.mlwinfitIGLS <- function(object, ...) {
   form <- Formula.translate(object@Formula, object@D, object@data)
@@ -641,6 +644,7 @@ residuals.mlwinfitIGLS <- function(object, ...) {
 #' @param terms if \code{type="terms"}, which terms (default is all terms), a character vector.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{predict}}
+#' @method predict mlwinfitIGLS
 #' @export
 predict.mlwinfitIGLS <-  function(object, newdata = NULL, params = NULL, type = "link", se.fit = FALSE,
                                               terms = NULL, ...) {
@@ -753,6 +757,7 @@ setMethod("logLik", signature(object = "mlwinfitIGLS"), function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{deviance}}
+#' @method deviance mlwinfitIGLS
 #' @export
 deviance.mlwinfitIGLS <- function(object, ...) {
   D <- object@D
@@ -768,6 +773,7 @@ deviance.mlwinfitIGLS <- function(object, ...) {
 #' @param object An \code{\link{mlwinfitIGLS-class}} object.
 #' @param ... Other arguments.
 #' @seealso \code{\link[stats]{nobs}}
+#' @method nobs mlwinfitIGLS
 #' @export
 nobs.mlwinfitIGLS <- function(object, ...) {
   object@Nobs
@@ -777,7 +783,7 @@ nobs.mlwinfitIGLS <- function(object, ...) {
 #' @param object an \code{\link{mlwinfitIGLS-class}} object
 #' @param ... other parameters
 #' @method summary mlwinfitIGLS
-#' @exportS3Method summary mlwinfitIGLS
+#' @export
 summary.mlwinfitIGLS <- function(object, ...) {
   summary(object)
 }
@@ -789,7 +795,8 @@ summary.mlwinfitIGLS <- function(object, ...) {
 #' @param signif.stars logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @param ... other parameters
 #' @seealso \code{\link[base]{print}}
-#' @export 
+#' @method print mlwinfitIGLS
+#' @export
 print.mlwinfitIGLS <- function(x, digits = max(3, getOption("digits") - 2), signif.stars = getOption("show.signif.stars"), ...) {
   printIGLS(x, digits = digits, signif.stars = signif.stars)
 }
@@ -799,7 +806,7 @@ print.mlwinfitIGLS <- function(x, digits = max(3, getOption("digits") - 2), sign
 #' @param ... other parameters
 #' @seealso \code{\link[methods]{show}}
 #' @method show mlwinfitIGLS
-#' @exportS3Method show mlwinfitIGLS
+#' @export
 show.mlwinfitIGLS <- function(object, ...) {
   show(object)
 }
@@ -810,7 +817,7 @@ show.mlwinfitIGLS <- function(object, ...) {
 #' @return either a new updated \code{mlwinfitIGLS} class object, or else an unevaluated expression for creating such an object.
 #' @seealso \code{\link[stats]{update}}
 #' @method update mlwinfitIGLS
-#' @exportS3Method update mlwinfitIGLS
+#' @export
 update.mlwinfitIGLS <- function(object, ...) {
   update(object)
 }
@@ -820,7 +827,7 @@ update.mlwinfitIGLS <- function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{coef}}
 #' @method coef mlwinfitIGLS
-#' @exportS3Method coef mlwinfitIGLS
+#' @export
 coef.mlwinfitIGLS <- function(object, ...) {
   coef(object)
 }
@@ -830,7 +837,7 @@ coef.mlwinfitIGLS <- function(object, ...) {
 #' @param ... Other arguments
 #' @seealso \code{\link[stats]{vcov}}
 #' @method vcov mlwinfitIGLS
-#' @exportS3Method vcov mlwinfitIGLS
+#' @export
 vcov.mlwinfitIGLS <- function(object, ...) {
   vcov(object)
 }
@@ -839,13 +846,18 @@ vcov.mlwinfitIGLS <- function(object, ...) {
 #' @param x See \code{\link[stats]{formula}}
 #' @param env See \code{\link[stats]{formula}}
 #' @param ... Other arguments; see \code{\link[stats]{formula}}
+#' @method formula mlwinfitIGLS
 #' @export
 formula.mlwinfitIGLS <- function(x, env = parent.frame(), ...) {
   stats::as.formula(x@Formula)
 }
 
+#' Returns the log-likelihood from "mlwinfitIGLS" objects.
+#' @param object An \code{\link{mlwinfitIGLS-class}} object.
+#' @param ... Other arguments.
+#' @seealso \code{\link[stats]{logLik}}
 #' @method logLik mlwinfitIGLS
-#' @exportS3Method logLik mlwinfitIGLS
+#' @export
 logLik.mlwinfitIGLS <- function(object, ...) {
   logLik(object)
 }
@@ -896,6 +908,7 @@ setMethod("extract", signature = className("mlwinfitIGLS", "R2MLwiN"), function(
 #' @param alpha level of the confidence intervals; their coverage should be 1-alpha/2
 #' @param ... Other arguments.
 #' @seealso \code{\link[memisc]{getSummary}}
+#' @method getSummary mlwinfitIGLS
 #' @export 
 getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) {
   co <- t(rbind(coef(obj), sqrt(diag(vcov(obj)))))
@@ -924,6 +937,7 @@ getSummary.mlwinfitIGLS <- function (obj, alpha = 0.05, ...) {
 #' @param conf.level confidence interval level
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{tidy}}
+#' @method tidy mlwinfitIGLS
 #' @export 
 tidy.mlwinfitIGLS <- function(x, conf.int = FALSE, conf.level = .95, ...) {
   est <- coef(x)
@@ -962,6 +976,7 @@ tidy.mlwinfitIGLS <- function(x, conf.int = FALSE, conf.level = .95, ...) {
 #' @param type.residuals Type of residuals to compute
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{augment}}
+#' @method augment mlwinfitIGLS
 #' @export 
 augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, type.predict, type.residuals, ...) {
     warning("augment method not yet implemented for mlwinfitIGLS objects")
@@ -972,6 +987,7 @@ augment.mlwinfitIGLS <- function(x, data = x@frame, newdata = NULL, type.predict
 #' @param x An \code{\link{mlwinfitIGLS-class}} model.
 #' @param ... Other arguments.
 #' @seealso \code{\link[generics]{glance}}
+#' @method glance mlwinfitIGLS
 #' @export 
 glance.mlwinfitIGLS <- function(x, ...) {
   tibble::tibble(

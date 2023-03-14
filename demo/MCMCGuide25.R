@@ -70,8 +70,6 @@ trajectories(mymodel)
 ## Read mmmec data
 data(mmmec, package = "R2MLwiN")
 
-contrasts(mmmec$nation, 9) <- diag(9)
-
 ## Define the model Hierarchical centring at level 2
 (mymodel <- runMLwiN(log(obs) ~ 0 + nation + nation:uvbi + offset(log(exp)) + (1 | region), D = "Poisson", estoptions = list(EstM = 1, 
   mcmcMeth = list(iterations = 50000), mcmcOptions = list(hcen = 2)), data = mmmec))

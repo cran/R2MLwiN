@@ -7,7 +7,7 @@
 \method{getSummary}{mlwinfitMCMC}(obj, alpha = 0.05, ...)
 }
 \arguments{
-\item{obj}{An \code{\link{mlwinfitIGLS-class}} model.}
+\item{obj}{An \code{\link{mlwinfitMCMC-class}} model.}
 
 \item{alpha}{level of the confidence intervals; their coverage should be 1-alpha/2}
 
