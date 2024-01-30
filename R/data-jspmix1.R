@@ -13,18 +13,19 @@
 #' 
 #' @docType data
 #' @format A data frame with 1119 observations on the following 8 variables:
-#' \describe{ \item{list("school")}{School identifying code.}
-#' \item{list("id")}{Pupil identifying code.} \item{list("sex")}{Sex of pupil;
-#' a factor with levels \code{female} and \code{male}.}
-#' \item{list("fluent")}{Fluency in English indicator, where \code{0} =
-#' beginner, \code{1} = intermediate, \code{2} = fully fluent; measured in Year
-#' 1.} \item{list("ravens")}{Test score, out of 40; measured in Year 1.}
-#' \item{list("english")}{Pupils' English test score, out of 100; measured in
-#' Year 3.} \item{list("behaviour")}{Pupils' behaviour score, where
-#' \code{lowerquarter} = pupil rated in bottom 25\%, and \code{upper}
-#' otherwise; measured in Year 3.} \item{list("cons")}{A column of ones. If
-#' included as an explanatory variable in a regression model (e.g. in MLwiN),
-#' its coefficient is the intercept.} }
+#' \describe{
+#' \item{school}{School identifying code.}
+#' \item{id}{Pupil identifying code.}
+#' \item{sex}{Sex of pupil; a factor with levels \code{female} and \code{male}.}
+#' \item{fluent}{Fluency in English indicator, where \code{0} = beginner,
+#' \code{1} = intermediate, \code{2} = fully fluent; measured in Year 1.}
+#' \item{ravens}{Test score, out of 40; measured in Year 1.}
+#' \item{english}{Pupils' English test score, out of 100; measured in Year 3.}
+#' \item{behaviour}{Pupils' behaviour score, where \code{lowerquarter} = pupil
+#' rated in bottom 25\%, and \code{upper} otherwise; measured in Year 3.}
+#' \item{cons}{A column of ones. If included as an explanatory variable in a
+#' regression model (e.g. in MLwiN), its coefficient is the intercept.}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

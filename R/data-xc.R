@@ -12,19 +12,23 @@
 #' 
 #' @docType data
 #' @format A data frame with 3435 observations on the following 11 variables:
-#' \describe{ \item{list("vrq")}{A verbal reasoning score resulting from tests
-#' pupils took when they entered secondary school.}
-#' \item{list("attain")}{Attainment score of pupils at age sixteen.}
-#' \item{list("pid")}{Primary school identifying code.}
-#' \item{list("sex")}{Pupils' gender: a factor with levels \code{Male} and
-#' \code{Female}.} \item{list("sc")}{Pupils' social class (scaled from low to
-#' high).} \item{list("sid")}{Secondary school identifying code.}
-#' \item{list("fed")}{Fathers' education.} \item{list("choice")}{Choice number
-#' of secondary school attended (where 1 is first choice, etc.)}
-#' \item{list("med")}{Mothers' education.} \item{list("cons")}{A column of
-#' ones. If included as an explanatory variable in a regression model (e.g. in
-#' MLwiN), its coefficient is the intercept.} \item{list("pupil")}{Pupil
-#' identifying code.} }
+#' \describe{
+#' \item{vrq}{A verbal reasoning score resulting from tests pupils took when
+#' they entered secondary school.}
+#' \item{attain}{Attainment score of pupils at age sixteen.}
+#' \item{pid}{Primary school identifying code.}
+#' \item{sex}{Pupils' gender: a factor with levels \code{Male} and
+#' \code{Female}.}
+#' \item{sc}{Pupils' social class (scaled from low to high).}
+#' \item{sid}{Secondary school identifying code.}
+#' \item{fed}{Fathers' education.}
+#' \item{choice}{Choice number of secondary school attended (where 1 is first
+#' choice, etc.)}
+#' \item{med}{Mothers' education.}
+#' \item{cons}{A column of ones. If included as an explanatory variable in a
+#' regression model (e.g. in MLwiN), its coefficient is the intercept.}
+#' \item{pupil}{Pupil identifying code.}
+#' }
 #' @seealso See \code{mlmRev} package for an alternative format of the same
 #' dataset.
 #' @source Paterson, L. (1991) Socio economic status and educational

@@ -454,7 +454,6 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("OPTS   0")
   }
   
-  wrt("MONI    0")
   wrt("MARK    0")
   wrt("NOTE    Import the R data into MLwiN")
   wrt(paste("RSTA    '", dtafile, "'", sep = ""))
@@ -1519,7 +1518,6 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     wrt("NEXT")
   }
   wrt("ECHO 0")
-  wrt("MONI 1")
   wrt("ITNU 0 b21")
   wrt("CONV b22")
   wrt("")
@@ -2328,16 +2326,14 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
     }
     
     wrt("GSIZ G26 b1000")
-    wrt("LINK 3 G27")
-    wrt(paste("CODE ", iterations/thinning, "b1000", 1, "G27[1]"))
-    wrt(paste0("CALC G27[1] = G27[1] * ", thinning))
-    wrt("NAME   G27[1] 'itnum'")
-    wrt(paste("CODE b1000", 1, iterations/thinning, "G27[2]"))
-    wrt("NAME   G27[2] 'parnum'")
-    wrt("NAME   G27[3] 'iteration'")
-    wrt("DESC   G27[3] '\\Iteration'")
+    wrt("LINK 2 G27")
+    wrt(paste("CODE b1000", 1, iterations/thinning, "G27[1]"))
+    wrt("NAME   G27[1] 'parnum'")
+    wrt(paste("GENErate", 1, iterations/thinning, "G27[2]"))
+    wrt("NAME   G27[2] 'iteration'")
+    wrt("DESC   G27[2] '\\Iteration'")
     
-    wrt("UNVE b1000 'parnum' 'itnum' 'mcmcchains' 'iteration' G26")
+    wrt("SPLIt 'mcmcchains' 'parnum' G26")
     if (D[1] == "Multinomial" && as.numeric(D["mode"]) == 1) {
       wrt("LINK 1 G25")
       wrt(paste("PUT ", iterations/thinning, 1, "G25[1]"))
@@ -2347,7 +2343,7 @@ write.MCMC <- function(indata, dtafile, oldsyntax = FALSE, resp, levID, expl, rp
       wrt("LINK 0 G25")
     }
     wrt(paste0("PSTA '", chainfile, "' ", "'iteration' 'deviance' G26"))
-    wrt("ERAS 'itnum' 'parnum' 'iteration' G26")
+    wrt("ERAS 'parnum' 'iteration' G26")
     wrt("LINK 0 G27")
     wrt("LINK 0 G26")
     

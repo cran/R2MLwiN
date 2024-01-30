@@ -10,41 +10,50 @@
 #' 
 #' @docType data
 #' @format A data frame with 56 observations on the following 41 variables:
-#' \describe{ \item{list("area")}{Region ID.} \item{list("cons")}{Constant
-#' (=1).} \item{list("obs")}{Observed cases of lip cancer.}
-#' \item{list("exp")}{Expected count.} \item{list("perc_aff")}{Percentage of
-#' the region who work in agriculture, fishing and forestry.}
-#' \item{list("offs")}{Log of the expected count.}
-#' \item{list("pcons")}{Constant (=1).} \item{list("denom")}{Constant (=1).}
-#' \item{list("neigh1")}{First neighbours.} \item{list("neigh2")}{Second
-#' neighbours.} \item{list("neigh3")}{Third neighbours.}
-#' \item{list("neigh4")}{Fourth neighbours.} \item{list("neigh5")}{Fifth
-#' neighbours.} \item{list("neigh6")}{Sixth neighbours.}
-#' \item{list("neigh7")}{Seventh neighbours.} \item{list("neigh8")}{Eighth
-#' neighbours.} \item{list("neigh9")}{Ninth neighbours.}
-#' \item{list("neigh10")}{Tenth neightbours.} \item{list("neigh11")}{Eleventh
-#' neightbours.} \item{list("weight1")}{First neighbours' weights.}
-#' \item{list("weight2")}{Second neighbours' weights.}
-#' \item{list("weight3")}{Third neighbours' weights.}
-#' \item{list("weight4")}{Fourth neighbours' weights.}
-#' \item{list("weight5")}{Fifth neighbours' weights.}
-#' \item{list("weight6")}{Sixth neighbours' weights.}
-#' \item{list("weight7")}{Seventh neighbours' weights.}
-#' \item{list("weight8")}{Eighth neighbours' weights.}
-#' \item{list("weight9")}{Ninth neighbours' weights.}
-#' \item{list("weight10")}{Tenth neightbours' weights.}
-#' \item{list("weight11")}{Eleventh neightbours' weights.}
-#' \item{list("wcar1")}{First neighbours' CAR weights.}
-#' \item{list("wcar2")}{Second neighbours' CAR weights.}
-#' \item{list("wcar3")}{Third neighbours' CAR weights.}
-#' \item{list("wcar4")}{Fourth neighbours' CAR weights.}
-#' \item{list("wcar5")}{Fifth neighbours' CAR weights.}
-#' \item{list("wcar6")}{Sixth neighbours' CAR weights.}
-#' \item{list("wcar7")}{Seventh neighbours' CAR weights.}
-#' \item{list("wcar8")}{Eighth neighbours' CAR weights.}
-#' \item{list("wcar9")}{Ninth neighbours' CAR weights.}
-#' \item{list("wcar10")}{Tenth neightbours' CAR weights.}
-#' \item{list("wcar11")}{Eleventh neightbours' CAR weights.} }
+#' \describe{
+#' \item{area}{Region ID.}
+#' \item{cons}{Constant (=1).}
+#' \item{obs}{Observed cases of lip cancer.}
+#' \item{exp}{Expected count.}
+#' \item{perc_aff}{Percentage of the region who work in agriculture, fishing and
+#' forestry.}
+#' \item{offs}{Log of the expected count.}
+#' \item{pcons}{Constant (=1).}
+#' \item{denom}{Constant (=1).}
+#' \item{neigh1}{First neighbours.}
+#' \item{neigh2}{Second neighbours.}
+#' \item{neigh3}{Third neighbours.}
+#' \item{neigh4}{Fourth neighbours.}
+#' \item{neigh5}{Fifth neighbours.}
+#' \item{neigh6}{Sixth neighbours.}
+#' \item{neigh7}{Seventh neighbours.}
+#' \item{neigh8}{Eighth neighbours.}
+#' \item{neigh9}{Ninth neighbours.}
+#' \item{neigh10}{Tenth neightbours.}
+#' \item{neigh11}{Eleventh neightbours.}
+#' \item{weight1}{First neighbours' weights.}
+#' \item{weight2}{Second neighbours' weights.}
+#' \item{weight3}{Third neighbours' weights.}
+#' \item{weight4}{Fourth neighbours' weights.}
+#' \item{weight5}{Fifth neighbours' weights.}
+#' \item{weight6}{Sixth neighbours' weights.}
+#' \item{weight7}{Seventh neighbours' weights.}
+#' \item{weight8}{Eighth neighbours' weights.}
+#' \item{weight9}{Ninth neighbours' weights.}
+#' \item{weight10}{Tenth neightbours' weights.}
+#' \item{weight11}{Eleventh neightbours' weights.}
+#' \item{wcar1}{First neighbours' CAR weights.}
+#' \item{wcar2}{Second neighbours' CAR weights.}
+#' \item{wcar3}{Third neighbours' CAR weights.}
+#' \item{wcar4}{Fourth neighbours' CAR weights.}
+#' \item{wcar5}{Fifth neighbours' CAR weights.}
+#' \item{wcar6}{Sixth neighbours' CAR weights.}
+#' \item{wcar7}{Seventh neighbours' CAR weights.}
+#' \item{wcar8}{Eighth neighbours' CAR weights.}
+#' \item{wcar9}{Ninth neighbours' CAR weights.}
+#' \item{wcar10}{Tenth neightbours' CAR weights.}
+#' \item{wcar11}{Eleventh neightbours' CAR weights.}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

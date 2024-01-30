@@ -27,6 +27,27 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+# Change contrasts if wish to avoid warning indicating that, by default,
+# specified contrasts for ordered predictors will be ignored by runMLwiN
+# (they will be fitted as "contr.treatment" regardless of this setting). To
+# enable specified contrasts, set allowcontrast to TRUE (this will be the
+# default in future package releases). NB at the end of this script, the
+# specification for contrasts is changed back.
+my_contrasts <- options("contrasts")$contrasts
+options(contrasts = c(unordered = "contr.treatment",
+                      ordered = "contr.treatment"))
+
+# As an alternative to changing contrasts, can instead use C() to specify
+# contrasts for ordered predictors in formula object, e.g.:
+
+# (mymodel <- runMLwiN(logit(use) ~ 1 + age + C(lc, "contr.treatment") + urban +
+#                        (1 + urban | district),
+#                      D = "Binomial",
+#                      estoptions = list(EstM = 1,
+#                                        mcmcOptions = list(hcen = 2)),
+#                      data = bang1,
+#                      allowcontrast = TRUE))
+
 # User's input if necessary
 
 ## Read tutorial data
@@ -102,8 +123,10 @@ trajectories(mymodel, Range = c(4501, 5000))
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .422
 
+# Addendum: changing contrasts back to pre-existing . . . . . . . . . . . NA
 
-
-
+# Following re-specification of contrast settings towards the start of this
+# script, change contrasts back to pre-existing:
+options(contrasts = my_contrasts)
 
 ############################################################################

@@ -13,25 +13,30 @@
 #' 
 #' @docType data
 #' @format A data frame with 2867 observations on the following 12 variables:
-#' \describe{ \item{list("woman")}{Identifying code for each woman (level 1
-#' unit).} \item{list("district")}{Identifying code for each district (level 2
-#' unit).} \item{list("use")}{Contraceptive use status at time of survey; a
-#' factor with levels \code{Not_using} and \code{Using}.}
-#' \item{list("use4")}{Contraceptive use status and method (a factor with
-#' levels: \code{Sterilization}, \code{Modern_reversible_method},
+#' \describe{
+#' \item{woman}{Identifying code for each woman (level 1 unit).}
+#' \item{district}{Identifying code for each district (level 2 unit).}
+#' \item{use}{Contraceptive use status at time of survey; a factor with levels
+#' \code{Not_using} and \code{Using}.}
+#' \item{use4}{Contraceptive use status and method (a factor with levels:
+#' \code{Sterilization}, \code{Modern_reversible_method},
 #' \code{Traditional_method}, \code{Not_using_contraception}).}
-#' \item{list("lc")}{Number of living children at time of survey; a factor with
-#' ordered levels \code{None}, \code{One_child}, \code{Two_children},
-#' \code{Three_plus}.} \item{list("age")}{Age of woman at time of survey (in
-#' years), centred on sample mean of 30 years.} \item{list("urban")}{Type of
-#' region of residence; levels are \code{Rural} and \code{Urban}.}
-#' \item{list("educ")}{Woman's level of education (a factor with ordered levels
+#' \item{lc}{Number of living children at time of survey; a factor with ordered
+#' levels \code{None}, \code{One_child}, \code{Two_children},
+#' \code{Three_plus}.}
+#' \item{age}{Age of woman at time of survey (in years), centred on sample mean
+#' of 30 years.}
+#' \item{urban}{Type of region of residence; levels are \code{Rural} and
+#' \code{Urban}.}
+#' \item{educ}{Woman's level of education (a factor with ordered levels
 #' \code{None}, \code{Lower_primary}, \code{Upper_primary},
-#' \code{Secondary_and_above}.} \item{list("hindu")}{Woman's religion; levels
-#' are \code{Muslim} and \code{Hindu}.} \item{list("d_lit")}{Proportion of
-#' women in district who are literate.} \item{list("d_pray")}{Proportion of
-#' Muslim women in district who pray every day (a measure of religiosity).}
-#' \item{list("cons")}{Constant of ones.} }
+#' \code{Secondary_and_above}.}
+#' \item{hindu}{Woman's religion; levels are \code{Muslim} and \code{Hindu}.}
+#' \item{d_lit}{Proportion of women in district who are literate.}
+#' \item{d_pray}{Proportion of Muslim women in district who pray every day (a
+#' measure of religiosity).}
+#' \item{cons}{Constant of ones.}
+#' }
 #' @seealso See \code{mlmRev} package for an alternative format of the same
 #' dataset, with fewer variables.
 #' @source Amin, S., Diamond, I., Steele, F. (1997) Contraception and
@@ -58,8 +63,35 @@
 #' 
 #' bang$use4 <- relevel(bang$use4, 4)
 #' 
-#' (mymodel <- runMLwiN(log(use4, cons) ~ 1 + lc + (1 | district), 
-#'   D = "Unordered Multinomial", estoptions = list(EstM = 1, nonlinear = c(1, 2)), data = bang))
+#' # Change contrasts if wish to avoid warning indicating that, by default,
+#' # specified contrasts for ordered predictors will be ignored by runMLwiN
+#' # (they will be fitted as "contr.treatment" regardless of this setting). To
+#' # enable specified contrasts, set allowcontrast to TRUE (this will be the
+#' # default in future package releases).
+#' my_contrasts <- options("contrasts")$contrasts
+#' options(contrasts = c(unordered = "contr.treatment",
+#'                       ordered = "contr.treatment"))
+#' 
+#' # As an alternative to changing contrasts, can instead use C() to specify
+#' # contrasts for ordered predictors in formula object, e.g.:
+#' 
+#' # F1 <- log(use4, cons) ~ 1 + C(lc, "contr.treatment") + (1 | district)
+#' 
+#' # (mymodel <- runMLwiN(Formula = F1, 
+#' #                      D = "Unordered Multinomial",
+#' #                      estoptions = list(EstM = 1, nonlinear = c(1, 2)),
+#' #                      data = bang,
+#' #                      allowcontrast = TRUE))
+#' 
+#' F1 <- log(use4, cons) ~ 1 + lc + (1 | district)
+#' 
+#' (mymodel <- runMLwiN(Formula = F1, 
+#'                      D = "Unordered Multinomial",
+#'                      estoptions = list(EstM = 1, nonlinear = c(1, 2)),
+#'                      data = bang))
+#' 
+#' # Change contrasts back to pre-existing:
+#' options(contrasts = my_contrasts)
 #' 
 #' }
 #' 

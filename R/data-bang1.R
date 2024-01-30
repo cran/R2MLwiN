@@ -12,24 +12,29 @@
 #' 
 #' @docType data
 #' @format A data frame with 1934 observations on the following 11 variables:
-#' \describe{ \item{list("woman")}{Identifying code for each woman (level 1
-#' unit).} \item{list("district")}{Identifying code for each district (level 2
-#' unit).} \item{list("use")}{Contraceptive use status at time of survey; a
-#' factor with levels \code{Not_using} and \code{Using}.}
-#' \item{list("lc")}{Number of living children at time of survey; an ordered
-#' factor with levels \code{None}, \code{One_child}, \code{Two_children},
-#' \code{Three_plus}.} \item{list("age")}{Age of woman at time of survey (in
-#' years), centred on sample mean of 30 years.} \item{list("urban")}{Type of
-#' region of residence; a factor with levels \code{Rural} and \code{Urban}.}
-#' \item{list("educ")}{Woman's level of education; an ordered factor with
-#' levels \code{None}, \code{Lower_primary}, \code{Upper_primary},
-#' \code{Secondary_and_above}.} \item{list("hindu")}{Woman's religion; a factor
-#' with levels \code{Muslim} and \code{Hindu}.}
-#' \item{list("d_illit")}{Proportion of women in district who are literate.}
-#' \item{list("d_pray")}{Proportion of Muslim women in district who pray every
-#' day (a measure of religiosity).} \item{list("cons")}{A column of ones. If
-#' included as an explanatory variable in a regression model (e.g. in MLwiN),
-#' its coefficient is the intercept.} }
+#' \describe{
+#' \item{woman}{Identifying code for each woman (level 1 unit).}
+#' \item{district}{Identifying code for each district (level 2 unit).}
+#' \item{use}{Contraceptive use status at time of survey; a factor with levels
+#' \code{Not_using} and \code{Using}.}
+#' \item{lc}{Number of living children at time of survey; an ordered factor with
+#' levels \code{None}, \code{One_child}, \code{Two_children},
+#' \code{Three_plus}.}
+#' \item{age}{Age of woman at time of survey (in years), centred on sample mean
+#' of 30 years.}
+#' \item{urban}{Type of region of residence; a factor with levels \code{Rural}
+#' and \code{Urban}.}
+#' \item{educ}{Woman's level of education; an ordered factor with levels
+#' \code{None}, \code{Lower_primary}, \code{Upper_primary},
+#' \code{Secondary_and_above}.}
+#' \item{hindu}{Woman's religion; a factor with levels \code{Muslim} and
+#' \code{Hindu}.}
+#' \item{d_illit}{Proportion of women in district who are literate.}
+#' \item{d_pray}{Proportion of Muslim women in district who pray every day (a
+#' measure of religiosity).}
+#' \item{cons}{A column of ones. If included as an explanatory variable in a
+#' regression model (e.g. in MLwiN), its coefficient is the intercept.}
+#' }
 #' @seealso See \code{mlmRev} package for an alternative format of the same
 #' dataset, with fewer variables.
 #' @source Amin, S., Diamond, I., Steele, F. (1997) Contraception and
@@ -53,8 +58,38 @@
 #' 
 #' data(bang1, package = "R2MLwiN")
 #' 
-#' (mymodel <- runMLwiN(logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district),
-#'   D = "Binomial", estoptions = list(EstM = 1), data = bang1))
+#' bang1$denomb <- 1
+#' 
+#' # Change contrasts if wish to avoid warning indicating that, by default,
+#' # specified contrasts for ordered predictors will be ignored by runMLwiN
+#' # (they will be fitted as "contr.treatment" regardless of this setting). To
+#' # enable specified contrasts, set allowcontrast to TRUE (this will be the
+#' # default in future package releases).
+#' my_contrasts <- options("contrasts")$contrasts
+#' options(contrasts = c(unordered = "contr.treatment",
+#'                       ordered = "contr.treatment"))
+#' 
+#' # As an alternative to changing contrasts, can instead use C() to specify
+#' # contrasts for ordered predictors in formula object, e.g.:
+#' 
+#' # F1 <- logit(use, denomb) ~ 1 + age + C(lc, "contr.treatment") + urban +
+#' #   (1 + urban | district)
+#' 
+#' # (mymodel <- runMLwiN(Formula = F1,
+#' #                      D = "Binomial",
+#' #                      estoptions = list(EstM = 1),
+#' #                      data = bang1,
+#' #                      allowcontrast = TRUE))
+#' 
+#' F1 <- logit(use, denomb) ~ 1 + age + lc + urban + (1 + urban | district)
+#' 
+#' (mymodel <- runMLwiN(Formula = F1,
+#'                      D = "Binomial",
+#'                      estoptions = list(EstM = 1),
+#'                      data = bang1))
+#'
+#' # Change contrasts back to pre-existing:
+#' options(contrasts = my_contrasts)
 #' 
 #' }
 #' 

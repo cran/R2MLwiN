@@ -1,12 +1,12 @@
 Package: R2MLwiN
-Version: 0.8-8
-Date: 2023-03-14
+Version: 0.8-9
+Date: 2024-01-30
 Title: Running 'MLwiN' from Within R
 Authors@R: c(person("Zhengzheng", "Zhang", role = c("aut", "cre"),email =
     "zhengzheng236@gmail.com"), person("Chris", "Charlton",  role = "aut"),
     person("Richard", "Parker", role = "aut"), person("George", "Leckie", role
     = "aut"), person("William", "Browne", role = "aut"))
-Depends: R (>= 3.2.0),
+Depends: R (>= 3.5.0),
 Imports: methods, stats, stats4, Matrix, foreign (>= 0.8-46),
         R2WinBUGS, digest (>= 0.6.5), texreg, foreach, parallel,
         doParallel, coda (>= 0.16-1), lattice, memisc, broom, tibble
@@ -18,9 +18,10 @@ URL:
         http://www.bristol.ac.uk/cmm/software/r2mlwin/,https://r-forge.r-project.org/projects/r2mlwin/,http://www.bristol.ac.uk/cmm/software/mlwin/
 SystemRequirements: MLwiN, (OpenBUGS, WinBUGS optional)
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.0
+LazyData: true
 NeedsCompilation: no
-Packaged: 2023-03-14 05:08:01 UTC; Administrator
+Packaged: 2024-01-30 02:46:08 UTC; Administrator
 Author: Zhengzheng Zhang [aut, cre],
   Chris Charlton [aut],
   Richard Parker [aut],
@@ -28,4 +29,4 @@ Author: Zhengzheng Zhang [aut, cre],
   William Browne [aut]
 Maintainer: Zhengzheng Zhang <zhengzheng236@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-03-14 05:40:02 UTC
+Date/Publication: 2024-01-30 03:20:16 UTC

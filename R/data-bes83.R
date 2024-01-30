@@ -9,24 +9,27 @@
 #' 
 #' @docType data
 #' @format A data frame with 800 observations on the following 10 variables:
-#' \describe{ \item{list("voter")}{Voter identifier.}
-#' \item{list("area")}{Identifier for voters' constituencies.}
-#' \item{list("defence")}{Score on a 21 point scale of attitudes towards
-#' nuclear weapons with low scores indicating disapproval of Britain possessing
-#' them.  This variable is centred about its mean.} \item{list("unemp")}{Score
-#' on a 21 point scale of attitudes towards unemployment with low scores
-#' indicating strong opposition and higher scores indicating a preference for
-#' greater unemployment if it results in lower inflation.  This variable is
-#' centred about its mean.} \item{list("taxes")}{Score on a 21 point scale of
-#' attitudes towards tax cuts with low scores indicating a preference for
-#' higher taxes to pay for more government spending.  This variable is centred
-#' about its mean.} \item{list("privat")}{Score on a 21 point scale of
-#' attitudes towards privatization of public services with low scores
-#' indicating opposition.  This variable is centred about its mean.}
-#' \item{list("votecons")}{If respondent voted Conservative; a factor with
-#' levels \code{Other} and \code{Voted_Conservative}.} \item{list("cons")}{This
-#' variable is constant (= 1) for all voters.} \item{list("denom")}{This
-#' variable is constant (= 1) for all voters.} }
+#' \describe{
+#' \item{voter}{Voter identifier.}
+#' \item{area}{Identifier for voters' constituencies.}
+#' \item{defence}{Score on a 21 point scale of attitudes towards nuclear weapons
+#' with low scores indicating disapproval of Britain possessing them.  This
+#' variable is centred about its mean.}
+#' \item{unemp}{Score on a 21 point scale of attitudes towards unemployment with
+#' low scores indicating strong opposition and higher scores indicating a
+#' preference for greater unemployment if it results in lower inflation.  This
+#' variable is centred about its mean.}
+#' \item{taxes}{Score on a 21 point scale of attitudes towards tax cuts with low
+#' scores indicating a preference for higher taxes to pay for more government
+#' spending.  This variable is centred about its mean.}
+#' \item{privat}{Score on a 21 point scale of attitudes towards privatization of
+#' public services with low scores indicating opposition.  This variable is
+#' centred about its mean.}
+#' \item{votecons}{If respondent voted Conservative; a factor with levels
+#' \code{Other} and \code{Voted_Conservative}.}
+#' \item{cons}{This variable is constant (= 1) for all voters.}
+#' \item{denom}{This variable is constant (= 1) for all voters.}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

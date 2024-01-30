@@ -15,34 +15,46 @@
 #' 
 #' @docType data
 #' @format A data frame with 3022 observations on the following 21 variables:
-#' \describe{ \item{list("id")}{Unique office worker identifying code.}
-#' \item{list("company")}{Identifying code for company worked for over the last
-#' 12 months.} \item{list("company2")}{If worked for >1 company over the last
-#' 12 months, identifying code for second company.} \item{list("company3")}{If
-#' worked for >2 companies over the last 12 months, identifying code for third
-#' company.} \item{list("company4")}{If worked for >3 companies over the last
-#' 12 months, identifying code for fourth company.} \item{list("age")}{Age of
-#' worker.} \item{list("parttime")}{Part or full-time, a factor with levels
-#' \code{Fulltime} and \code{Parttime}.} \item{list("sex")}{Sex of worker, a
-#' factor with levels \code{male} and \code{female}.} \item{list("cons")}{A
-#' column of ones. If included as an explanatory variable in a regression model
-#' (e.g. in MLwiN), its coefficient is the intercept.}
-#' \item{list("earnings")}{Workers' earnings over the last financial year.}
-#' \item{list("logearn")}{Workers' (natural) log-transformed earnings over the
-#' last financial year.} \item{list("numjobs")}{The number of companies worked
-#' for over the last 12 months.} \item{list("weight1")}{Proportion of time
-#' worked for employer listed in \code{company}.}
-#' \item{list("weight2")}{Proportion of time worked for employer listed in
-#' \code{company2}.} \item{list("weight3")}{Proportion of time worked for
-#' employer listed in \code{company3}.} \item{list("weight4")}{Proportion of
-#' time worked for employer listed in \code{company4}.}
-#' \item{list("ew1")}{Alternative (equal) weighting for \code{company}
-#' (1/\code{numjobs}).} \item{list("ew2")}{Alternative (equal) weighting for
-#' \code{company2} (if numjobs >1 then 1/\code{numjobs}, else 0).}
-#' \item{list("ew3")}{Alternative (equal) weighting for \code{company3} (if
-#' numjobs >2 then 1/\code{numjobs}, else 0).} \item{list("ew4")}{Alternative
-#' (equal) weighting for \code{company4} (if numjobs >3 then 1/\code{numjobs},
-#' else 0).} \item{list("age_40")}{Age of worker, centered on 40 years.} }
+#' \describe{
+#' \item{id}{Unique office worker identifying code.}
+#' \item{company}{Identifying code for company worked for over the last
+#' 12 months.}
+#' \item{company2}{If worked for >1 company over the last 12 months, identifying
+#' code for second company.}
+#' \item{company3}{If worked for >2 companies over the last 12 months,
+#' identifying code for third company.}
+#' \item{company4}{If worked for >3 companies over the last 12 months,
+#' identifying code for fourth company.}
+#' \item{age}{Age of worker.}
+#' \item{parttime}{Part or full-time, a factor with levels \code{Fulltime} and
+#' \code{Parttime}.}
+#' \item{sex}{Sex of worker, a factor with levels \code{male} and
+#' \code{female}.}
+#' \item{cons}{A column of ones. If included as an explanatory variable in a
+#' regression model (e.g. in MLwiN), its coefficient is the intercept.}
+#' \item{earnings}{Workers' earnings over the last financial year.}
+#' \item{logearn}{Workers' (natural) log-transformed earnings over the last
+#' financial year.}
+#' \item{numjobs}{The number of companies worked for over the last 12 months.}
+#' \item{weight1}{Proportion of time worked for employer listed in
+#' \code{company}.}
+#' \item{weight2}{Proportion of time worked for employer listed in
+#' \code{company2}.}
+#' \item{weight3}{Proportion of time worked for employer listed in
+#' \code{company3}.}
+#' \item{weight4}{Proportion of time worked for employer listed in
+#' \code{company4}.}
+#' \item{ew1}{Alternative (equal) weighting for \code{company}
+#' (1/\code{numjobs}).}
+#' \item{ew2}{Alternative (equal) weighting for \code{company2} (if numjobs >1
+#' then 1/\code{numjobs}, else 0).}
+#' \item{ew3}{Alternative (equal) weighting for \code{company3} (if numjobs >2
+#' then 1/\code{numjobs}, else 0).}
+#' \item{ew4}{Alternative (equal) weighting for \code{company4} (if numjobs >3
+#' then 1/\code{numjobs},
+#' else 0).}
+#' \item{age_40}{Age of worker, centered on 40 years.}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

@@ -9,14 +9,17 @@
 #' 
 #' @docType data
 #' @format A data frame with 354 observations on the following variables:
-#' \describe{ \item{list("nation")}{Nation ID: a factor with levels
-#' corresponding to each country.} \item{list("region")}{Region (within-nation)
-#' ID.} \item{list("county")}{County (within-region) ID.}
-#' \item{list("obs")}{Number of male deaths due to malignant melanoma between
-#' 1971 and 1980.} \item{list("exp")}{Expected number of deaths - proportional
-#' to county population.} \item{list("cons")}{Constant (=1).}
-#' \item{list("uvbi")}{County-level measurement of UV B radiation, centered on
-#' the mean.} }
+#' \describe{
+#' \item{nation}{Nation ID: a factor with levels corresponding to each country.}
+#' \item{region}{Region (within-nation) ID.}
+#' \item{county}{County (within-region) ID.}
+#' \item{obs}{Number of male deaths due to malignant melanoma between 1971 and
+#' 1980.}
+#' \item{exp}{Expected number of deaths - proportional to county population.}
+#' \item{cons}{Constant (=1).}
+#' \item{uvbi}{County-level measurement of UV B radiation, centered on the
+#' mean.}
+#' }
 #' @seealso See \code{mlmRev} package for an alternative format of the same
 #' dataset, with fewer variables.
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}

@@ -24,6 +24,23 @@ while (!file.access(mlwin, mode = 1) == 0) {
 }
 options(MLwiN_path = mlwin)
 
+# Change contrasts if wish to avoid warning indicating that, by default,
+# specified contrasts for ordered predictors will be ignored by runMLwiN
+# (they will be fitted as "contr.treatment" regardless of this setting). To
+# enable specified contrasts, set allowcontrast to TRUE (this will be the
+# default in future package releases). NB at the end of this script, the
+# specification for contrasts is changed back.
+my_contrasts <- options("contrasts")$contrasts
+options(contrasts = c(unordered = "contr.treatment",
+                      ordered = "contr.treatment"))
+
+# As an alternative to changing contrasts, can instead use C() to specify
+# contrasts for ordered predictors in formula object, e.g.:
+
+# (mymodel1 <- runMLwiN(logit(use4) ~ 1 + C(lc, "contr.treatment"),
+#                       D = "Unordered Multinomial",
+#                       data = bang,
+#                       allowcontrast = TRUE))
 
 # 10.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . .145
 
@@ -40,7 +57,7 @@ addmargins(with(bang, table(lc, use4)))
 
 bang$use4 <- relevel(bang$use4, 4)
 
-(mymodel1 <- (runMLwiN(logit(use4) ~ 1 + lc, D = "Unordered Multinomial", data = bang)))
+(mymodel1 <- runMLwiN(logit(use4) ~ 1 + lc, D = "Unordered Multinomial", data = bang))
 
 cat(paste("Pr(y = 1) =", round(exp(mymodel1@FP["FP_Intercept_Sterilization"])/(1 + exp(mymodel1@FP["FP_Intercept_Sterilization"]) + 
   exp(mymodel1@FP["FP_Intercept_Modern_reversible_method"]) + exp(mymodel1@FP["FP_Intercept_Traditional_method"])), 4), "\n"))
@@ -55,11 +72,11 @@ cat(paste("Pr(y = 4) =", round(1/(1 + exp(mymodel1@FP["FP_Intercept_Sterilizatio
 
 # 10.5 Fitting a two-level random intercept model . . . . . . . . . . . .155
 
-(mymodel2 <- (runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", data = bang)))
+(mymodel2 <- runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", data = bang))
 
-(mymodel3 <- (runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(nonlinear = c(1, 
+(mymodel3 <- runMLwiN(logit(use4) ~ 1 + lc + (1 | district), D = "Unordered Multinomial", estoptions = list(nonlinear = c(1, 
   2), startval = list(FP.b = mymodel2@FP, FP.v = mymodel2@FP.cov, RP.b = mymodel2@RP, RP.v = mymodel2@RP.cov), resi.store = TRUE), 
-  data = bang)))
+  data = bang))
 
 
 mymodel3@RP["RP2_cov_Intercept_Sterilization_Intercept_Modern_reversible_method"]/sqrt(mymodel3@RP["RP2_var_Intercept_Sterilization"] * mymodel3@RP["RP2_var_Intercept_Modern_reversible_method"])
@@ -113,5 +130,11 @@ for (i in 1:2) points(x = which(u2rankno == hipos[i]), y = u2[u2rankno[which(u2r
   1)
 
 # Chapter learning outcomes . . . . . . . . . . . . . . . . . . . . . . .159
+
+# Addendum: changing contrasts back to pre-existing . . . . . . . . . . . NA
+
+# Following re-specification of contrast settings towards the start of this
+# script, change contrasts back to pre-existing:
+options(contrasts = my_contrasts)
 
 ############################################################################

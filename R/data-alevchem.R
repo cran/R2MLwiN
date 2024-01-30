@@ -8,14 +8,19 @@
 #' 
 #' @docType data
 #' @format A data frame with 2166 observations on the following 8 variables:
-#' \describe{ \item{list("lea")}{Local Education Authority ID.}
-#' \item{list("estab")}{Establishment (institution) ID.}
-#' \item{list("pupil")}{Pupil ID.} \item{list("a_point")}{A-level point score
+#' \describe{
+#' \item{lea}{Local Education Authority ID.}
+#' \item{estab}{Establishment (institution) ID.}
+#' \item{pupil}{Pupil ID.}
+#' \item{a_point}{A-level point score
 #' (an ordered factor with levels: \code{F}, \code{E}, \code{D}, \code{C},
-#' \code{B}, \code{A}).} \item{list("gcse_tot")}{Total GCSE point score.}
-#' \item{list("gcse_no")}{Number of GCSEs taken.} \item{list("cons")}{Constant
-#' of ones} \item{list("gender")}{Pupil's gender (a factor with levels:
-#' \code{male}, \code{female}).} }
+#' \code{B}, \code{A}).}
+#' \item{gcse_tot}{Total GCSE point score.}
+#' \item{gcse_no}{Number of GCSEs taken.}
+#' \item{cons}{Constant of ones}
+#' \item{gender}{Pupil's gender (a factor with levels: \code{male},
+#' \code{female}).}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

@@ -9,14 +9,18 @@
 #' 
 #' @docType data
 #' @format A data frame with 907 observations on the following 9 variables:
-#' \describe{ \item{list("school")}{School identifier.}
-#' \item{list("sex")}{Pupil gender.} \item{list("vrq")}{Verbal Reasoning
-#' quotient.} \item{list("ilea")}{O-level/CSE examination results.}
-#' \item{list("type")}{School type: a factor with levels \code{Comprehensive}
-#' and \code{Grammar}.} \item{list("pupil")}{Pupil identifier.}
-#' \item{list("cons")}{Constant (=1).} \item{list("n_ilea")}{O-level/CSE
-#' examination results (normal scores).} \item{list("n_vrq")}{Verbal Reasoning
-#' quotient (normal scores).} }
+#' \describe{
+#' \item{school}{School identifier.}
+#' \item{sex}{Pupil gender.}
+#' \item{vrq}{Verbal Reasoning quotient.}
+#' \item{ilea}{O-level/CSE examination results.}
+#' \item{type}{School type: a factor with levels \code{Comprehensive} and
+#' \code{Grammar}.}
+#' \item{pupil}{Pupil identifier.}
+#' \item{cons}{Constant (=1).}
+#' \item{n_ilea}{O-level/CSE examination results (normal scores).}
+#' \item{n_vrq}{Verbal Reasoning quotient (normal scores).}
+#' }
 #' @source Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B.
 #' (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University
 #' of Bristol.

@@ -80,7 +80,7 @@ disable via \code{FALSE} e.g. if slowing execution time down (for example
 in a simulation).}
 
 \item{allowcontrast}{If \code{TRUE}, factor variables will follow the R
-behaviour when creating contrast variables. If code {FALSE} (default) factor
+behaviour when creating contrast variables. If \code{FALSE} (default) factor
 variables will be converted into a series of zero/one dummies.}
 
 \item{indata}{A \code{data.frame} object containing the data to be modelled.

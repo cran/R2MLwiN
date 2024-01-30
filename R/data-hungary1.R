@@ -11,16 +11,19 @@
 #' 
 #' @docType data
 #' @format A data frame with 2439 observations on the following 10 variables:
-#' \describe{ \item{list("school")}{Identifying code for each school (level 2
-#' unit).} \item{list("female")}{Gender indicator: a factor with levels
-#' \code{Male} and \code{Female}.} \item{list("es_core")}{Core Earth Sciences
-#' test result.} \item{list("biol_core")}{Core Biology test result.}
-#' \item{list("biol_r3")}{Optional Biology test result.}
-#' \item{list("biol_r4")}{Optional Biology test result.}
-#' \item{list("phys_core")}{Core Physics test result.}
-#' \item{list("phys_r2")}{Optional Physics test result.}
-#' \item{list("cons")}{Constant(=1).} \item{list("student")}{Identifying code
-#' for each student (level 1 unit).} }
+#' \describe{
+#' \item{school}{Identifying code for each school (level 2 unit).}
+#' \item{female}{Gender indicator: a factor with levels \code{Male} and
+#' \code{Female}.}
+#' \item{es_core}{Core Earth Sciences test result.}
+#' \item{biol_core}{Core Biology test result.}
+#' \item{biol_r3}{Optional Biology test result.}
+#' \item{biol_r4}{Optional Biology test result.}
+#' \item{phys_core}{Core Physics test result.}
+#' \item{phys_r2}{Optional Physics test result.}
+#' \item{cons}{Constant(=1).}
+#' \item{student}{Identifying code for each student (level 1 unit).}
+#' }
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}
 #' University of Bristol: Centre for Multilevel Modelling.
 #' 

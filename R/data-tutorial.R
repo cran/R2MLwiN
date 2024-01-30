@@ -17,23 +17,26 @@
 #' 
 #' @docType data
 #' @format A data frame with 4059 observations on the following 10 variables:
-#' \describe{ \item{list("school")}{Numeric school identifier.}
-#' \item{list("student")}{Numeric student identifier.}
-#' \item{list("normexam")}{Students' exam score at age 16, normalised to have
-#' approximately a standard Normal distribution.} \item{list("cons")}{A column
-#' of ones. If included as an explanatory variable in a regression model (e.g.
-#' in MLwiN), its coefficient is the intercept.}
-#' \item{list("standlrt")}{Students' score at age 11 on the London Reading Test
-#' (LRT), standardised using Z-scores.} \item{list("sex")}{Sex of pupil; a
-#' factor with levels \code{boy}, \code{girl}.} \item{list("schgend")}{Schools'
-#' gender; a factor with levels corresponding to mixed school
-#' (\code{mixedsch}), boys' school (\code{boysch}), and girls' school
-#' (\code{girlsch}).} \item{list("avslrt")}{Average LRT score in school.}
-#' \item{list("schav")}{Average LRT score in school, coded into 3 categories:
+#' \describe{
+#' \item{school}{Numeric school identifier.}
+#' \item{student}{Numeric student identifier.}
+#' \item{normexam}{Students' exam score at age 16, normalised to have
+#' approximately a standard Normal distribution.}
+#' \item{cons}{A column of ones. If included as an explanatory variable in a
+#' regression model (e.g. in MLwiN), its coefficient is the intercept.}
+#' \item{standlrt}{Students' score at age 11 on the London Reading Test
+#' (LRT), standardised using Z-scores.}
+#' \item{sex}{Sex of pupil; a factor with levels \code{boy}, \code{girl}.}
+#' \item{schgend}{Schools' gender; a factor with levels corresponding to mixed
+#' school (\code{mixedsch}), boys' school (\code{boysch}), and girls' school
+#' (\code{girlsch}).}
+#' \item{avslrt}{Average LRT score in school.}
+#' \item{schav}{Average LRT score in school, coded into 3 categories:
 #' \code{low} = bottom 25\%, \code{mid} = middle 50\%, \code{high} = top 25\%.}
-#' \item{list("vrband")}{Students' score in test of verbal reasoning at age 11,
+#' \item{vrband}{Students' score in test of verbal reasoning at age 11,
 #' a factor with 3 levels: \code{vb1} = top 25\%, \code{vb2} = middle 50\%,
-#' \code{vb3} = bottom 25\%.} }
+#' \code{vb3} = bottom 25\%.}
+#' }
 #' @seealso See \code{mlmRev} package for an alternative format of the same
 #' dataset.
 #' @source Browne, W. J. (2012) \emph{MCMC Estimation in MLwiN Version 2.26.}

@@ -50,7 +50,7 @@
 #' disable via \code{FALSE} e.g. if slowing execution time down (for example
 #' in a simulation).
 #' @param allowcontrast If \code{TRUE}, factor variables will follow the R
-#' behaviour when creating contrast variables. If code {FALSE} (default) factor
+#' behaviour when creating contrast variables. If \code{FALSE} (default) factor
 #' variables will be converted into a series of zero/one dummies.
 #' @param indata A \code{data.frame} object containing the data to be modelled.
 #' Deprecated syntax: by default this is \code{NULL} and the \code{data.frame}
@@ -689,8 +689,8 @@ runMLwiN <- function(Formula, levID = NULL, D = "Normal", data = NULL, estoption
 
   for (var in colnames(indata)) {
     if (!(var %in% respvars)) {
-      unordcontr <- options("contrasts")$contrasts["unordered"]
-      ordcontr <- options("contrasts")$contrasts["ordered"]
+      unordcontr <- options("contrasts")$contrasts[1]
+      ordcontr <- options("contrasts")$contrasts[2]
       resetcontr <- FALSE
       if (is.factor(indata[[var]])) {
         if (!is.ordered(indata[[var]]) && unordcontr != "contr.treatment") {
@@ -1143,16 +1143,72 @@ version:date:md5:filename:x64:trial:platform
 3.06:Nov 2022:318a09a203265d5acab7161de49180da:mlnscript:TRUE:FALSE:lin
 3.06:Nov 2022:84a4dbe914d44962efc7ca9ea60e5731:mlnscript:TRUE:FALSE:lin
 3.06:Nov 2022:5ed9c7bacc1fc4f0662c02851e38ed06:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:0f29541ce9b230ac321b2115b7822db0:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:6cdea76d912414b717bef3bf2dbd49b2:mlnscript:TRUE:FALSE:lin
+3.06:Nov 2022:25b2fe241aa8e3b523b7d01d32b51daa:mlnscript:TRUE:FALSE:lin
 3.06:Nov 2022:008974270da0e0a100ba515652e00a10:mlnscript:TRUE:FALSE:mac
 3.06:Nov 2022:f9f718399c080dec7ce1595f7b8ebc48:mlnscript:TRUE:FALSE:bsd
 3.06:Nov 2022:1b2ca999d6add4ad19ae3312964a12ee:mlnscript:TRUE:FALSE:bsd
+3.06:Nov 2022:b12ed2d51117d798a29b1a5fce884539:mlnscript:TRUE:FALSE:bsd
+3.07:Jul 2023:6a84e2ca312f5d88803cff03fb7553f2:mlwin.exe:TRUE:FALSE:win
+3.07:Jul 2023:725b90d57af126c465c62f9f8c9a0c38:mlnscript.exe:TRUE:FALSE:win
+3.07:Jul 2023:37d19e41ddd88c8a57557ac8e2933633:mlwin.exe:FALSE:FALSE:win
+3.07:Jul 2023:927c3983552fe0c1946c3c30d3fd0364:mlnscript.exe:FALSE:FALSE:win
+3.07:Jul 2023:4ff8aa54d91bf34b63fee1e6d79628c1:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:0f29541ce9b230ac321b2115b7822db0:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:a10ae98ff912d1bbf1c422797ccb84d6:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:7e900e63acbb5e629eea9096d0e551d8:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:0eae73790104ce87e43f0f9a71d05adf:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:e8a94186f5f41a8954c605858f129b83:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:272ace0f30d7c92c96ae5706d458ea24:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:3f3e5ee6cd8de1341f2da629d90fb4e7:mlnscript:TRUE:FALSE:lin
+3.07:Jul 2023:050a8217d02530bc1711e98172403be9:mlnscript:TRUE:FALSE:mac
+3.07:Jul 2023:0139d12bff3f9525da73d787a363ed10:mlnscript:TRUE:FALSE:bsd
+3.07:Jul 2023:29496c0ae97643bf9ef96d03e6d80baa:mlnscript:TRUE:FALSE:bsd
+3.07:Jul 2023:e743491dd343a6f9bcffd82bd549ca0f:mlnscript:TRUE:FALSE:bsd
+3.08:Sep 2023:c5fd564ab8e5e78a31174ae069825e51:mlwin.exe:TRUE:FALSE:win
+3.08:Sep 2023:927c3983552fe0c1946c3c30d3fd0364:mlnscript.exe:TRUE:FALSE:win
+3.08:Sep 2023:95368e225d049f1d44b5cb44b5ca45c0:mlwin.exe:FALSE:FALSE:win
+3.08:Sep 2023:19bad752fa4ee530c42d3a2cae3bed5b:mlnscript.exe:FALSE:FALSE:win
+3.08:Sep 2023:809526a7f8cc0116d31c5bed6ffd2fbc:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:92b5fe54146894911291f0811bf47324:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:9309902e53e1d732c83f27cc0557a04b:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:d93f98dd3854f969b27e12fb3e38ea98:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:905764ff6443ec309d084c28d0206408:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:5461c7e39a84c10ebdfaf37150d3c482:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:08317467244f866962a59136ee8b1cb8:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:a4bd103dbc2585c5c106df437515910f:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:d930c0281f1e78ee652f7a5d4787d79f:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:bef61ff3e99969f651a227591e79d151:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:8afff4758729b5991be283211b8f8560:mlnscript:TRUE:FALSE:lin
+3.08:Sep 2023:923c1a0c4b6ba48357369a8991abd073:mlnscript:TRUE:FALSE:mac
+3.08:Sep 2023:6ce30eb3558b975953b079b127d7c0ba:mlnscript:TRUE:FALSE:bsd
+3.08:Sep 2023:9d37221ceb352646bb44ffe9917b3b2a:mlnscript:TRUE:FALSE:bsd
+3.08:Sep 2023:48b21219ad8afbcf4f17e37eb7bdc916:mlnscript:TRUE:FALSE:bsd
+3.09:Jan 2024:b2d475456d23530731d84ef81369d3d1:mlwin.exe:TRUE:FALSE:win
+3.09:Jan 2024:014005303255b087959215b1a6531aa9:mlnscript.exe:TRUE:FALSE:win
+3.09:Jan 2024:ead0af894dbb19cb088b3d53f6ae3b07:mlwin.exe:FALSE:FALSE:win
+3.09:Jan 2024:64ad4aacd19d15c8bd8d861c8c25bb7f:mlnscript.exe:FALSE:FALSE:win
+3.09:Jan 2024:739313e9b1216204a602ac66b881056a:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:6cce42cfa07c3ade14a7500770d1802c:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:15b662700522ccc0f618987f9dde7bf0:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:1f621d1b6c311731bc9c783c8b971cd4:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:33b042abac6d771c5684cb4cb569cd84:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:7d6f794a2624dfb05a7ac4fcc9a958fe:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:c3f8d5712a56e2443f9cc1754b53c14f:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:3cf815b66c6c91df65b1e0703f3baa05:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:d091879c4e81be7c231a3855c1219954:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:0a886c5f9ac2cef38295c176b8bf93f8:mlnscript:TRUE:FALSE:lin
+3.09:Jan 2024:edd830002ca47da3f0b288370ea0b53d:mlnscript:TRUE:FALSE:mac
+3.09:Jan 2024:138f311fecf2c3780d690dbcb2887c10:mlnscript:TRUE:FALSE:bsd
+3.09:Jan 2024:3130f5aa03ef44c9edd6962e65528f46:mlnscript:TRUE:FALSE:bsd
 '
   versioninfo <- utils::read.delim(textConnection(versioninfostr), header = TRUE, sep = ":", strip.white = TRUE)
   if (isTRUE(checkversion)) {
     # Allow disabling the version check if it is slowing things down (e.g. in a simulation study)
     currentver <- versioninfo[versioninfo$md5 == digest::digest(cmd, algo = "md5", file = TRUE), ]
     if (nrow(currentver) == 0) {
-      versiontext <- "MLwiN (version: unknown or >3.06)"
+      versiontext <- "MLwiN (version: unknown or >3.09)"
     } else {
       if (currentver$version < 2.36) {
         # Block releases older than a year or so (allow 2.36 as this corresponds to the trial version)

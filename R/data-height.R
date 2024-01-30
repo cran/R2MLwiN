@@ -8,8 +8,9 @@
 #' 
 #' @docType data
 #' @format A data frame with 100 observations on the following variable:
-#' \describe{ \item{list("height")}{Heights of 100 adult males measured in
-#' centimetres.} }
+#' \describe{
+#' \item{height}{Heights of 100 adult males measured in centimetres.}
+#' }
 #' @source Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B.
 #' (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University
 #' of Bristol. Rasbash, J., Steele, F., Browne, W.J. and Goldstein, H. (2012)

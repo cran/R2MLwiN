@@ -9,16 +9,20 @@
 #' 
 #' @docType data
 #' @format A data frame with 407 observations on the following 13 variables:
-#' \describe{ \item{list("id")}{Unique pupil identifying code.}
-#' \item{list("age1")}{Age at occasion 1.} \item{list("read1")}{Reading score
-#' at occasion 1.} \item{list("age2")}{Age at occasion 2.}
-#' \item{list("read2")}{Reading score at occasion 2.} \item{list("age3")}{Age
-#' at occasion 3.} \item{list("read3")}{Reading score at occasion 3.}
-#' \item{list("age4")}{Age at occasion 4.} \item{list("read4")}{Reading score
-#' at occasion 4.} \item{list("age5")}{Age at occasion 5.}
-#' \item{list("read5")}{Reading score at occasion 5.} \item{list("age6")}{Age
-#' at occasion 6.} \item{list("read6")}{Reading score at occasion 6.}
-#' 
+#' \describe{
+#' \item{id}{Unique pupil identifying code.}
+#' \item{age1}{Age at occasion 1.}
+#' \item{read1}{Reading score at occasion 1.}
+#' \item{age2}{Age at occasion 2.}
+#' \item{read2}{Reading score at occasion 2.}
+#' \item{age3}{Age at occasion 3.}
+#' \item{read3}{Reading score at occasion 3.}
+#' \item{age4}{Age at occasion 4.}
+#' \item{read4}{Reading score at occasion 4.}
+#' \item{age5}{Age at occasion 5.}
+#' \item{read5}{Reading score at occasion 5.}
+#' \item{age6}{Age at occasion 6.}
+#' \item{read6}{Reading score at occasion 6.}
 #' }
 #' @source Rasbash, J., Charlton, C., Browne, W.J., Healy, M. and Cameron, B.
 #' (2009) \emph{MLwiN Version 2.1.} Centre for Multilevel Modelling, University
